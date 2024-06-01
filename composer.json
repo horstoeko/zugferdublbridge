@@ -28,9 +28,7 @@
         }
     },
     "require": {
-        "php": "^7.3|^7.4|^8",
-        "horstoeko/zugferd": "^1",
-        "horstoeko/ubl": "^1"
+        "php": "^7.3|^7.4|^8"
     },
     "require-dev": {
         "pdepend/pdepend": "^2",

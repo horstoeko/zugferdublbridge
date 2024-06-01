@@ -2,7 +2,12 @@
 
 [![Latest Stable Version](https://poser.pugx.org/horstoeko/zugferdublbridge/v/stable.png)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![Total Downloads](https://poser.pugx.org/horstoeko/zugferdublbridge/downloads.png)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![Latest Unstable Version](https://poser.pugx.org/horstoeko/zugferdublbridge/v/unstable.png)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![License](https://poser.pugx.org/horstoeko/zugferdublbridge/license.png)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/horstoeko/zugferdublbridge)
 
-[![CI (Ant, PHP 7.3)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php73.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php73.ant.yml) [![CI (Ant, PHP 7.4)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php74.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php74.ant.yml) [![CI (PHP 8.0)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php80.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php80.ant.yml) [![CI (PHP 8.1)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php81.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php81.ant.yml)
+[![CI (Ant, PHP 7.3)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php73.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php73.ant.yml)
+[![CI (Ant, PHP 7.4)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php74.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php74.ant.yml)
+[![CI (Ant, PHP 8.0)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php80.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php80.ant.yml)
+[![CI (Ant, PHP 8.1)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php81.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php81.ant.yml)
+[![CI (Ant, PHP 8.2)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php82.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php82.ant.yml)
+[![CI (Ant, PHP 8.3)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php83.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php83.ant.yml)
 
 ## Table of Contents
 

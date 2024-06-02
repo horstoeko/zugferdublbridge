@@ -452,16 +452,16 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 $this->in->queryValues('./ram:ID', $sellerTradePartyNode)->forEach(
                     function ($sellerTradePartyIdNode) {
                         $this->out->startElement('cac:PartyIdentification');
-                        $this->out->element('cbc:ID', $sellerTradePartyIdNode->nodeValue);
+                        $this->out->elementWithAttribute('cbc:ID', $sellerTradePartyIdNode->nodeValue, 'schemeID', $sellerTradePartyIdNode->getAttribute('schemeID'));
                         $this->out->endElement();
                     }
                 );
                 $this->in->whenExists(
                     './/ram:GlobalID',
                     $sellerTradePartyNode,
-                    function ($sellerTradePartyIdNode) {
+                    function ($sellerTradePartyGlobalIdNode) {
                         $this->out->startElement('cac:PartyIdentification');
-                        $this->out->elementWithAttribute('cbc:ID', $sellerTradePartyIdNode->nodeValue, 'schemeID', $sellerTradePartyIdNode->getAttribute('schemeID'));
+                        $this->out->elementWithAttribute('cbc:ID', $sellerTradePartyGlobalIdNode->nodeValue, 'schemeID', $sellerTradePartyGlobalIdNode->getAttribute('schemeID'));
                         $this->out->endElement();
                     }
                 );
@@ -629,16 +629,16 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 $this->in->queryValues('./ram:ID', $buyerTradePartyNode)->forEach(
                     function ($buyerTradePartyIdNode) {
                         $this->out->startElement('cac:PartyIdentification');
-                        $this->out->element('cbc:ID', $buyerTradePartyIdNode->nodeValue);
+                        $this->out->elementWithAttribute('cbc:ID', $buyerTradePartyIdNode->nodeValue, 'schemeID', $buyerTradePartyIdNode->getAttribute('schemeID'));
                         $this->out->endElement();
                     }
                 );
                 $this->in->whenExists(
                     './/ram:GlobalID',
                     $buyerTradePartyNode,
-                    function ($buyerTradePartyIdNode) {
+                    function ($buyerTradePartyGlobalIdNode) {
                         $this->out->startElement('cac:PartyIdentification');
-                        $this->out->elementWithAttribute('cbc:ID', $buyerTradePartyIdNode->nodeValue, 'schemeID', $buyerTradePartyIdNode->getAttribute('schemeID'));
+                        $this->out->elementWithAttribute('cbc:ID', $buyerTradePartyGlobalIdNode->nodeValue, 'schemeID', $buyerTradePartyGlobalIdNode->getAttribute('schemeID'));
                         $this->out->endElement();
                     }
                 );
@@ -794,16 +794,16 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 $this->in->queryValues('./ram:ID', $payeeTradePartyNode)->forEach(
                     function ($payeeTradePartyIdNode) {
                         $this->out->startElement('cac:PartyIdentification');
-                        $this->out->element('cbc:ID', $payeeTradePartyIdNode->nodeValue);
+                        $this->out->elementWithAttribute('cbc:ID', $payeeTradePartyIdNode->nodeValue, 'schemeID', $payeeTradePartyIdNode->getAttribute('schemeID'));
                         $this->out->endElement();
                     }
                 );
                 $this->in->whenExists(
                     './/ram:GlobalID',
                     $payeeTradePartyNode,
-                    function ($payeeTradePartyIdNode) {
+                    function ($payeeTradePartyGlobalIdNode) {
                         $this->out->startElement('cac:PartyIdentification');
-                        $this->out->elementWithAttribute('cbc:ID', $payeeTradePartyIdNode->nodeValue, 'schemeID', $payeeTradePartyIdNode->getAttribute('schemeID'));
+                        $this->out->elementWithAttribute('cbc:ID', $payeeTradePartyGlobalIdNode->nodeValue, 'schemeID', $payeeTradePartyGlobalIdNode->getAttribute('schemeID'));
                         $this->out->endElement();
                     }
                 );
@@ -945,16 +945,16 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 $this->in->queryValues('./ram:ID', $sellerTaxRepresentativePartyNode)->forEach(
                     function ($sellerTaxRepresentativePartyIdNode) {
                         $this->out->startElement('cac:PartyIdentification');
-                        $this->out->element('cbc:ID', $sellerTaxRepresentativePartyIdNode->nodeValue);
+                        $this->out->elementWithAttribute('cbc:ID', $sellerTaxRepresentativePartyIdNode->nodeValue, 'schemeID', $sellerTaxRepresentativePartyIdNode->getAttribute('schemeID'));
                         $this->out->endElement();
                     }
                 );
                 $this->in->whenExists(
                     './/ram:GlobalID',
                     $sellerTaxRepresentativePartyNode,
-                    function ($sellerTaxRepresentativePartyIdNode) {
+                    function ($sellerTaxRepresentativePartyGlobalIdNode) {
                         $this->out->startElement('cac:PartyIdentification');
-                        $this->out->elementWithAttribute('cbc:ID', $sellerTaxRepresentativePartyIdNode->nodeValue, 'schemeID', $sellerTaxRepresentativePartyIdNode->getAttribute('schemeID'));
+                        $this->out->elementWithAttribute('cbc:ID', $sellerTaxRepresentativePartyGlobalIdNode->nodeValue, 'schemeID', $sellerTaxRepresentativePartyGlobalIdNode->getAttribute('schemeID'));
                         $this->out->endElement();
                     }
                 );

@@ -476,28 +476,15 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->out->endElement();
                     }
                 );
-                /*
                 $this->in->whenExists(
-                    './/ram:SpecifiedLegalOrganization/ram:TradingBusinessName',
+                    './/ram:Name',
                     $sellerTradePartyNode,
-                    function ($sellerTradePartyTradingBusinessNameNode) {
+                    function ($sellerTradePartyNameNode) {
                         $this->out->startElement('cac:PartyName');
-                        $this->out->element('cbc:Name', $sellerTradePartyTradingBusinessNameNode->nodeValue);
+                        $this->out->element('cbc:Name', $sellerTradePartyNameNode->nodeValue);
                         $this->out->endElement();
-                    },
-                    function () use ($sellerTradePartyNode) {
-                        $this->in->whenExists(
-                            './/ram:Name',
-                            $sellerTradePartyNode,
-                            function ($sellerTradePartyNameNode) {
-                                $this->out->startElement('cac:PartyName');
-                                $this->out->element('cbc:Name', $sellerTradePartyNameNode->nodeValue);
-                                $this->out->endElement();
-                            }
-                        );
                     }
                 );
-                */
                 $this->in->whenExists(
                     './/ram:PostalTradeAddress',
                     $sellerTradePartyNode,
@@ -642,28 +629,15 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->out->endElement();
                     }
                 );
-                /*
                 $this->in->whenExists(
-                    './/ram:SpecifiedLegalOrganization/ram:TradingBusinessName',
+                    './/ram:Name',
                     $buyerTradePartyNode,
-                    function ($buyerTradePartyTradingBusinessNameNode) {
+                    function ($buyerTradePartyNameNode) {
                         $this->out->startElement('cac:PartyName');
-                        $this->out->element('cbc:Name', $buyerTradePartyTradingBusinessNameNode->nodeValue);
+                        $this->out->element('cbc:Name', $buyerTradePartyNameNode->nodeValue);
                         $this->out->endElement();
-                    },
-                    function () use ($buyerTradePartyNode) {
-                        $this->in->whenExists(
-                            './/ram:Name',
-                            $buyerTradePartyNode,
-                            function ($buyerTradePartyNameNode) {
-                                $this->out->startElement('cac:PartyName');
-                                $this->out->element('cbc:Name', $buyerTradePartyNameNode->nodeValue);
-                                $this->out->endElement();
-                            }
-                        );
                     }
                 );
-                */
                 $this->in->whenExists(
                     './/ram:PostalTradeAddress',
                     $buyerTradePartyNode,
@@ -808,23 +782,12 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     }
                 );
                 $this->in->whenExists(
-                    './/ram:SpecifiedLegalOrganization/ram:TradingBusinessName',
+                    './/ram:Name',
                     $payeeTradePartyNode,
-                    function ($payeeTradePartyTradingBusinessNameNode) {
+                    function ($payeeTradePartyNameNode) {
                         $this->out->startElement('cac:PartyName');
-                        $this->out->element('cbc:Name', $payeeTradePartyTradingBusinessNameNode->nodeValue);
+                        $this->out->element('cbc:Name', $payeeTradePartyNameNode->nodeValue);
                         $this->out->endElement();
-                    },
-                    function () use ($payeeTradePartyNode) {
-                        $this->in->whenExists(
-                            './/ram:Name',
-                            $payeeTradePartyNode,
-                            function ($payeeTradePartyNameNode) {
-                                $this->out->startElement('cac:PartyName');
-                                $this->out->element('cbc:Name', $payeeTradePartyNameNode->nodeValue);
-                                $this->out->endElement();
-                            }
-                        );
                     }
                 );
                 $this->in->whenExists(
@@ -959,23 +922,12 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     }
                 );
                 $this->in->whenExists(
-                    './/ram:SpecifiedLegalOrganization/ram:TradingBusinessName',
+                    './/ram:Name',
                     $sellerTaxRepresentativePartyNode,
-                    function ($sellerTaxRepresentativePartyTradingBusinessNameNode) {
+                    function ($sellerTaxRepresentativePartyNameNode) {
                         $this->out->startElement('cac:PartyName');
-                        $this->out->element('cbc:Name', $sellerTaxRepresentativePartyTradingBusinessNameNode->nodeValue);
+                        $this->out->element('cbc:Name', $sellerTaxRepresentativePartyNameNode->nodeValue);
                         $this->out->endElement();
-                    },
-                    function () use ($sellerTaxRepresentativePartyNode) {
-                        $this->in->whenExists(
-                            './/ram:Name',
-                            $sellerTaxRepresentativePartyNode,
-                            function ($sellerTaxRepresentativePartyNameNode) {
-                                $this->out->startElement('cac:PartyName');
-                                $this->out->element('cbc:Name', $sellerTaxRepresentativePartyNameNode->nodeValue);
-                                $this->out->endElement();
-                            }
-                        );
                     }
                 );
                 $this->in->whenExists(

@@ -357,11 +357,13 @@ class XmlConverterCiiToUbl extends XmlConverterBase
 
         $this->in->queryValues('.//ram:AdditionalReferencedDocument', $invoiceHeaderAgreement)->forEach(
             function ($nodeFound) {
-                if ($this->in->queryValue('.//ram:TypeCode', $nodeFound) == '50') {
-                    $this->out->startElement('cac:OriginatorDocumentReference');
-                    $this->out->element('cbc:ID', $this->in->queryValue('.//ram:IssuerAssignedID', $nodeFound));
-                    $this->out->endElement();
-                }
+                $this->in->whenEquals(
+                    './/ram:TypeCode', $nodeFound, '50', function () use ($nodeFound) {
+                        $this->out->startElement('cac:OriginatorDocumentReference');
+                        $this->out->element('cbc:ID', $this->in->queryValue('.//ram:IssuerAssignedID', $nodeFound));
+                        $this->out->endElement();
+                    }
+                );
             }
         );
 
@@ -378,7 +380,11 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 if ($this->in->queryValue('.//ram:TypeCode', $additionalReferencedDocumentNode) != '50') {
                     $this->out->startElement('cac:AdditionalDocumentReference');
                     $this->out->element('cbc:ID', $this->in->queryValue('.//ram:IssuerAssignedID', $additionalReferencedDocumentNode));
-                    //$this->out->element('cbc:DocumentTypeCode', $this->in->queryValue('.//ram:TypeCode', $additionalReferencedDocumentNode));
+                    $this->in->whenEquals(
+                        './/ram:TypeCode', $additionalReferencedDocumentNode, '130', function () use ($additionalReferencedDocumentNode) {
+                            $this->out->element('cbc:DocumentTypeCode', $this->in->queryValue('.//ram:TypeCode', $additionalReferencedDocumentNode));
+                        }
+                    );
                     $this->out->element('cbc:DocumentDescription', $this->in->queryValue('.//ram:Name', $additionalReferencedDocumentNode));
                     $this->in->whenExists(
                         './/ram:AttachmentBinaryObject',

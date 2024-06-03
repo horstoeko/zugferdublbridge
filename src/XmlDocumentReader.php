@@ -212,4 +212,44 @@ class XmlDocumentReader extends XmlDocumentBase
 
         return $this;
     }
+
+    /**
+     * When an element equals value(s) the $callback is called
+     *
+     * @param  string          $expression
+     * @param  DOMNode|null    $contextNode
+     * @param  string|string[] $values
+     * @param  callable        $callback
+     * @param  callable|null   $callbackElse
+     * @return XmlDocumentReader
+     */
+    public function whenEquals(string $expression, ?DOMNode $contextNode, $values, $callback, $callbackElse = null): XmlDocumentReader
+    {
+        if (!is_array($values)) {
+            $values = [$values];
+        }
+
+        $equals = false;
+
+        foreach ($values as $value) {
+            if ($this->queryValue($expression, $contextNode) === $value) {
+                $equals = true;
+                break;
+            }
+        }
+
+        if ($equals === true) {
+            call_user_func(
+                $callback,
+                $this->query($expression, $contextNode)->item(0),
+                $this->query($expression, $contextNode)->item(0)->parentNode
+            );
+        } else {
+            if (!is_null($callbackElse)) {
+                call_user_func($callbackElse);
+            }
+        }
+
+        return $this;
+    }
 }

@@ -358,7 +358,10 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $this->in->queryValues('.//ram:AdditionalReferencedDocument', $invoiceHeaderAgreement)->forEach(
             function ($nodeFound) {
                 $this->in->whenEquals(
-                    './/ram:TypeCode', $nodeFound, '50', function () use ($nodeFound) {
+                    './/ram:TypeCode',
+                    $nodeFound,
+                    '50',
+                    function () use ($nodeFound) {
                         $this->out->startElement('cac:OriginatorDocumentReference');
                         $this->out->element('cbc:ID', $this->in->queryValue('.//ram:IssuerAssignedID', $nodeFound));
                         $this->out->endElement();
@@ -377,42 +380,50 @@ class XmlConverterCiiToUbl extends XmlConverterBase
 
         $this->in->queryValues('.//ram:AdditionalReferencedDocument', $invoiceHeaderAgreement)->forEach(
             function ($additionalReferencedDocumentNode) {
-                if ($this->in->queryValue('.//ram:TypeCode', $additionalReferencedDocumentNode) != '50') {
-                    $this->out->startElement('cac:AdditionalDocumentReference');
-                    $this->out->element('cbc:ID', $this->in->queryValue('.//ram:IssuerAssignedID', $additionalReferencedDocumentNode));
-                    $this->in->whenEquals(
-                        './/ram:TypeCode', $additionalReferencedDocumentNode, '130', function () use ($additionalReferencedDocumentNode) {
-                            $this->out->element('cbc:DocumentTypeCode', $this->in->queryValue('.//ram:TypeCode', $additionalReferencedDocumentNode));
-                        }
-                    );
-                    $this->out->element('cbc:DocumentDescription', $this->in->queryValue('.//ram:Name', $additionalReferencedDocumentNode));
-                    $this->in->whenExists(
-                        './/ram:AttachmentBinaryObject',
-                        $additionalReferencedDocumentNode,
-                        function ($attachmentBinaryObjectNode, $additionalReferencedDocumentNode) {
-                            $this->out->startElement('cac:Attachment');
-                            $this->out->elementWithMultipleAttributes(
-                                'cbc:EmbeddedDocumentBinaryObject',
-                                $attachmentBinaryObjectNode->nodeValue,
-                                [
-                                    'mimeCode' => $attachmentBinaryObjectNode->getAttribute('mimeCode'),
-                                    'filename' => $attachmentBinaryObjectNode->getAttribute('filename'),
-                                ]
-                            );
-                            $this->in->whenExists(
-                                './/ram:URIID',
-                                $additionalReferencedDocumentNode,
-                                function ($uriIdNode) {
-                                    $this->out->startElement('cac:ExternalReference');
-                                    $this->out->element('cbc:URI', $uriIdNode->nodeValue);
-                                    $this->out->endElement();
-                                }
-                            );
-                            $this->out->endElement();
-                        }
-                    );
-                    $this->out->endElement();
-                }
+                $this->in->whenNotEquals(
+                    './/ram:TypeCode',
+                    $additionalReferencedDocumentNode,
+                    '50',
+                    function () use ($additionalReferencedDocumentNode) {
+                        $this->out->startElement('cac:AdditionalDocumentReference');
+                        $this->out->element('cbc:ID', $this->in->queryValue('.//ram:IssuerAssignedID', $additionalReferencedDocumentNode));
+                        $this->in->whenEquals(
+                            './/ram:TypeCode',
+                            $additionalReferencedDocumentNode,
+                            '130',
+                            function () use ($additionalReferencedDocumentNode) {
+                                $this->out->element('cbc:DocumentTypeCode', $this->in->queryValue('.//ram:TypeCode', $additionalReferencedDocumentNode));
+                            }
+                        );
+                        $this->out->element('cbc:DocumentDescription', $this->in->queryValue('.//ram:Name', $additionalReferencedDocumentNode));
+                        $this->in->whenExists(
+                            './/ram:AttachmentBinaryObject',
+                            $additionalReferencedDocumentNode,
+                            function ($attachmentBinaryObjectNode, $additionalReferencedDocumentNode) {
+                                $this->out->startElement('cac:Attachment');
+                                $this->out->elementWithMultipleAttributes(
+                                    'cbc:EmbeddedDocumentBinaryObject',
+                                    $attachmentBinaryObjectNode->nodeValue,
+                                    [
+                                        'mimeCode' => $attachmentBinaryObjectNode->getAttribute('mimeCode'),
+                                        'filename' => $attachmentBinaryObjectNode->getAttribute('filename'),
+                                    ]
+                                );
+                                $this->in->whenExists(
+                                    './/ram:URIID',
+                                    $additionalReferencedDocumentNode,
+                                    function ($uriIdNode) {
+                                        $this->out->startElement('cac:ExternalReference');
+                                        $this->out->element('cbc:URI', $uriIdNode->nodeValue);
+                                        $this->out->endElement();
+                                    }
+                                );
+                                $this->out->endElement();
+                            }
+                        );
+                        $this->out->endElement();
+                    }
+                );
             }
         );
 
@@ -1282,7 +1293,9 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             function () use ($invoiceHeaderSettlement, $invoiceCurrencyCode, $taxCurrencyCode) {
                 $this->out->startElement('cac:TaxTotal');
                 $this->in->whenExists(
-                    sprintf('.//ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID=\'%s\']', $invoiceCurrencyCode), $invoiceHeaderSettlement, function ($taxTotalAmountNode) {
+                    sprintf('.//ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID=\'%s\']', $invoiceCurrencyCode),
+                    $invoiceHeaderSettlement,
+                    function ($taxTotalAmountNode) {
                         $this->out->elementWithAttribute(
                             'cbc:TaxAmount',
                             $this->formatAmount($taxTotalAmountNode->nodeValue),
@@ -1322,7 +1335,9 @@ class XmlConverterCiiToUbl extends XmlConverterBase
 
                 if ($invoiceCurrencyCode && $taxCurrencyCode && ($invoiceCurrencyCode != $taxCurrencyCode)) {
                     $this->in->whenExists(
-                        sprintf('.//ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID=\'%s\']', $taxCurrencyCode), $invoiceHeaderSettlement, function ($taxTotalAmountNode) {
+                        sprintf('.//ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID=\'%s\']', $taxCurrencyCode),
+                        $invoiceHeaderSettlement,
+                        function ($taxTotalAmountNode) {
                             $this->out->startElement('cac:TaxTotal');
                             $this->out->elementWithAttribute(
                                 'cbc:TaxAmount',

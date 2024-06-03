@@ -55,9 +55,9 @@ class XmlConverterCiiToUbl extends XmlConverterBase
      * Factory: Load from XML file
      *
      * @param  string $filename
-     * @return XmlConverterCiiToUbl
+     * @return static
      */
-    public static function fromFile(string $filename): XmlConverterCiiToUbl
+    public static function fromFile(string $filename)
     {
         return (new static())->loadFromXmlFile($filename);
     }
@@ -66,92 +66,56 @@ class XmlConverterCiiToUbl extends XmlConverterBase
      * Factory: Load from XML stream
      *
      * @param  string $xmlData
-     * @return XmlConverterCiiToUbl
+     * @return static
      */
-    public static function fromString(string $xmlData): XmlConverterCiiToUbl
+    public static function fromString(string $xmlData)
     {
         return (new static())->loadFromXmlString($xmlData);
     }
 
     /**
-     * Constructor
+     * @inheritDoc
      */
-    public function __construct()
+    protected function getDestinationRoot(): string
     {
-        $this->in = (new XmlDocumentReader())
-            ->addNamespace('rsm', 'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100')
-            ->addNamespace('ram', 'urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100')
-            ->addNamespace('qdt', 'urn:un:unece:uncefact:data:Standard:QualifiedDataType:100')
-            ->addNamespace('udt', 'urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100')
-            ->addNamespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-
-        $this->out = (new XmlDocumentWriter("ubl:Invoice"))
-            ->addNamespace('ubl', 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2')
-            ->addNamespace('cac', 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2')
-            ->addNamespace('cbc', 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2');
+        return "ubl:Invoice";
     }
 
     /**
-     * Load source from XML string
-     *
-     * @param  string $source
-     * @return XmlConverterCiiToUbl
+     * @inheritDoc
      */
-    public function loadFromXmlString(string $source): XmlConverterCiiToUbl
+    protected function getSourceNamespaces(): array
     {
-        $this->in->loadFromXmlString($source);
-
-        return $this;
+        return [
+            'rsm' => 'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100',
+            'ram' => 'urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100',
+            'qdt' => 'urn:un:unece:uncefact:data:Standard:QualifiedDataType:100',
+            'udt' => 'urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100',
+            'xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+        ];
     }
 
     /**
-     * Load from XML file
-     *
-     * @param  string $filename
-     * @return XmlConverterCiiToUbl
-     * @throws RuntimeException
+     * @inheritDoc
      */
-    public function loadFromXmlFile(string $filename): XmlConverterCiiToUbl
+    protected function getDestinationNamespaces(): array
     {
-        if (!is_file($filename)) {
-            throw new RuntimeException("File $filename does not exists");
-        }
-
-        $this->in->loadFromXmlFile($filename);
-
-        return $this;
-    }
-
-    /**
-     * Save converted XML to a string containing XML data
-     *
-     * @return string
-     */
-    public function saveXmlString(): string
-    {
-        return $this->out->saveXmlString();
-    }
-
-    /**
-     * Save converted XML to a file
-     *
-     * @param  string $filename
-     * @return int|false
-     */
-    public function saveXmlFile(string $filename)
-    {
-        return $this->out->saveXmlFile($filename);
+        return [
+            'ubl' => 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',
+            'cac' => 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',
+            'cbc' => 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2',
+        ];
     }
 
     /**
      * Perform conversion
      *
-     * @return XmlConverterCiiToUbl
+     * @return static
      * @throws DOMException
      * @throws Exception
      * @throws RuntimeException
      */
-    public function convert(): XmlConverterCiiToUbl
+    public function convert()
     {
         $this->checkValidSource();
         $this->convertGeneral();

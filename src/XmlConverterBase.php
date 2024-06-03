@@ -117,14 +117,14 @@ abstract class XmlConverterBase
     /**
      * Get namespaces for the source document
      *
-     * @return array
+     * @return array<string,string>
      */
     protected abstract function getSourceNamespaces(): array;
 
     /**
      * Get namespaces for the destination document
      *
-     * @return array
+     * @return array<string,string>
      */
     protected abstract function getDestinationNamespaces(): array;
 

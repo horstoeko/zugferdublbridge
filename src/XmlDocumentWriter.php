@@ -9,7 +9,6 @@
 
 namespace horstoeko\zugferdublbridge;
 
-use Closure;
 use DOMElement;
 use DOMDocument;
 use horstoeko\zugferdublbridge\XmlDocumentBase;

@@ -29,29 +29,29 @@ abstract class XmlConverterBase
      *
      * @var XmlDocumentReader
      */
-    protected $in = null;
+    protected $source = null;
 
     /**
      * The output document
      *
      * @var XmlDocumentWriter
      */
-    protected $out = null;
+    protected $destination = null;
 
     /**
      * Constructor
      */
     protected final function __construct()
     {
-        $this->in = (new XmlDocumentReader());
-        $this->out = (new XmlDocumentWriter($this->getDestinationRoot()));
+        $this->source = (new XmlDocumentReader());
+        $this->destination = (new XmlDocumentWriter($this->getDestinationRoot()));
 
         foreach ($this->getSourceNamespaces() as $namespace => $namespaceUri) {
-            $this->in->addNamespace($namespace, $namespaceUri);
+            $this->source->addNamespace($namespace, $namespaceUri);
         }
 
         foreach ($this->getDestinationNamespaces() as $namespace => $namespaceUri) {
-            $this->out->addNamespace($namespace, $namespaceUri);
+            $this->destination->addNamespace($namespace, $namespaceUri);
         }
     }
 
@@ -63,7 +63,7 @@ abstract class XmlConverterBase
      */
     public function loadFromXmlString(string $source): XmlConverterCiiToUbl
     {
-        $this->in->loadFromXmlString($source);
+        $this->source->loadFromXmlString($source);
 
         return $this;
     }
@@ -81,7 +81,7 @@ abstract class XmlConverterBase
             throw new RuntimeException("File $filename does not exists");
         }
 
-        $this->in->loadFromXmlFile($filename);
+        $this->source->loadFromXmlFile($filename);
 
         return $this;
     }
@@ -93,7 +93,7 @@ abstract class XmlConverterBase
      */
     public function saveXmlString(): string
     {
-        return $this->out->saveXmlString();
+        return $this->destination->saveXmlString();
     }
 
     /**
@@ -104,7 +104,7 @@ abstract class XmlConverterBase
      */
     public function saveXmlFile(string $filename)
     {
-        return $this->out->saveXmlFile($filename);
+        return $this->destination->saveXmlFile($filename);
     }
 
     /**

@@ -136,7 +136,7 @@ class XmlDocumentReader extends XmlDocumentBase
             return false;
         }
 
-        if (is_null($nodeList->item(0)->nodeValue)) {
+        if (is_null($nodeList->item(0)->nodeValue) || $nodeList->item(0)->nodeValue == "") {
             return false;
         }
 

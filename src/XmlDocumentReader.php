@@ -188,7 +188,7 @@ class XmlDocumentReader extends XmlDocumentBase
     }
 
     /**
-     * When an element can be queried the $callback is called
+     * When an element can be queried the $callback is called otherwise $callbackElse
      *
      * @param  string        $expression
      * @param  DOMNode|null  $contextNode
@@ -199,6 +199,32 @@ class XmlDocumentReader extends XmlDocumentBase
     public function whenExists(string $expression, ?DOMNode $contextNode, $callback, $callbackElse = null): XmlDocumentReader
     {
         if ($this->exists($expression, $contextNode)) {
+            call_user_func(
+                $callback,
+                $this->query($expression, $contextNode)->item(0),
+                $this->query($expression, $contextNode)->item(0)->parentNode
+            );
+        } else {
+            if (!is_null($callbackElse)) {
+                call_user_func($callbackElse);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * When an element cannot be queried the $callback is called otherwise $callbackElse
+     *
+     * @param  string        $expression
+     * @param  DOMNode|null  $contextNode
+     * @param  callable      $callback
+     * @param  callable|null $callbackElse
+     * @return XmlDocumentReader
+     */
+    public function whenNotExists(string $expression, ?DOMNode $contextNode, $callback, $callbackElse = null): XmlDocumentReader
+    {
+        if (!$this->exists($expression, $contextNode)) {
             call_user_func(
                 $callback,
                 $this->query($expression, $contextNode)->item(0),

@@ -77,6 +77,7 @@ class XmlDocumentWriter extends XmlDocumentBase
 
         if ($value) {
             $value = trim($value);
+            $value = htmlspecialchars($value);
         }
 
         if ($newNameSpace) {

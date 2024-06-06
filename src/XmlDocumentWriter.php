@@ -148,7 +148,7 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Write single element with empty value
      *
-     * @param string $tag
+     * @param  string $tag
      * @return XmlDocumentWriter
      */
     public function elementEmpty(string $tag): XmlDocumentWriter

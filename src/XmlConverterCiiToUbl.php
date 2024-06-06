@@ -1141,7 +1141,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 $this->source->whenExists(
                     './ram:SpecifiedTradePaymentTerms/ram:DirectDebitMandateID',
                     $invoiceHeaderSettlement,
-                    function ($DirectDebitMandateNode) use ($invoiceHeaderSettlement, $peymentMeansNode) {
+                    function ($DirectDebitMandateNode) use ($peymentMeansNode) {
                         $this->destination->startElement('cac:PaymentMandate');
                         $this->destination->element('cbc:ID', $DirectDebitMandateNode->nodeValue);
                         $this->source->whenExists(
@@ -1175,7 +1175,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $this->source->whenExists(
             './ram:SpecifiedTradePaymentTerms/ram:Description[string-length(text()) > 0]',
             $invoiceHeaderSettlement,
-            function ($peymentTermsDescriptionNode, $peymentTermsNode) {
+            function ($peymentTermsDescriptionNode) {
                 $this->destination->startElement('cac:PaymentTerms');
                 $this->destination->element('cbc:Note', $peymentTermsDescriptionNode->nodeValue);
                 $this->destination->endElement();

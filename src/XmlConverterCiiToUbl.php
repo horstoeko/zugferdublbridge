@@ -1114,6 +1114,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     function ($paymentMeansFinancialCardNode) {
                         $this->destination->startElement('cac:CardAccount');
                         $this->destination->element('cbc:PrimaryAccountNumberID', $this->source->queryValue('./ram:ID', $paymentMeansFinancialCardNode));
+                        $this->destination->element('cbc:NetworkID', 'mapped-from-cii');
                         $this->destination->element('cbc:HolderName', $this->source->queryValue('./ram:CardholderName', $paymentMeansFinancialCardNode));
                         $this->destination->endElement();
                     }
@@ -1172,11 +1173,11 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $invoiceHeaderSettlement = $this->source->query('./ram:ApplicableHeaderTradeSettlement', $invoiceSuppyChainTradeTransaction)->item(0);
 
         $this->source->whenExists(
-            './ram:SpecifiedTradePaymentTerms',
+            './ram:SpecifiedTradePaymentTerms/ram:Description[string-length(text()) > 0]',
             $invoiceHeaderSettlement,
-            function ($peymentTermsNode) {
+            function ($peymentTermsDescriptionNode, $peymentTermsNode) {
                 $this->destination->startElement('cac:PaymentTerms');
-                $this->destination->element('cbc:Note', $this->source->queryValue('./ram:Description', $peymentTermsNode));
+                $this->destination->element('cbc:Note', $peymentTermsDescriptionNode->nodeValue);
                 $this->destination->endElement();
             }
         );

@@ -278,6 +278,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     $invoiceHeaderAgreement,
                     function ($sellerOrderReferencedDocumentNode) {
                         $this->destination->startElement('cac:OrderReference');
+                        $this->destination->element('cbc:ID', 'Dummy');
                         $this->destination->element('cbc:SalesOrderID', $sellerOrderReferencedDocumentNode->nodeValue);
                         $this->destination->endElement();
                     }

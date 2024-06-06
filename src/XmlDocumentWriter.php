@@ -76,7 +76,7 @@ class XmlDocumentWriter extends XmlDocumentBase
         $this->splitNamespaceAndTag($tag, $newNameSpace, $newTag);
 
         if ($value) {
-            $value = trim($value);
+            //$value = trim($value);
             $value = htmlspecialchars($value);
         }
 
@@ -141,6 +141,19 @@ class XmlDocumentWriter extends XmlDocumentBase
         }
 
         $this->startElement($tag, $value)->endElement();
+
+        return $this;
+    }
+
+    /**
+     * Write single element with empty value
+     *
+     * @param string $tag
+     * @return XmlDocumentWriter
+     */
+    public function elementEmpty(string $tag): XmlDocumentWriter
+    {
+        $this->startElement($tag, '')->endElement();
 
         return $this;
     }

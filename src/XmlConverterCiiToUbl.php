@@ -461,7 +461,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 $this->source->whenExists(
                     './ram:Name',
                     $sellerTradePartyNode,
-                    function ($sellerTradePartyNameNode) use ($sellerTradePartyNode) {
+                    function () use ($sellerTradePartyNode) {
                         $this->source->whenExists(
                             './ram:SpecifiedLegalOrganization/ram:TradingBusinessName',
                             $sellerTradePartyNode,
@@ -612,7 +612,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 $this->source->whenExists(
                     './ram:Name',
                     $buyerTradePartyNode,
-                    function ($buyerTradePartyNameNode) use ($buyerTradePartyNode) {
+                    function () use ($buyerTradePartyNode) {
                         $this->source->whenExists(
                             './ram:SpecifiedLegalOrganization/ram:TradingBusinessName',
                             $buyerTradePartyNode,
@@ -829,15 +829,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     function ($payeeTradePartyLegalOrgNode) use ($payeeTradePartyNode) {
                         $this->destination->startElement('cac:PartyLegalEntity');
                         $this->destination->element('cbc:RegistrationName', $this->source->queryValue('./ram:Name', $payeeTradePartyNode));
-                        $this->source->whenExists(
-                            './ram:ID',
-                            $payeeTradePartyLegalOrgNode,
-                            function ($payeeTradePartyLegalOrgIdNode) {
-                                $this->destination->startElement('cbc:CompanyID', $payeeTradePartyLegalOrgIdNode->nodeValue);
-                                $this->destination->attribute('schemeID', $this->source->queryValue('./@schemeID', $payeeTradePartyLegalOrgIdNode));
-                                $this->destination->endElement();
-                            }
-                        );
+                        $this->destination->elementWithAttribute('cbc:CompanyID', $this->source->queryValue('./ram:ID', $payeeTradePartyLegalOrgNode), 'schemeID', $this->source->queryValue('./ram:ID/@schemeID', $payeeTradePartyLegalOrgNode));
                         $this->destination->element('cbc:CompanyLegalForm', $this->source->queryValue('./ram:Description', $payeeTradePartyNode));
                         $this->destination->endElement();
                     }
@@ -969,15 +961,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     function ($sellerTaxRepresentativePartyLegalOrgNode) use ($sellerTaxRepresentativePartyNode) {
                         $this->destination->startElement('cac:PartyLegalEntity');
                         $this->destination->element('cbc:RegistrationName', $this->source->queryValue('./ram:Name', $sellerTaxRepresentativePartyNode));
-                        $this->source->whenExists(
-                            './ram:ID',
-                            $sellerTaxRepresentativePartyLegalOrgNode,
-                            function ($sellerTaxRepresentativePartyLegalOrgIdNode) {
-                                $this->destination->startElement('cbc:CompanyID', $sellerTaxRepresentativePartyLegalOrgIdNode->nodeValue);
-                                $this->destination->attribute('schemeID', $this->source->queryValue('./@schemeID', $sellerTaxRepresentativePartyLegalOrgIdNode));
-                                $this->destination->endElement();
-                            }
-                        );
+                        $this->destination->elementWithAttribute('cbc:CompanyID', $this->source->queryValue('./ram:ID', $sellerTaxRepresentativePartyLegalOrgNode), 'schemeID', $this->source->queryValue('./ram:ID/@schemeID', $sellerTaxRepresentativePartyLegalOrgNode));
                         $this->destination->element('cbc:CompanyLegalForm', $this->source->queryValue('./ram:Description', $sellerTaxRepresentativePartyNode));
                         $this->destination->endElement();
                     }

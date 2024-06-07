@@ -76,7 +76,7 @@ class XmlDocumentWriter extends XmlDocumentBase
         $this->splitNamespaceAndTag($tag, $newNameSpace, $newTag);
 
         if ($value) {
-            //$value = trim($value);
+            $value = trim($value, ' ');
             $value = htmlspecialchars($value);
         }
 

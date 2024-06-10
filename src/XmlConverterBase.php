@@ -56,6 +56,28 @@ abstract class XmlConverterBase
     }
 
     /**
+     * Factory: Load from XML file
+     *
+     * @param  string $filename
+     * @return static
+     */
+    public static function fromFile(string $filename)
+    {
+        return (new static())->loadFromXmlFile($filename);
+    }
+
+    /**
+     * Factory: Load from XML stream
+     *
+     * @param  string $xmlData
+     * @return static
+     */
+    public static function fromString(string $xmlData)
+    {
+        return (new static())->loadFromXmlString($xmlData);
+    }
+
+    /**
      * Load source from XML string
      *
      * @param  string $source
@@ -108,6 +130,19 @@ abstract class XmlConverterBase
     }
 
     /**
+     * Convert
+     *
+     * @return static
+     */
+    public function convert()
+    {
+        $this->checkValidSource();
+        $this->doConvert();
+
+        return $this;
+    }
+
+    /**
      * Get the root namespace for the destination document
      *
      * @return string
@@ -129,9 +164,16 @@ abstract class XmlConverterBase
     protected abstract function getDestinationNamespaces(): array;
 
     /**
+     * Checks that the source is valid
+     *
+     * @return static
+     */
+    protected abstract function checkValidSource();
+
+    /**
      * Perform convert
      *
      * @return static
      */
-    protected abstract function convert();
+    protected abstract function doConvert();
 }

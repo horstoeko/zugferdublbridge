@@ -45,33 +45,32 @@ class XmlConverterCiiToUbl extends XmlConverterBase
     ];
 
     /**
+     * List of document types which represent an invoice
+     *
+     * @var string[]
+     */
+    private const INVOICE_TYPES = [
+        '80', '82', '84', '130', '202', '203', '204', '211', '295', '325', '326', '380', '383',
+        '384', '385', '386', '387', '388', '389', '390', '393', '394', '395', '456', '457', '527',
+        '575', '623', '633', '751', '780', '935',
+    ];
+
+    /**
+     * List of document types which represent a credit note
+     *
+     * @var string[]
+     */
+
+    private const CREDITNOTE_TYPES = [
+        '81', '83', '261', '262', '296', '308', '381', '396', '420', '458', '532',
+    ];
+
+    /**
      * Internal flag to disable amount formattting
      *
      * @var boolean
      */
     private $amountFormatDisabled = true;
-
-    /**
-     * Factory: Load from XML file
-     *
-     * @param  string $filename
-     * @return static
-     */
-    public static function fromFile(string $filename)
-    {
-        return (new static())->loadFromXmlFile($filename);
-    }
-
-    /**
-     * Factory: Load from XML stream
-     *
-     * @param  string $xmlData
-     * @return static
-     */
-    public static function fromString(string $xmlData)
-    {
-        return (new static())->loadFromXmlString($xmlData);
-    }
 
     /**
      * @inheritDoc
@@ -115,10 +114,8 @@ class XmlConverterCiiToUbl extends XmlConverterBase
      * @throws Exception
      * @throws RuntimeException
      */
-    public function convert()
+    public function doConvert()
     {
-        $this->checkValidSource();
-
         $this->convertGeneral();
         $this->convertSellerTradeParty();
         $this->convertBuyerTradeParty();
@@ -160,11 +157,9 @@ class XmlConverterCiiToUbl extends XmlConverterBase
     }
 
     /**
-     * Checks that the source is valid
-     *
-     * @return void
+     * @inheritDoc
      */
-    private function checkValidSource(): void
+    protected function checkValidSource()
     {
         $invoiceElement = $this->source->query('//rsm:CrossIndustryInvoice')->item(0);
         $invoiceExchangeDocumentContext = $this->source->query('./rsm:ExchangedDocumentContext', $invoiceElement)->item(0);

@@ -22,5 +22,5 @@ foreach ($xmlFilenames as $xmlFilename) {
     echo " - Source ... $xmlFilename" . PHP_EOL;
     echo " - Dest ..... $newXmlFilename" . PHP_EOL;
 
-    XmlConverterCiiToUbl::fromFile($xmlFilename)->convert()->saveXmlFile($newXmlFilename);
+    XmlConverterCiiToUbl::fromFile($xmlFilename)->enableAutomaticMode()->convert()->saveXmlFile($newXmlFilename);
 }

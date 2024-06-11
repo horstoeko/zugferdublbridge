@@ -42,7 +42,7 @@ class XmlDocumentWriter extends XmlDocumentBase
     {
         $this->internalDomDocument = new DOMDocument($version, $encoding);
         $this->internalDomDocument->formatOutput = true;
-        $root = $this->internalDomDocument->createElementNs("http://www.w3.org/2005/Atom", $tag);
+        $root = $this->internalDomDocument->createElement($tag);
         $this->internalDomDocument->appendChild($root);
 
         $this->stackPush($root);

@@ -10,9 +10,7 @@
 namespace horstoeko\zugferdublbridge;
 
 use DateTime;
-use DOMException;
 use Exception;
-use RuntimeException;
 
 /**
  * Class representing the converter from CII syntax to UBL syntax
@@ -71,6 +69,13 @@ class XmlConverterCiiToUbl extends XmlConverterBase
      * @var boolean
      */
     private $amountFormatDisabled = true;
+
+    /**
+     * Internal flag to disable the automatic detection of Invoice or CreditNote
+     *
+     * @var boolean
+     */
+    private $automaticModeDisabled = true;
 
     /**
      * @inheritDoc
@@ -168,12 +173,40 @@ class XmlConverterCiiToUbl extends XmlConverterBase
     }
 
     /**
+     * Disable automatic detection of Invoice/CreditNote
+     *
+     * @return XmlConverterCiiToUbl
+     */
+    public function disableAutomaticMode(): XmlConverterCiiToUbl
+    {
+        $this->automaticModeDisabled = true;
+
+        return $this;
+    }
+
+    /**
+     * Enable automatic detection of Invoice/CreditNote
+     *
+     * @return XmlConverterCiiToUbl
+     */
+    public function enableAutomaticMode(): XmlConverterCiiToUbl
+    {
+        $this->automaticModeDisabled = false;
+
+        return $this;
+    }
+
+    /**
      * Check if the docukment is a credit note.
      *
      * @return void
      */
     private function checkForCreditNote(): void
     {
+        if ($this->automaticModeDisabled === true) {
+            return;
+        }
+
         $invoiceElement = $this->source->query('//rsm:CrossIndustryInvoice')->item(0);
         $invoiceExchangeDocument = $this->source->query('./rsm:ExchangedDocument', $invoiceElement)->item(0);
 

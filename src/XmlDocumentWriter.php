@@ -234,6 +234,36 @@ class XmlDocumentWriter extends XmlDocumentBase
     }
 
     /**
+     * Change the root of the document
+     *
+     * @param string $newRoot
+     * @return XmlDocumentWriter
+     */
+    public function changeRoot(string $newRoot): XmlDocumentWriter
+    {
+        $oldRoot = $this->internalDomDocument->documentElement;
+        $newRoot = $this->internalDomDocument->createElementNs("http://www.w3.org/2005/Atom", $newRoot);
+
+        foreach ($oldRoot->attributes as $attr) {
+            $newRoot->setAttribute($attr->nodeName, $attr->nodeValue);
+        }
+
+        while ($oldRoot->firstChild) {
+            $newRoot->appendChild($oldRoot->firstChild);
+        }
+
+        $this->internalDomDocument->replaceChild($newRoot, $oldRoot);
+
+        foreach ($this->registeredNamespaces as $namespace => $value) {
+            $this->internalDomDocument->documentElement->setAttributeNS('http://www.w3.org/2000/xmlns/', sprintf('xmlns:%s', $namespace), $value);
+        }
+
+        $this->internalNavigatorStack[0] = $newRoot;
+
+        return $this;
+    }
+
+    /**
      * Get XML as a string
      *
      * @return string

@@ -107,15 +107,26 @@ class XmlConverterCiiToUbl extends XmlConverterBase
     }
 
     /**
-     * Perform conversion
-     *
-     * @return static
-     * @throws DOMException
-     * @throws Exception
-     * @throws RuntimeException
+     * @inheritDoc
      */
-    public function doConvert()
+    protected function checkValidSource()
     {
+        $invoiceElement = $this->source->query('//rsm:CrossIndustryInvoice')->item(0);
+        $invoiceExchangeDocumentContext = $this->source->query('./rsm:ExchangedDocumentContext', $invoiceElement)->item(0);
+
+        $submittedProfile = $this->source->queryValue('./ram:GuidelineSpecifiedDocumentContextParameter/ram:ID', $invoiceExchangeDocumentContext);
+
+        if (!in_array($submittedProfile, static::SUPPORTED_PROFILES)) {
+            throw new \RuntimeException(sprintf('The submitted profile %s is not supported', $submittedProfile));
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function doConvert()
+    {
+        $this->checkForCreditNote();
         $this->convertGeneral();
         $this->convertSellerTradeParty();
         $this->convertBuyerTradeParty();
@@ -157,18 +168,21 @@ class XmlConverterCiiToUbl extends XmlConverterBase
     }
 
     /**
-     * @inheritDoc
+     * Check if the docukment is a credit note.
+     *
+     * @return void
      */
-    protected function checkValidSource()
+    private function checkForCreditNote(): void
     {
         $invoiceElement = $this->source->query('//rsm:CrossIndustryInvoice')->item(0);
-        $invoiceExchangeDocumentContext = $this->source->query('./rsm:ExchangedDocumentContext', $invoiceElement)->item(0);
+        $invoiceExchangeDocument = $this->source->query('./rsm:ExchangedDocument', $invoiceElement)->item(0);
 
-        $submittedProfile = $this->source->queryValue('./ram:GuidelineSpecifiedDocumentContextParameter/ram:ID', $invoiceExchangeDocumentContext);
-
-        if (!in_array($submittedProfile, static::SUPPORTED_PROFILES)) {
-            throw new \RuntimeException(sprintf('The submitted profile %s is not supported', $submittedProfile));
+        if (!in_array($this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument), static::CREDITNOTE_TYPES)) {
+            return;
         }
+
+        $this->destination->addNamespace('ubl', 'urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2');
+        $this->destination->changeRoot('ubl:CreditNote');
     }
 
     /**

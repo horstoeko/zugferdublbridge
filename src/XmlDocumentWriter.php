@@ -29,7 +29,7 @@ class XmlDocumentWriter extends XmlDocumentBase
      *
      * @var DOMElement[]
      */
-    private $internalNavigatorStack = [];
+    private $stack = [];
 
     /**
      * Constructor
@@ -111,23 +111,6 @@ class XmlDocumentWriter extends XmlDocumentBase
     }
 
     /**
-     * Start an element if $condition meets
-     *
-     * @param  boolean $condition
-     * @param  string  $tag
-     * @param  string  $value
-     * @return XmlDocumentWriter
-     */
-    public function startElementIf(bool $condition, string $tag, string $value = ''): XmlDocumentWriter
-    {
-        if ($condition) {
-            $this->startElement($tag, $value);
-        }
-
-        return $this;
-    }
-
-    /**
      * Write a single element
      *
      * @param  string $tag
@@ -146,14 +129,18 @@ class XmlDocumentWriter extends XmlDocumentBase
     }
 
     /**
-     * Write single element with empty value
+     * Write a single element if $condition is true
      *
-     * @param  string $tag
+     * @param boolean $condition
+     * @param string $tag
+     * @param string|null $value
      * @return XmlDocumentWriter
      */
-    public function elementEmpty(string $tag): XmlDocumentWriter
+    public function elementIf(bool $condition, string $tag, ?string $value = ''): XmlDocumentWriter
     {
-        $this->startElement($tag, '')->endElement();
+        if ($condition) {
+            $this->element($tag, $value);
+        }
 
         return $this;
     }
@@ -258,7 +245,7 @@ class XmlDocumentWriter extends XmlDocumentBase
             $this->internalDomDocument->documentElement->setAttributeNS('http://www.w3.org/2000/xmlns/', sprintf('xmlns:%s', $namespace), $value);
         }
 
-        $this->internalNavigatorStack[0] = $newRoot;
+        $this->stack[0] = $newRoot;
 
         return $this;
     }
@@ -292,7 +279,7 @@ class XmlDocumentWriter extends XmlDocumentBase
      */
     private function stackPush(\DOMElement $node): void
     {
-        array_push($this->internalNavigatorStack, $node);
+        array_push($this->stack, $node);
     }
 
     /**
@@ -302,7 +289,7 @@ class XmlDocumentWriter extends XmlDocumentBase
      */
     private function stackPeek(): \DOMElement
     {
-        return end($this->internalNavigatorStack);
+        return end($this->stack);
     }
 
     /**
@@ -312,10 +299,10 @@ class XmlDocumentWriter extends XmlDocumentBase
      */
     private function stackPop(): \DOMElement
     {
-        if (count($this->internalNavigatorStack) === 1) {
+        if (count($this->stack) === 1) {
             throw new \Exception("First level already reached");
         }
 
-        return array_pop($this->internalNavigatorStack);
+        return array_pop($this->stack);
     }
 }

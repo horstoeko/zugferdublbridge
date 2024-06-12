@@ -263,21 +263,17 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             )
         );
 
-        if (!$this->getIsCreditNote()) {
-            $this->destination->element(
-                'cbc:DueDate',
-                $this->convertDateTime(
-                    $this->source->queryValue('./ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString', $invoiceHeaderSettlement),
-                    $this->source->queryValue('./ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString/@format', $invoiceHeaderSettlement)
-                )
-            );
-        }
+        $this->destination->elementIf(
+            !$this->getIsCreditNote(),
+            'cbc:DueDate',
+            $this->convertDateTime(
+                $this->source->queryValue('./ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString', $invoiceHeaderSettlement),
+                $this->source->queryValue('./ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString/@format', $invoiceHeaderSettlement)
+            )
+        );
 
-        if ($this->getIsCreditNote()) {
-            $this->destination->element('cbc:CreditNoteTypeCode', $this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument));
-        } else {
-            $this->destination->element('cbc:InvoiceTypeCode', $this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument));
-        }
+        $this->destination->elementIf($this->getIsCreditNote(), 'cbc:CreditNoteTypeCode', $this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument));
+        $this->destination->elementIf(!$this->getIsCreditNote(), 'cbc:InvoiceTypeCode', $this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument));
 
         $this->source->queryValues('./ram:IncludedNote', $invoiceExchangeDocument)->forEach(
             function ($includedNoteNode) {
@@ -289,15 +285,14 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             }
         );
 
-        if (!$this->getIsCreditNote()) {
-            $this->destination->element(
-                'cbc:TaxPointDate',
-                $this->convertDateTime(
-                    $this->source->queryValue('./ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString', $invoiceHeaderSettlement),
-                    $this->source->queryValue('./ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString/@format', $invoiceHeaderSettlement)
-                )
-            );
-        }
+        $this->destination->elementIf(
+            !$this->getIsCreditNote(),
+            'cbc:TaxPointDate',
+            $this->convertDateTime(
+                $this->source->queryValue('./ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString', $invoiceHeaderSettlement),
+                $this->source->queryValue('./ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString/@format', $invoiceHeaderSettlement)
+            )
+        );
 
         $this->destination->element('cbc:DocumentCurrencyCode', $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement));
 

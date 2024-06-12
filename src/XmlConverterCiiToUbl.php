@@ -78,6 +78,13 @@ class XmlConverterCiiToUbl extends XmlConverterBase
     private $automaticModeDisabled = true;
 
     /**
+     * Internal flag that indicated that the source is a credit note
+     *
+     * @var boolean|null
+     */
+    private $isCreditNoteSource = null;
+
+    /**
      * @inheritDoc
      */
     protected function getDestinationRoot(): string
@@ -197,20 +204,30 @@ class XmlConverterCiiToUbl extends XmlConverterBase
     }
 
     /**
+     * Returns true if source is a credit note, otherwise false
+     *
+     * @return boolean
+     */
+    private function getIsCreditNote(): bool
+    {
+        if ($this->automaticModeDisabled === true) {
+            return false;
+        }
+
+        $invoiceElement = $this->source->query('//rsm:CrossIndustryInvoice')->item(0);
+        $invoiceExchangeDocument = $this->source->query('./rsm:ExchangedDocument', $invoiceElement)->item(0);
+
+        return in_array($this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument), static::CREDITNOTE_TYPES);
+    }
+
+    /**
      * Check if the docukment is a credit note.
      *
      * @return void
      */
     private function checkForCreditNote(): void
     {
-        if ($this->automaticModeDisabled === true) {
-            return;
-        }
-
-        $invoiceElement = $this->source->query('//rsm:CrossIndustryInvoice')->item(0);
-        $invoiceExchangeDocument = $this->source->query('./rsm:ExchangedDocument', $invoiceElement)->item(0);
-
-        if (!in_array($this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument), static::CREDITNOTE_TYPES)) {
+        if (!$this->getIsCreditNote()) {
             return;
         }
 
@@ -246,15 +263,21 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             )
         );
 
-        $this->destination->element(
-            'cbc:DueDate',
-            $this->convertDateTime(
-                $this->source->queryValue('./ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString', $invoiceHeaderSettlement),
-                $this->source->queryValue('./ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString/@format', $invoiceHeaderSettlement)
-            )
-        );
+        if (!$this->getIsCreditNote()) {
+            $this->destination->element(
+                'cbc:DueDate',
+                $this->convertDateTime(
+                    $this->source->queryValue('./ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString', $invoiceHeaderSettlement),
+                    $this->source->queryValue('./ram:SpecifiedTradePaymentTerms/ram:DueDateDateTime/udt:DateTimeString/@format', $invoiceHeaderSettlement)
+                )
+            );
+        }
 
-        $this->destination->element('cbc:InvoiceTypeCode', $this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument));
+        if ($this->getIsCreditNote()) {
+            $this->destination->element('cbc:CreditNoteTypeCode', $this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument));
+        } else {
+            $this->destination->element('cbc:InvoiceTypeCode', $this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument));
+        }
 
         $this->source->queryValues('./ram:IncludedNote', $invoiceExchangeDocument)->forEach(
             function ($includedNoteNode) {
@@ -266,13 +289,15 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             }
         );
 
-        $this->destination->element(
-            'cbc:TaxPointDate',
-            $this->convertDateTime(
-                $this->source->queryValue('./ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString', $invoiceHeaderSettlement),
-                $this->source->queryValue('./ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString/@format', $invoiceHeaderSettlement)
-            )
-        );
+        if (!$this->getIsCreditNote()) {
+            $this->destination->element(
+                'cbc:TaxPointDate',
+                $this->convertDateTime(
+                    $this->source->queryValue('./ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString', $invoiceHeaderSettlement),
+                    $this->source->queryValue('./ram:ApplicableTradeTax/ram:TaxPointDate/udt:DateString/@format', $invoiceHeaderSettlement)
+                )
+            );
+        }
 
         $this->destination->element('cbc:DocumentCurrencyCode', $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement));
 
@@ -363,88 +388,97 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             }
         );
 
-        $this->source->queryValues('./ram:AdditionalReferencedDocument', $invoiceHeaderAgreement)->forEach(
-            function ($nodeFound) {
-                $this->source->whenEquals(
-                    './ram:TypeCode',
-                    $nodeFound,
-                    '50',
-                    function () use ($nodeFound) {
-                        $this->destination->startElement('cac:OriginatorDocumentReference');
-                        $this->destination->element('cbc:ID', $this->source->queryValue('./ram:IssuerAssignedID', $nodeFound));
+        $addDocuments = $this->getIsCreditNote() ? ['CON', 'ADD', 'ORI'] : ['ORI', 'CON', 'ADD', 'PRJ'];
+
+        foreach ($addDocuments as $addDocument) {
+            if ($addDocument == 'CON') {
+                $this->source->queryValues('./ram:ContractReferencedDocument/ram:IssuerAssignedID', $invoiceHeaderAgreement)->forEach(
+                    function ($nodeFound) {
+                        $this->destination->startElement('cac:ContractDocumentReference');
+                        $this->destination->element('cbc:ID', $nodeFound->nodeValue);
                         $this->destination->endElement();
                     }
                 );
             }
-        );
 
-        $this->source->queryValues('./ram:ContractReferencedDocument/ram:IssuerAssignedID', $invoiceHeaderAgreement)->forEach(
-            function ($nodeFound) {
-                $this->destination->startElement('cac:ContractDocumentReference');
-                $this->destination->element('cbc:ID', $nodeFound->nodeValue);
-                $this->destination->endElement();
-            }
-        );
-
-        $this->source->queryValues('./ram:AdditionalReferencedDocument', $invoiceHeaderAgreement)->forEach(
-            function ($additionalReferencedDocumentNode) {
-                $this->source->whenNotEquals(
-                    './ram:TypeCode',
-                    $additionalReferencedDocumentNode,
-                    '50',
-                    function () use ($additionalReferencedDocumentNode) {
-                        $this->destination->startElement('cac:AdditionalDocumentReference');
-                        $this->destination->element('cbc:ID', $this->source->queryValue('./ram:IssuerAssignedID', $additionalReferencedDocumentNode));
-                        $this->source->whenEquals(
+            if ($addDocument == 'ADD') {
+                $this->source->queryValues('./ram:AdditionalReferencedDocument', $invoiceHeaderAgreement)->forEach(
+                    function ($additionalReferencedDocumentNode) {
+                        $this->source->whenNotEquals(
                             './ram:TypeCode',
                             $additionalReferencedDocumentNode,
-                            '130',
+                            '50',
                             function () use ($additionalReferencedDocumentNode) {
-                                $this->destination->element('cbc:DocumentTypeCode', $this->source->queryValue('./ram:TypeCode', $additionalReferencedDocumentNode));
-                            }
-                        );
-                        $this->destination->element('cbc:DocumentDescription', $this->source->queryValue('./ram:Name', $additionalReferencedDocumentNode));
-                        $this->source->whenExists(
-                            './ram:AttachmentBinaryObject',
-                            $additionalReferencedDocumentNode,
-                            function ($attachmentBinaryObjectNode, $additionalReferencedDocumentNode) {
-                                $this->destination->startElement('cac:Attachment');
-                                $this->destination->elementWithMultipleAttributes(
-                                    'cbc:EmbeddedDocumentBinaryObject',
-                                    $attachmentBinaryObjectNode->nodeValue,
-                                    [
-                                        'mimeCode' => $attachmentBinaryObjectNode->getAttribute('mimeCode'),
-                                        'filename' => $attachmentBinaryObjectNode->getAttribute('filename'),
-                                    ]
-                                );
-                                $this->source->whenExists(
-                                    './ram:URIID',
+                                $this->destination->startElement('cac:AdditionalDocumentReference');
+                                $this->destination->element('cbc:ID', $this->source->queryValue('./ram:IssuerAssignedID', $additionalReferencedDocumentNode));
+                                $this->source->whenEquals(
+                                    './ram:TypeCode',
                                     $additionalReferencedDocumentNode,
-                                    function ($uriIdNode) {
-                                        $this->destination->startElement('cac:ExternalReference');
-                                        $this->destination->element('cbc:URI', $uriIdNode->nodeValue);
+                                    '130',
+                                    function () use ($additionalReferencedDocumentNode) {
+                                        $this->destination->element('cbc:DocumentTypeCode', $this->source->queryValue('./ram:TypeCode', $additionalReferencedDocumentNode));
+                                    }
+                                );
+                                $this->destination->element('cbc:DocumentDescription', $this->source->queryValue('./ram:Name', $additionalReferencedDocumentNode));
+                                $this->source->whenExists(
+                                    './ram:AttachmentBinaryObject',
+                                    $additionalReferencedDocumentNode,
+                                    function ($attachmentBinaryObjectNode, $additionalReferencedDocumentNode) {
+                                        $this->destination->startElement('cac:Attachment');
+                                        $this->destination->elementWithMultipleAttributes(
+                                            'cbc:EmbeddedDocumentBinaryObject',
+                                            $attachmentBinaryObjectNode->nodeValue,
+                                            [
+                                                'mimeCode' => $attachmentBinaryObjectNode->getAttribute('mimeCode'),
+                                                'filename' => $attachmentBinaryObjectNode->getAttribute('filename'),
+                                            ]
+                                        );
+                                        $this->source->whenExists(
+                                            './ram:URIID',
+                                            $additionalReferencedDocumentNode,
+                                            function ($uriIdNode) {
+                                                $this->destination->startElement('cac:ExternalReference');
+                                                $this->destination->element('cbc:URI', $uriIdNode->nodeValue);
+                                                $this->destination->endElement();
+                                            }
+                                        );
                                         $this->destination->endElement();
                                     }
                                 );
                                 $this->destination->endElement();
                             }
                         );
+                    }
+                );
+            }
+
+            if ($addDocument == 'ORI') {
+                $this->source->queryValues('./ram:AdditionalReferencedDocument', $invoiceHeaderAgreement)->forEach(
+                    function ($nodeFound) {
+                        $this->source->whenEquals(
+                            './ram:TypeCode',
+                            $nodeFound,
+                            '50',
+                            function () use ($nodeFound) {
+                                $this->destination->startElement('cac:OriginatorDocumentReference');
+                                $this->destination->element('cbc:ID', $this->source->queryValue('./ram:IssuerAssignedID', $nodeFound));
+                                $this->destination->endElement();
+                            }
+                        );
+                    }
+                );
+            }
+
+            if ($addDocument == 'PRJ') {
+                $this->source->queryValues('./ram:SpecifiedProcuringProject/ram:ID', $invoiceHeaderAgreement)->forEach(
+                    function ($nodeFound) {
+                        $this->destination->startElement('cac:ProjectReference');
+                        $this->destination->element('cbc:ID', $nodeFound->nodeValue);
                         $this->destination->endElement();
                     }
                 );
             }
-        );
-
-        //TODO: See Mapping lines 42..45
-        //TODO: See Mapping lines 47..51
-
-        $this->source->queryValues('./ram:SpecifiedProcuringProject/ram:ID', $invoiceHeaderAgreement)->forEach(
-            function ($nodeFound) {
-                $this->destination->startElement('cac:ProjectReference');
-                $this->destination->element('cbc:ID', $nodeFound->nodeValue);
-                $this->destination->endElement();
-            }
-        );
+        }
     }
 
     /**
@@ -1410,11 +1444,11 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     $invoiceSuppyChainTradeTransaction
                 )->forEach(
                     function ($tradeLineItemNode) use ($invoiceHeaderSettlement) {
-                        $this->destination->startElement('cac:InvoiceLine');
+                        $this->destination->startElement($this->getIsCreditNote() ? 'cac:CreditNoteLine' : 'cac:InvoiceLine');
                         $this->destination->element('cbc:ID', $this->source->queryValue('./ram:AssociatedDocumentLineDocument/ram:LineID', $tradeLineItemNode));
                         $this->destination->element('cbc:Note', $this->source->queryValue('./ram:AssociatedDocumentLineDocument/ram:IncludedNote/ram:Content', $tradeLineItemNode));
                         $this->destination->elementWithAttribute(
-                            'cbc:InvoicedQuantity',
+                            $this->getIsCreditNote() ? 'cbc:CreditedQuantity' : 'cbc:InvoicedQuantity',
                             $this->source->queryValue('./ram:SpecifiedLineTradeDelivery/ram:BilledQuantity', $tradeLineItemNode),
                             'unitCode',
                             $this->source->queryValue('./ram:SpecifiedLineTradeDelivery/ram:BilledQuantity/@unitCode', $tradeLineItemNode)

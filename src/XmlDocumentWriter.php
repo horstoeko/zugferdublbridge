@@ -236,7 +236,7 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Change the root of the document
      *
-     * @param string $newRoot
+     * @param  string $newRoot
      * @return XmlDocumentWriter
      */
     public function changeRoot(string $newRoot): XmlDocumentWriter

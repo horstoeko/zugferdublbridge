@@ -131,9 +131,9 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Write a single element if $condition is true
      *
-     * @param boolean $condition
-     * @param string $tag
-     * @param string|null $value
+     * @param  boolean     $condition
+     * @param  string      $tag
+     * @param  string|null $value
      * @return XmlDocumentWriter
      */
     public function elementIf(bool $condition, string $tag, ?string $value = ''): XmlDocumentWriter

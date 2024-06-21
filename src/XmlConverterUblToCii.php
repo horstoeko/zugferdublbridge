@@ -406,13 +406,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                                 $this->destination->element('ram:TradingBusinessName', $invoiceAccountingSupplierPartyNameNode->nodeValue);
                             },
                             function () use ($invoiceAccountingSupplierPartyLegalEntityNode) {
-                                $this->source->whenExists(
-                                    './cbc:RegistrationName',
-                                    $invoiceAccountingSupplierPartyLegalEntityNode,
-                                    function ($invoiceAccountingSupplierPartyLegalEntityRegNameNode) {
-                                        $this->destination->element('ram:TradingBusinessName', $invoiceAccountingSupplierPartyLegalEntityRegNameNode->nodeValue);
-                                    }
-                                );
+                                $this->destination->element('ram:TradingBusinessName', $this->source->queryValue('./cbc:RegistrationName', $invoiceAccountingSupplierPartyLegalEntityNode));
                             }
                         );
                         $this->destination->endElement();

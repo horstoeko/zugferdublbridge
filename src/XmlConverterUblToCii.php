@@ -197,9 +197,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                 $this->destination->endElement();
             }
         );
-        $this->source->whenExists(
-            './cbc:Note',
-            $docRootElement,
+        $this->source->queryAll('./cbc:Note', $docRootElement)->foreach(
             function ($noteNode) {
                 $splittedNode = explode('#', $noteNode->nodeValue);
                 if (count($splittedNode) > 2) {
@@ -416,18 +414,24 @@ class XmlConverterUblToCii extends XmlConverterBase
                     }
                 );
                 $this->source->whenExists(
-                    './cac:Contact', $invoiceAccountingSupplierPartyNode, function ($invoiceAccountingSupplierPartyContactNode) {
+                    './cac:Contact',
+                    $invoiceAccountingSupplierPartyNode,
+                    function ($invoiceAccountingSupplierPartyContactNode) {
                         $this->destination->startElement('ram:DefinedTradeContact');
                         $this->destination->element('ram:PersonName', $this->source->queryValue('./cbc:Name', $invoiceAccountingSupplierPartyContactNode));
                         $this->source->whenExists(
-                            './cbc:Telephone', $invoiceAccountingSupplierPartyContactNode, function ($invoiceAccountingSupplierPartyContactPhoneNode) {
+                            './cbc:Telephone',
+                            $invoiceAccountingSupplierPartyContactNode,
+                            function ($invoiceAccountingSupplierPartyContactPhoneNode) {
                                 $this->destination->startElement('ram:TelephoneUniversalCommunication');
                                 $this->destination->element('ram:CompleteNumber', $invoiceAccountingSupplierPartyContactPhoneNode->nodeValue);
                                 $this->destination->endElement();
                             }
                         );
                         $this->source->whenExists(
-                            './cbc:ElectronicMail', $invoiceAccountingSupplierPartyContactNode, function ($invoiceAccountingSupplierPartyContactMailNode) {
+                            './cbc:ElectronicMail',
+                            $invoiceAccountingSupplierPartyContactNode,
+                            function ($invoiceAccountingSupplierPartyContactMailNode) {
                                 $this->destination->startElement('ram:EmailURIUniversalCommunication');
                                 $this->destination->element('ram:URIID', $invoiceAccountingSupplierPartyContactMailNode->nodeValue);
                                 $this->destination->endElement();
@@ -437,34 +441,187 @@ class XmlConverterUblToCii extends XmlConverterBase
                     }
                 );
                 $this->source->whenExists(
-                    './cac:PostalAddress', $invoiceAccountingSupplierPartyNode, function ($invoiceAccountingSupplierPartyPostalAddressNode) {
+                    './cac:PostalAddress',
+                    $invoiceAccountingSupplierPartyNode,
+                    function ($invoiceAccountingSupplierPartyPostalAddressNode) {
                         $this->destination->startElement('ram:PostalTradeAddress');
                         $this->destination->element('ram:PostcodeCode', $this->source->queryValue('./cbc:PostalZone', $invoiceAccountingSupplierPartyPostalAddressNode));
                         $this->destination->element('ram:LineOne', $this->source->queryValue('./cbc:StreetName', $invoiceAccountingSupplierPartyPostalAddressNode));
                         $this->destination->element('ram:LineTwo', $this->source->queryValue('./cbc:AdditionalStreetName', $invoiceAccountingSupplierPartyPostalAddressNode));
+                        $this->destination->element('ram:LineThree', $this->source->queryValue('./cac:AddressLine/cbc:Line', $invoiceAccountingSupplierPartyPostalAddressNode));
                         $this->destination->element('ram:CityName', $this->source->queryValue('./cbc:CityName', $invoiceAccountingSupplierPartyPostalAddressNode));
                         $this->destination->element('ram:CountryID', $this->source->queryValue('./cac:Country/cbc:IdentificationCode', $invoiceAccountingSupplierPartyPostalAddressNode));
                         $this->destination->endElement();
                     }
                 );
                 $this->source->whenExists(
-                    './cbc:EndpointID[@schemeID=\'EM\']', $invoiceAccountingSupplierPartyNode, function ($invoiceAccountingSupplierPartyEndpointNode) {
+                    './cbc:EndpointID[@schemeID=\'EM\']',
+                    $invoiceAccountingSupplierPartyNode,
+                    function ($invoiceAccountingSupplierPartyEndpointNode) {
                         $this->destination->startElement('ram:URIUniversalCommunication');
                         $this->destination->elementWithAttribute('ram:URIID', $invoiceAccountingSupplierPartyEndpointNode->nodeValue, 'schemeID', 'EM');
                         $this->destination->endElement();
                     }
                 );
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'VAT\']', $invoiceAccountingSupplierPartyNode, function ($invoiceAccountingSupplierPartyTaxSchemeNode) {
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'VAT\']',
+                    $invoiceAccountingSupplierPartyNode,
+                    function ($invoiceAccountingSupplierPartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');
                         $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingSupplierPartyTaxSchemeNode), 'schemeID', 'VA');
                         $this->destination->endElement();
                     }
                 );
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']', $invoiceAccountingSupplierPartyNode, function ($invoiceAccountingSupplierPartyTaxSchemeNode) {
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
+                    $invoiceAccountingSupplierPartyNode,
+                    function ($invoiceAccountingSupplierPartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');
                         $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingSupplierPartyTaxSchemeNode), 'schemeID', 'FC');
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'???\']',
+                    $invoiceAccountingSupplierPartyNode,
+                    function ($invoiceAccountingSupplierPartyTaxSchemeNode) {
+                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
+                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingSupplierPartyTaxSchemeNode), 'schemeID', 'FC');
+                        $this->destination->endElement();
+                    }
+                );
+                $this->destination->endElement();
+            }
+        );
+
+        $this->source->whenExists(
+            './cac:AccountingCustomerParty/cac:Party',
+            $docRootElement,
+            function ($invoiceAccountingCustomerPartyNode) {
+                $this->destination->startElement('ram:BuyerTradeParty');
+                $this->source->queryAll('./cac:PartyIdentification/cbc:ID[not(@schemeID)]', $invoiceAccountingCustomerPartyNode)->forEach(
+                    function ($invoiceAccountingCustomerPartyIdNode) {
+                        $this->destination->element('ram:ID', $invoiceAccountingCustomerPartyIdNode->nodeValue);
+                    }
+                );
+                $this->source->queryAll('./cac:PartyIdentification/cbc:ID[@schemeID]', $invoiceAccountingCustomerPartyNode)->forEach(
+                    function ($invoiceAccountingCustomerPartyIdNode) {
+                        $this->destination->elementWithAttribute('ram:GlobalID', $invoiceAccountingCustomerPartyIdNode->nodeValue, 'schemeID', $invoiceAccountingCustomerPartyIdNode->getAttribute('schemeID'));
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PartyLegalEntity/cbc:RegistrationName',
+                    $invoiceAccountingCustomerPartyNode,
+                    function ($invoiceAccountingCustomerPartyLegalEntityNode) {
+                        $this->destination->element('ram:Name', $invoiceAccountingCustomerPartyLegalEntityNode->nodeValue);
+                    },
+                    function () use ($invoiceAccountingCustomerPartyNode) {
+                        $this->destination->element('ram:Name', $this->source->queryValue('./cac:PartyName/cbc:Name', $invoiceAccountingCustomerPartyNode));
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PartyLegalEntity/cbc:CompanyLegalForm',
+                    $invoiceAccountingCustomerPartyNode,
+                    function ($invoiceAccountingCustomerPartyLegalEntityNode) {
+                        $this->destination->element('ram:Description', $invoiceAccountingCustomerPartyLegalEntityNode->nodeValue);
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PartyLegalEntity',
+                    $invoiceAccountingCustomerPartyNode,
+                    function ($invoiceAccountingCustomerPartyLegalEntityNode) use ($invoiceAccountingCustomerPartyNode) {
+                        $this->destination->startElement('ram:SpecifiedLegalOrganization');
+                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('./cbc:CompanyID', $invoiceAccountingCustomerPartyLegalEntityNode), 'schemeID', $this->source->queryValue('./cbc:CompanyID/@schemeID', $invoiceAccountingCustomerPartyLegalEntityNode));
+                        $this->source->whenExists(
+                            './cac:PartyName/cbc:Name',
+                            $invoiceAccountingCustomerPartyNode,
+                            function ($invoiceAccountingCustomerPartyNameNode) {
+                                $this->destination->element('ram:TradingBusinessName', $invoiceAccountingCustomerPartyNameNode->nodeValue);
+                            },
+                            function () use ($invoiceAccountingCustomerPartyLegalEntityNode) {
+                                $this->destination->element('ram:TradingBusinessName', $this->source->queryValue('./cbc:RegistrationName', $invoiceAccountingCustomerPartyLegalEntityNode));
+                            }
+                        );
+                        $this->destination->endElement();
+                    },
+                    function () {
+                        //TODO: Implement or delete
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:Contact',
+                    $invoiceAccountingCustomerPartyNode,
+                    function ($invoiceAccountingCustomerPartyContactNode) {
+                        $this->destination->startElement('ram:DefinedTradeContact');
+                        $this->destination->element('ram:PersonName', $this->source->queryValue('./cbc:Name', $invoiceAccountingCustomerPartyContactNode));
+                        $this->source->whenExists(
+                            './cbc:Telephone',
+                            $invoiceAccountingCustomerPartyContactNode,
+                            function ($invoiceAccountingCustomerPartyContactPhoneNode) {
+                                $this->destination->startElement('ram:TelephoneUniversalCommunication');
+                                $this->destination->element('ram:CompleteNumber', $invoiceAccountingCustomerPartyContactPhoneNode->nodeValue);
+                                $this->destination->endElement();
+                            }
+                        );
+                        $this->source->whenExists(
+                            './cbc:ElectronicMail',
+                            $invoiceAccountingCustomerPartyContactNode,
+                            function ($invoiceAccountingCustomerPartyContactMailNode) {
+                                $this->destination->startElement('ram:EmailURIUniversalCommunication');
+                                $this->destination->element('ram:URIID', $invoiceAccountingCustomerPartyContactMailNode->nodeValue);
+                                $this->destination->endElement();
+                            }
+                        );
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PostalAddress',
+                    $invoiceAccountingCustomerPartyNode,
+                    function ($invoiceAccountingCustomerPartyPostalAddressNode) {
+                        $this->destination->startElement('ram:PostalTradeAddress');
+                        $this->destination->element('ram:PostcodeCode', $this->source->queryValue('./cbc:PostalZone', $invoiceAccountingCustomerPartyPostalAddressNode));
+                        $this->destination->element('ram:LineOne', $this->source->queryValue('./cbc:StreetName', $invoiceAccountingCustomerPartyPostalAddressNode));
+                        $this->destination->element('ram:LineTwo', $this->source->queryValue('./cbc:AdditionalStreetName', $invoiceAccountingCustomerPartyPostalAddressNode));
+                        $this->destination->element('ram:LineThree', $this->source->queryValue('./cac:AddressLine/cbc:Line', $invoiceAccountingCustomerPartyPostalAddressNode));
+                        $this->destination->element('ram:CityName', $this->source->queryValue('./cbc:CityName', $invoiceAccountingCustomerPartyPostalAddressNode));
+                        $this->destination->element('ram:CountryID', $this->source->queryValue('./cac:Country/cbc:IdentificationCode', $invoiceAccountingCustomerPartyPostalAddressNode));
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cbc:EndpointID[@schemeID=\'EM\']',
+                    $invoiceAccountingCustomerPartyNode,
+                    function ($invoiceAccountingCustomerPartyEndpointNode) {
+                        $this->destination->startElement('ram:URIUniversalCommunication');
+                        $this->destination->elementWithAttribute('ram:URIID', $invoiceAccountingCustomerPartyEndpointNode->nodeValue, 'schemeID', 'EM');
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'VAT\']',
+                    $invoiceAccountingCustomerPartyNode,
+                    function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
+                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
+                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingCustomerPartyTaxSchemeNode), 'schemeID', 'VA');
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
+                    $invoiceAccountingCustomerPartyNode,
+                    function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
+                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
+                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingCustomerPartyTaxSchemeNode), 'schemeID', 'FC');
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'???\']',
+                    $invoiceAccountingCustomerPartyNode,
+                    function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
+                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
+                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingCustomerPartyTaxSchemeNode), 'schemeID', 'FC');
                         $this->destination->endElement();
                     }
                 );

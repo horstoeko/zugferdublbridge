@@ -178,7 +178,7 @@ class XmlDocumentReader extends XmlDocumentBase
      * @param  DOMNode|null $contextNode
      * @return XmlNodeList;
      */
-    public function queryValues(string $expression, ?DOMNode $contextNode = null): XmlNodeList
+    public function queryAll(string $expression, ?DOMNode $contextNode = null): XmlNodeList
     {
         if (!$this->exists($expression, $contextNode)) {
             return XmlNodeList::createFromDomNodelist();

@@ -78,13 +78,6 @@ class XmlConverterCiiToUbl extends XmlConverterBase
     private $automaticModeDisabled = true;
 
     /**
-     * Internal flag that indicated that the source is a credit note
-     *
-     * @var boolean|null
-     */
-    private $isCreditNoteSource = null;
-
-    /**
      * @inheritDoc
      */
     protected function getDestinationRoot(): string
@@ -275,7 +268,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $this->destination->elementIf($this->getIsCreditNote(), 'cbc:CreditNoteTypeCode', $this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument));
         $this->destination->elementIf(!$this->getIsCreditNote(), 'cbc:InvoiceTypeCode', $this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument));
 
-        $this->source->queryValues('./ram:IncludedNote', $invoiceExchangeDocument)->forEach(
+        $this->source->queryAll('./ram:IncludedNote', $invoiceExchangeDocument)->forEach(
             function ($includedNoteNode) {
                 $note = $this->source->queryValue('./ram:Content', $includedNoteNode);
                 if ($this->source->queryValue('./ram:SubjectCode', $includedNoteNode)) {
@@ -367,7 +360,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             }
         );
 
-        $this->source->queryValues('./ram:DespatchAdviceReferencedDocument/ram:IssuerAssignedID', $invoiceHeaderDelivery)->forEach(
+        $this->source->queryAll('./ram:DespatchAdviceReferencedDocument/ram:IssuerAssignedID', $invoiceHeaderDelivery)->forEach(
             function ($nodeFound) {
                 $this->destination->startElement('cac:DespatchDocumentReference');
                 $this->destination->element('cbc:ID', $nodeFound->nodeValue);
@@ -375,7 +368,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             }
         );
 
-        $this->source->queryValues('./ram:ReceivingAdviceReferencedDocument/ram:IssuerAssignedID', $invoiceHeaderDelivery)->forEach(
+        $this->source->queryAll('./ram:ReceivingAdviceReferencedDocument/ram:IssuerAssignedID', $invoiceHeaderDelivery)->forEach(
             function ($nodeFound) {
                 $this->destination->startElement('cac:ReceiptDocumentReference');
                 $this->destination->element('cbc:ID', $nodeFound->nodeValue);
@@ -387,7 +380,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
 
         foreach ($addDocuments as $addDocument) {
             if ($addDocument == 'CON') {
-                $this->source->queryValues('./ram:ContractReferencedDocument/ram:IssuerAssignedID', $invoiceHeaderAgreement)->forEach(
+                $this->source->queryAll('./ram:ContractReferencedDocument/ram:IssuerAssignedID', $invoiceHeaderAgreement)->forEach(
                     function ($nodeFound) {
                         $this->destination->startElement('cac:ContractDocumentReference');
                         $this->destination->element('cbc:ID', $nodeFound->nodeValue);
@@ -397,7 +390,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             }
 
             if ($addDocument == 'ADD') {
-                $this->source->queryValues('./ram:AdditionalReferencedDocument', $invoiceHeaderAgreement)->forEach(
+                $this->source->queryAll('./ram:AdditionalReferencedDocument', $invoiceHeaderAgreement)->forEach(
                     function ($additionalReferencedDocumentNode) {
                         $this->source->whenNotEquals(
                             './ram:TypeCode',
@@ -448,7 +441,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             }
 
             if ($addDocument == 'ORI') {
-                $this->source->queryValues('./ram:AdditionalReferencedDocument', $invoiceHeaderAgreement)->forEach(
+                $this->source->queryAll('./ram:AdditionalReferencedDocument', $invoiceHeaderAgreement)->forEach(
                     function ($nodeFound) {
                         $this->source->whenEquals(
                             './ram:TypeCode',
@@ -465,7 +458,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             }
 
             if ($addDocument == 'PRJ') {
-                $this->source->queryValues('./ram:SpecifiedProcuringProject/ram:ID', $invoiceHeaderAgreement)->forEach(
+                $this->source->queryAll('./ram:SpecifiedProcuringProject/ram:ID', $invoiceHeaderAgreement)->forEach(
                     function ($nodeFound) {
                         $this->destination->startElement('cac:ProjectReference');
                         $this->destination->element('cbc:ID', $nodeFound->nodeValue);
@@ -503,7 +496,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->endElement();
                     }
                 );
-                $this->source->queryValues('./ram:ID', $sellerTradePartyNode)->forEach(
+                $this->source->queryAll('./ram:ID', $sellerTradePartyNode)->forEach(
                     function ($sellerTradePartyIdNode) {
                         $this->destination->startElement('cac:PartyIdentification');
                         $this->destination->elementWithAttribute('cbc:ID', $sellerTradePartyIdNode->nodeValue, 'schemeID', $sellerTradePartyIdNode->getAttribute('schemeID'));
@@ -665,7 +658,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->endElement();
                     }
                 );
-                $this->source->queryValues('./ram:ID', $buyerTradePartyNode)->forEach(
+                $this->source->queryAll('./ram:ID', $buyerTradePartyNode)->forEach(
                     function ($buyerTradePartyIdNode) {
                         $this->destination->startElement('cac:PartyIdentification');
                         $this->destination->elementWithAttribute('cbc:ID', $buyerTradePartyIdNode->nodeValue, 'schemeID', $buyerTradePartyIdNode->getAttribute('schemeID'));
@@ -815,7 +808,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->endElement();
                     }
                 );
-                $this->source->queryValues('./ram:ID', $payeeTradePartyNode)->forEach(
+                $this->source->queryAll('./ram:ID', $payeeTradePartyNode)->forEach(
                     function ($payeeTradePartyIdNode) {
                         $this->destination->startElement('cac:PartyIdentification');
                         $this->destination->elementWithAttribute('cbc:ID', $payeeTradePartyIdNode->nodeValue, 'schemeID', $payeeTradePartyIdNode->getAttribute('schemeID'));
@@ -936,7 +929,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->endElement();
                     }
                 );
-                $this->source->queryValues('./ram:ID', $sellerTaxRepresentativePartyNode)->forEach(
+                $this->source->queryAll('./ram:ID', $sellerTaxRepresentativePartyNode)->forEach(
                     function ($sellerTaxRepresentativePartyIdNode) {
                         $this->destination->startElement('cac:PartyIdentification');
                         $this->destination->elementWithAttribute('cbc:ID', $sellerTaxRepresentativePartyIdNode->nodeValue, 'schemeID', $sellerTaxRepresentativePartyIdNode->getAttribute('schemeID'));
@@ -1141,7 +1134,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $invoiceSuppyChainTradeTransaction = $this->source->query('./rsm:SupplyChainTradeTransaction', $invoiceElement)->item(0);
         $invoiceHeaderSettlement = $this->source->query('./ram:ApplicableHeaderTradeSettlement', $invoiceSuppyChainTradeTransaction)->item(0);
 
-        $this->source->queryValues(
+        $this->source->queryAll(
             './ram:SpecifiedTradeSettlementPaymentMeans',
             $invoiceHeaderSettlement
         )->forEach(
@@ -1243,7 +1236,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $invoiceSuppyChainTradeTransaction = $this->source->query('./rsm:SupplyChainTradeTransaction', $invoiceElement)->item(0);
         $invoiceHeaderSettlement = $this->source->query('./ram:ApplicableHeaderTradeSettlement', $invoiceSuppyChainTradeTransaction)->item(0);
 
-        $this->source->queryValues('./ram:SpecifiedTradeAllowanceCharge', $invoiceHeaderSettlement)->forEach(
+        $this->source->queryAll('./ram:SpecifiedTradeAllowanceCharge', $invoiceHeaderSettlement)->forEach(
             function ($tradeAllowanceChargeNode) use ($invoiceHeaderSettlement) {
                 $this->destination->startElement('cac:AllowanceCharge');
                 $this->destination->element('cbc:ChargeIndicator', $this->source->queryValue('./ram:ChargeIndicator/udt:Indicator', $tradeAllowanceChargeNode));
@@ -1301,7 +1294,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         );
                     }
                 );
-                $this->source->queryValues('./ram:ApplicableTradeTax', $invoiceHeaderSettlement)->forEach(
+                $this->source->queryAll('./ram:ApplicableTradeTax', $invoiceHeaderSettlement)->forEach(
                     function ($tradeTaxNode) use ($invoiceHeaderSettlement) {
                         $this->destination->startElement('cac:TaxSubtotal');
                         $this->destination->elementWithAttribute(
@@ -1434,7 +1427,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             './ram:IncludedSupplyChainTradeLineItem',
             $invoiceSuppyChainTradeTransaction,
             function () use ($invoiceSuppyChainTradeTransaction, $invoiceHeaderSettlement) {
-                $this->source->queryValues(
+                $this->source->queryAll(
                     './ram:IncludedSupplyChainTradeLineItem',
                     $invoiceSuppyChainTradeTransaction
                 )->forEach(
@@ -1495,7 +1488,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                                 $this->destination->endElement();
                             }
                         );
-                        $this->source->queryValues('./ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeAllowanceCharge', $tradeLineItemNode)->forEach(
+                        $this->source->queryAll('./ram:SpecifiedLineTradeSettlement/ram:SpecifiedTradeAllowanceCharge', $tradeLineItemNode)->forEach(
                             function ($tradeLineItemAllowanceChargeNode) use ($invoiceHeaderSettlement) {
                                 $this->destination->startElement('cac:AllowanceCharge');
                                 $this->destination->element('cbc:ChargeIndicator', $this->source->queryValue('./ram:ChargeIndicator/udt:Indicator', $tradeLineItemAllowanceChargeNode));

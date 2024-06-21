@@ -83,7 +83,7 @@ abstract class XmlConverterBase
      * @param  string $source
      * @return static
      */
-    public function loadFromXmlString(string $source): XmlConverterCiiToUbl
+    public function loadFromXmlString(string $source)
     {
         $this->source->loadFromXmlString($source);
 
@@ -97,7 +97,7 @@ abstract class XmlConverterBase
      * @return static
      * @throws RuntimeException
      */
-    public function loadFromXmlFile(string $filename): XmlConverterCiiToUbl
+    public function loadFromXmlFile(string $filename)
     {
         if (!is_file($filename)) {
             throw new RuntimeException("File $filename does not exists");

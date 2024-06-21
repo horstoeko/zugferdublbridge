@@ -84,3 +84,5 @@ _backup*
 /examples/*.xml
 /examples/ubl/*.xml
 /examples/ubl/*.html
+/examples/cii/*.xml
+/examples/cii/*.html

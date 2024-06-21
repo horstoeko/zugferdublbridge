@@ -394,11 +394,11 @@ class XmlConverterUblToCii extends XmlConverterBase
                     }
                 );
                 $this->source->whenExists(
-                    './cac:PartyLegalEntity/cbc:CompanyID',
+                    './cac:PartyLegalEntity',
                     $invoiceAccountingSupplierPartyNode,
-                    function ($invoiceAccountingSupplierPartyLegalEntityCompanyIdNode, $invoiceAccountingSupplierPartyLegalEntityNode) use ($invoiceAccountingSupplierPartyNode) {
+                    function ($invoiceAccountingSupplierPartyLegalEntityNode) use ($invoiceAccountingSupplierPartyNode) {
                         $this->destination->startElement('ram:SpecifiedLegalOrganization');
-                        $this->destination->elementWithAttribute('ram:ID', $invoiceAccountingSupplierPartyLegalEntityCompanyIdNode->nodeValue, 'schemeID', $invoiceAccountingSupplierPartyLegalEntityCompanyIdNode->getAttribute('schemeID'));
+                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('./cbc:CompanyID', $invoiceAccountingSupplierPartyLegalEntityNode), 'schemeID', $this->source->queryValue('./cbc:CompanyID/@schemeID', $invoiceAccountingSupplierPartyLegalEntityNode));
                         $this->source->whenExists(
                             './cac:PartyName/cbc:Name',
                             $invoiceAccountingSupplierPartyNode,
@@ -421,45 +421,59 @@ class XmlConverterUblToCii extends XmlConverterBase
                         //TODO: Implement or delete
                     }
                 );
-                $this->source->whenExists('./cac:Contact', $invoiceAccountingSupplierPartyNode, function ($invoiceAccountingSupplierPartyContactNode) {
-                    $this->destination->startElement('ram:DefinedTradeContact');
-                    $this->destination->element('ram:PersonName', $this->source->queryValue('./cbc:Name', $invoiceAccountingSupplierPartyContactNode));
-                    $this->source->whenExists('./cbc:Telephone', $invoiceAccountingSupplierPartyContactNode, function ($invoiceAccountingSupplierPartyContactPhoneNode) {
-                        $this->destination->startElement('ram:TelephoneUniversalCommunication');
-                        $this->destination->element('ram:CompleteNumber', $invoiceAccountingSupplierPartyContactPhoneNode->nodeValue);
+                $this->source->whenExists(
+                    './cac:Contact', $invoiceAccountingSupplierPartyNode, function ($invoiceAccountingSupplierPartyContactNode) {
+                        $this->destination->startElement('ram:DefinedTradeContact');
+                        $this->destination->element('ram:PersonName', $this->source->queryValue('./cbc:Name', $invoiceAccountingSupplierPartyContactNode));
+                        $this->source->whenExists(
+                            './cbc:Telephone', $invoiceAccountingSupplierPartyContactNode, function ($invoiceAccountingSupplierPartyContactPhoneNode) {
+                                $this->destination->startElement('ram:TelephoneUniversalCommunication');
+                                $this->destination->element('ram:CompleteNumber', $invoiceAccountingSupplierPartyContactPhoneNode->nodeValue);
+                                $this->destination->endElement();
+                            }
+                        );
+                        $this->source->whenExists(
+                            './cbc:ElectronicMail', $invoiceAccountingSupplierPartyContactNode, function ($invoiceAccountingSupplierPartyContactMailNode) {
+                                $this->destination->startElement('ram:EmailURIUniversalCommunication');
+                                $this->destination->element('ram:URIID', $invoiceAccountingSupplierPartyContactMailNode->nodeValue);
+                                $this->destination->endElement();
+                            }
+                        );
                         $this->destination->endElement();
-                    });
-                    $this->source->whenExists('./cbc:ElectronicMail', $invoiceAccountingSupplierPartyContactNode, function ($invoiceAccountingSupplierPartyContactMailNode) {
-                        $this->destination->startElement('ram:EmailURIUniversalCommunication');
-                        $this->destination->element('ram:URIID', $invoiceAccountingSupplierPartyContactMailNode->nodeValue);
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PostalAddress', $invoiceAccountingSupplierPartyNode, function ($invoiceAccountingSupplierPartyPostalAddressNode) {
+                        $this->destination->startElement('ram:PostalTradeAddress');
+                        $this->destination->element('ram:PostcodeCode', $this->source->queryValue('./cbc:PostalZone', $invoiceAccountingSupplierPartyPostalAddressNode));
+                        $this->destination->element('ram:LineOne', $this->source->queryValue('./cbc:StreetName', $invoiceAccountingSupplierPartyPostalAddressNode));
+                        $this->destination->element('ram:LineTwo', $this->source->queryValue('./cbc:AdditionalStreetName', $invoiceAccountingSupplierPartyPostalAddressNode));
+                        $this->destination->element('ram:CityName', $this->source->queryValue('./cbc:CityName', $invoiceAccountingSupplierPartyPostalAddressNode));
+                        $this->destination->element('ram:CountryID', $this->source->queryValue('./cac:Country/cbc:IdentificationCode', $invoiceAccountingSupplierPartyPostalAddressNode));
                         $this->destination->endElement();
-                    });
-                    $this->destination->endElement();
-                });
-                $this->source->whenExists('./cac:PostalAddress', $invoiceAccountingSupplierPartyNode, function ($invoiceAccountingSupplierPartyPostalAddressNode) {
-                    $this->destination->startElement('ram:PostalTradeAddress');
-                    $this->destination->element('ram:PostcodeCode', $this->source->queryValue('./cbc:PostalZone', $invoiceAccountingSupplierPartyPostalAddressNode));
-                    $this->destination->element('ram:LineOne', $this->source->queryValue('./cbc:StreetName', $invoiceAccountingSupplierPartyPostalAddressNode));
-                    $this->destination->element('ram:LineTwo', $this->source->queryValue('./cbc:AdditionalStreetName', $invoiceAccountingSupplierPartyPostalAddressNode));
-                    $this->destination->element('ram:CityName', $this->source->queryValue('./cbc:CityName', $invoiceAccountingSupplierPartyPostalAddressNode));
-                    $this->destination->element('ram:CountryID', $this->source->queryValue('./cac:Country/cbc:IdentificationCode', $invoiceAccountingSupplierPartyPostalAddressNode));
-                    $this->destination->endElement();
-                });
-                $this->source->whenExists('./cbc:EndpointID[@schemeID=\'EM\']', $invoiceAccountingSupplierPartyNode, function($invoiceAccountingSupplierPartyEndpointNode) {
-                    $this->destination->startElement('ram:URIUniversalCommunication');
-                    $this->destination->elementWithAttribute('ram:URIID', $invoiceAccountingSupplierPartyEndpointNode->nodeValue, 'schemeID', 'EM');
-                    $this->destination->endElement();
-                });
-                $this->source->whenExists('./cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'VAT\']', $invoiceAccountingSupplierPartyNode, function($invoiceAccountingSupplierPartyTaxSchemeNode) {
-                    $this->destination->startElement('ram:SpecifiedTaxRegistration');
-                    $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingSupplierPartyTaxSchemeNode), 'schemeID', 'VA');
-                    $this->destination->endElement();
-                });
-                $this->source->whenExists('./cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']', $invoiceAccountingSupplierPartyNode, function($invoiceAccountingSupplierPartyTaxSchemeNode) {
-                    $this->destination->startElement('ram:SpecifiedTaxRegistration');
-                    $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingSupplierPartyTaxSchemeNode), 'schemeID', 'FC');
-                    $this->destination->endElement();
-                });
+                    }
+                );
+                $this->source->whenExists(
+                    './cbc:EndpointID[@schemeID=\'EM\']', $invoiceAccountingSupplierPartyNode, function ($invoiceAccountingSupplierPartyEndpointNode) {
+                        $this->destination->startElement('ram:URIUniversalCommunication');
+                        $this->destination->elementWithAttribute('ram:URIID', $invoiceAccountingSupplierPartyEndpointNode->nodeValue, 'schemeID', 'EM');
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'VAT\']', $invoiceAccountingSupplierPartyNode, function ($invoiceAccountingSupplierPartyTaxSchemeNode) {
+                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
+                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingSupplierPartyTaxSchemeNode), 'schemeID', 'VA');
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']', $invoiceAccountingSupplierPartyNode, function ($invoiceAccountingSupplierPartyTaxSchemeNode) {
+                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
+                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingSupplierPartyTaxSchemeNode), 'schemeID', 'FC');
+                        $this->destination->endElement();
+                    }
+                );
                 $this->destination->endElement();
             }
         );

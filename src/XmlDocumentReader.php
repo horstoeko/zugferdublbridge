@@ -318,4 +318,29 @@ class XmlDocumentReader extends XmlDocumentBase
 
         return $this;
     }
+
+    /**
+     * When one exists
+     *
+     * @param  array     $expressions
+     * @param  DOMNode[] $contextNodes
+     * @param  callable  $callback
+     * @param  callable  $callbackElse
+     * @return XmlDocumentReader
+     */
+    public function whenOneExists(array $expressions, array $contextNodes, $callback, $callbackElse = null): XmlDocumentReader
+    {
+        foreach ($expressions as $expressionIndex => $expression) {
+            if ($this->exists($expression, $contextNodes[$expressionIndex])) {
+                call_user_func($callback, $this->query($expression, $contextNodes[$expressionIndex])->item(0), $expressionIndex, $expression);
+                return $this;
+            }
+        }
+
+        if (!is_null($callbackElse)) {
+            call_user_func($callbackElse);
+        }
+
+        return $this;
+    }
 }

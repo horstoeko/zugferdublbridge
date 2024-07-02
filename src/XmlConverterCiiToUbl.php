@@ -592,11 +592,13 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     $sellerTradePartyNode,
                     function ($sellerTradePartyLegalOrgNode) use ($sellerTradePartyNode) {
                         $this->destination->startElement('cac:PartyLegalEntity');
-                        $this->source->whenExists('./ram:TradingBusinessName', $sellerTradePartyLegalOrgNode, function ($sellerTradePartyTradingBusinessName) {
-                            $this->destination->element('cbc:RegistrationName', $sellerTradePartyTradingBusinessName->nodeValue);
-                        }, function () use ($sellerTradePartyNode) {
-                            $this->destination->element('cbc:RegistrationName', $this->source->queryValue('./ram:Name', $sellerTradePartyNode));
-                        });
+                        $this->source->whenExists(
+                            './ram:TradingBusinessName', $sellerTradePartyLegalOrgNode, function ($sellerTradePartyTradingBusinessName) {
+                                $this->destination->element('cbc:RegistrationName', $sellerTradePartyTradingBusinessName->nodeValue);
+                            }, function () use ($sellerTradePartyNode) {
+                                $this->destination->element('cbc:RegistrationName', $this->source->queryValue('./ram:Name', $sellerTradePartyNode));
+                            }
+                        );
                         $this->destination->elementWithAttribute('cbc:CompanyID', $this->source->queryValue('./ram:ID', $sellerTradePartyLegalOrgNode), 'schemeID', $this->source->queryValue('./ram:ID/@schemeID', $sellerTradePartyLegalOrgNode));
                         $this->destination->element('cbc:CompanyLegalForm', $this->source->queryValue('./ram:Description', $sellerTradePartyNode));
                         $this->destination->endElement();
@@ -730,11 +732,13 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     $buyerTradePartyNode,
                     function ($buyerTradePartyLegalOrgNode) use ($buyerTradePartyNode) {
                         $this->destination->startElement('cac:PartyLegalEntity');
-                        $this->source->whenExists('./ram:TradingBusinessName', $buyerTradePartyLegalOrgNode, function ($tradingBusinessName) {
-                            $this->destination->element('cbc:RegistrationName', $tradingBusinessName->nodeValue);
-                        }, function () use ($buyerTradePartyNode) {
-                            $this->destination->element('cbc:RegistrationName', $this->source->queryValue('./ram:Name', $buyerTradePartyNode));
-                        });
+                        $this->source->whenExists(
+                            './ram:TradingBusinessName', $buyerTradePartyLegalOrgNode, function ($tradingBusinessName) {
+                                $this->destination->element('cbc:RegistrationName', $tradingBusinessName->nodeValue);
+                            }, function () use ($buyerTradePartyNode) {
+                                $this->destination->element('cbc:RegistrationName', $this->source->queryValue('./ram:Name', $buyerTradePartyNode));
+                            }
+                        );
                         $this->destination->elementWithAttribute('cbc:CompanyID', $this->source->queryValue('./ram:ID', $buyerTradePartyLegalOrgNode), 'schemeID', $this->source->queryValue('./ram:ID/@schemeID', $buyerTradePartyLegalOrgNode));
                         $this->destination->element('cbc:CompanyLegalForm', $this->source->queryValue('./ram:Description', $buyerTradePartyNode));
                         $this->destination->endElement();

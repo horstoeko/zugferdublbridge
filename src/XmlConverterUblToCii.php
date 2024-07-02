@@ -1039,11 +1039,13 @@ class XmlConverterUblToCii extends XmlConverterBase
                 $this->destination->endElement();
             },
             function () use ($docRootElement) {
-                $this->source->whenExists('./cac:PaymentTerms/cbc:Note', $docRootElement, function ($paymentTermaNoteNode) {
-                    $this->destination->startElement('ram:SpecifiedTradePaymentTerms');
-                    $this->destination->element('ram:Description', $paymentTermaNoteNode->nodeValue);
-                    $this->destination->endElement();
-                });
+                $this->source->whenExists(
+                    './cac:PaymentTerms/cbc:Note', $docRootElement, function ($paymentTermaNoteNode) {
+                        $this->destination->startElement('ram:SpecifiedTradePaymentTerms');
+                        $this->destination->element('ram:Description', $paymentTermaNoteNode->nodeValue);
+                        $this->destination->endElement();
+                    }
+                );
             }
         );
 

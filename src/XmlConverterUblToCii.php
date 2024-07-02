@@ -691,17 +691,65 @@ class XmlConverterUblToCii extends XmlConverterBase
         );
 
         $this->source->whenExists(
-            './cac:OrderReference/cbc:SalesOrderID', $docRootElement, function ($orderReferenceSalesOrderNode) {
+            './cac:OrderReference/cbc:SalesOrderID',
+            $docRootElement,
+            function ($orderReferenceSalesOrderNode) {
                 $this->destination->startElement('ram:SellerOrderReferencedDocument');
-                $this->destination->element('ram:IssuerAssignedID', $orderReferenceSalesOrderNode->nodeValue);
+                $this->destination->element('ram:IssuerAssignedID', trim($orderReferenceSalesOrderNode->nodeValue));
                 $this->destination->endElement();
             }
         );
 
         $this->source->whenExists(
-            './cac:OrderReference/cbc:ID', $docRootElement, function ($orderReferenceSalesOrderNode) {
+            './cac:OrderReference/cbc:ID',
+            $docRootElement,
+            function ($orderReferenceSalesOrderNode) {
                 $this->destination->startElement('ram:BuyerOrderReferencedDocument');
-                $this->destination->element('ram:IssuerAssignedID', $orderReferenceSalesOrderNode->nodeValue);
+                $this->destination->element('ram:IssuerAssignedID', trim($orderReferenceSalesOrderNode->nodeValue));
+                $this->destination->endElement();
+            }
+        );
+
+        $this->source->queryAll('./cac:ContractDocumentReference', $docRootElement)->forEach(
+            function ($contractReferenceDocumenntNode) {
+                $this->destination->startElement('ram:ContractReferencedDocument');
+                $this->destination->element('ram:IssuerAssignedID', trim($contractReferenceDocumenntNode->nodeValue));
+                $this->destination->endElement();
+            }
+        );
+
+        $this->source->queryAll('./cac:AdditionalDocumentReference', $docRootElement)->forEach(
+            function ($additionalDocumentReferenceNode) {
+                $this->destination->startElement('ram:AdditionalReferencedDocument');
+                $this->destination->element('ram:IssuerAssignedID', $this->source->queryValue('./cbc:ID', $additionalDocumentReferenceNode));
+                $this->destination->element('ram:TypeCode', '916');
+                $this->destination->element('ram:Name', $this->source->queryValue('./cbc:DocumentDescription', $additionalDocumentReferenceNode));
+                $this->source->whenExists(
+                    './cac:Attachment/cbc:EmbeddedDocumentBinaryObject', $additionalDocumentReferenceNode, function ($additionalDocumentReferenceAttNode) {
+                        $this->destination->startElement('ram:AttachmentBinaryObject', $additionalDocumentReferenceAttNode->nodeValue);
+                        $this->destination->attribute('mimeCode', $additionalDocumentReferenceAttNode->getAttribute('mimeCode'));
+                        $this->destination->attribute('filename', $additionalDocumentReferenceAttNode->getAttribute('filename'));
+                        $this->destination->endElement();
+                    }
+                );
+                $this->destination->endElement();
+            }
+        );
+
+        $this->source->queryAll('./cac:OriginatorDocumentReference', $docRootElement)->forEach(
+            function ($additionalDocumentReferenceNode) {
+                $this->destination->startElement('ram:AdditionalReferencedDocument');
+                $this->destination->element('ram:IssuerAssignedID', $this->source->queryValue('./cbc:ID', $additionalDocumentReferenceNode));
+                $this->destination->element('ram:TypeCode', '50');
+                $this->destination->element('ram:Name', $this->source->queryValue('./cbc:DocumentDescription', $additionalDocumentReferenceNode));
+                $this->destination->endElement();
+            }
+        );
+
+        $this->source->queryAll('./cac:ProjectReference', $docRootElement)->forEach(
+            function ($additionalDocumentReferenceNode) {
+                $this->destination->startElement('ram:SpecifiedProcuringProject');
+                $this->destination->element('ram:ID', $this->source->queryValue('./cbc:ID', $additionalDocumentReferenceNode));
                 $this->destination->endElement();
             }
         );
@@ -719,18 +767,24 @@ class XmlConverterUblToCii extends XmlConverterBase
         $docRootElement = $this->source->query(sprintf('//%s', $this->ublRootName))->item(0);
 
         $this->source->whenOneExists(
-            ['./cac:Delivery/cbc:ActualDeliveryDate', './cac:Delivery/cac:DeliveryLocation'], [$docRootElement, $docRootElement], function ($nodeFound) {
+            ['./cac:Delivery/cbc:ActualDeliveryDate', './cac:Delivery/cac:DeliveryLocation'],
+            [$docRootElement, $docRootElement],
+            function () {
                 $this->destination->startElement('ram:ApplicableHeaderTradeDelivery');
             }
         );
 
         $this->source->whenExists(
-            './cac:Delivery/cac:DeliveryLocation', $docRootElement, function ($deliveryLocationNode, $deliveryNode) {
+            './cac:Delivery/cac:DeliveryLocation',
+            $docRootElement,
+            function ($deliveryLocationNode, $deliveryNode) {
                 $this->destination->startElement('ram:ShipToTradeParty');
                 $this->destination->element('ram:ID', $this->source->queryValue('./cbc:ID', $deliveryLocationNode));
                 $this->destination->element('ram:Name', $this->source->queryValue('./cac:DeliveryParty/cac:PartyName/cbc:Name', $deliveryNode));
                 $this->source->whenExists(
-                    './cac:Address', $deliveryLocationNode, function ($deliveryLocationAddressNode) {
+                    './cac:Address',
+                    $deliveryLocationNode,
+                    function ($deliveryLocationAddressNode) {
                         $this->destination->startElement('ram:PostalTradeAddress');
                         $this->destination->element('ram:PostcodeCode', $this->source->queryValue('./cbc:PostalZone', $deliveryLocationAddressNode));
                         $this->destination->element('ram:LineOne', $this->source->queryValue('./cbc:StreetName', $deliveryLocationAddressNode));
@@ -746,7 +800,9 @@ class XmlConverterUblToCii extends XmlConverterBase
         );
 
         $this->source->whenExists(
-            './cac:Delivery/cbc:ActualDeliveryDate', $docRootElement, function ($actualDeliveryDateNode) {
+            './cac:Delivery/cbc:ActualDeliveryDate',
+            $docRootElement,
+            function ($actualDeliveryDateNode) {
                 $this->destination->startElement('ram:ActualDeliverySupplyChainEvent');
                 $this->destination->startElement('ram:OccurrenceDateTime');
                 $this->destination->elementWithAttribute('udt:DateTimeString', $this->convertDateTime($actualDeliveryDateNode->nodeValue), 'format', '102');
@@ -756,7 +812,9 @@ class XmlConverterUblToCii extends XmlConverterBase
         );
 
         $this->source->whenOneExists(
-            ['./cac:Delivery/cbc:ActualDeliveryDate'], [$docRootElement], function ($nodeFound) {
+            ['./cac:Delivery/cbc:ActualDeliveryDate', './cac:Delivery/cac:DeliveryLocation'],
+            [$docRootElement, $docRootElement],
+            function () {
                 $this->destination->endElement();
             }
         );
@@ -774,25 +832,143 @@ class XmlConverterUblToCii extends XmlConverterBase
         $this->destination->startElement('ram:ApplicableHeaderTradeSettlement');
 
         $this->source->whenExists(
-            './cac:PaymentMeans', $docRootElement, function ($paymentMeansNode) {
+            './cac:PaymentMeans',
+            $docRootElement,
+            function ($paymentMeansNode) {
                 $this->destination->element('ram:PaymentReference', $this->source->queryValue('./cbc:PaymentID', $paymentMeansNode));
             }
         );
         $this->source->whenExists(
-            './cbc:DocumentCurrencyCode', $docRootElement, function ($documentCUrrencyNode) {
+            './cbc:TaxCurrencyCode',
+            $docRootElement,
+            function ($documentCUrrencyNode) {
+                $this->destination->element('ram:TaxCurrencyCode', $documentCUrrencyNode->nodeValue);
+            }
+        );
+        $this->source->whenExists(
+            './cbc:DocumentCurrencyCode',
+            $docRootElement,
+            function ($documentCUrrencyNode) {
                 $this->destination->element('ram:InvoiceCurrencyCode', $documentCUrrencyNode->nodeValue);
             }
         );
         $this->source->whenExists(
-            './cac:PaymentMeans', $docRootElement, function ($paymentMeansNode) {
+            './cac:PayeeParty',
+            $docRootElement,
+            function ($invoicePayeePartyNode) {
+                $this->destination->startElement('ram:PayeeTradeParty');
+                $this->source->queryAll('./cac:PartyIdentification/cbc:ID[not(@schemeID)]', $invoicePayeePartyNode)->forEach(
+                    function ($invoiceAccountingCustomerPartyIdNode) {
+                        $this->destination->element('ram:ID', $invoiceAccountingCustomerPartyIdNode->nodeValue);
+                    }
+                );
+                $this->source->queryAll('./cac:PartyIdentification/cbc:ID[@schemeID]', $invoicePayeePartyNode)->forEach(
+                    function ($invoiceAccountingCustomerPartyIdNode) {
+                        $this->destination->elementWithAttribute('ram:GlobalID', $invoiceAccountingCustomerPartyIdNode->nodeValue, 'schemeID', $invoiceAccountingCustomerPartyIdNode->getAttribute('schemeID'));
+                    }
+                );
+                $this->destination->element('ram:Name', $this->source->queryValue('./cac:PartyName/cbc:Name', $invoicePayeePartyNode));
+                $this->source->whenExists(
+                    './cac:Contact',
+                    $invoicePayeePartyNode,
+                    function ($invoiceAccountingCustomerPartyContactNode) {
+                        $this->destination->startElement('ram:DefinedTradeContact');
+                        $this->destination->element('ram:PersonName', $this->source->queryValue('./cbc:Name', $invoiceAccountingCustomerPartyContactNode));
+                        $this->source->whenExists(
+                            './cbc:Telephone',
+                            $invoiceAccountingCustomerPartyContactNode,
+                            function ($invoiceAccountingCustomerPartyContactPhoneNode) {
+                                $this->destination->startElement('ram:TelephoneUniversalCommunication');
+                                $this->destination->element('ram:CompleteNumber', $invoiceAccountingCustomerPartyContactPhoneNode->nodeValue);
+                                $this->destination->endElement();
+                            }
+                        );
+                        $this->source->whenExists(
+                            './cbc:ElectronicMail',
+                            $invoiceAccountingCustomerPartyContactNode,
+                            function ($invoiceAccountingCustomerPartyContactMailNode) {
+                                $this->destination->startElement('ram:EmailURIUniversalCommunication');
+                                $this->destination->element('ram:URIID', $invoiceAccountingCustomerPartyContactMailNode->nodeValue);
+                                $this->destination->endElement();
+                            }
+                        );
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PostalAddress',
+                    $invoicePayeePartyNode,
+                    function ($invoiceAccountingCustomerPartyPostalAddressNode) {
+                        $this->destination->startElement('ram:PostalTradeAddress');
+                        $this->destination->element('ram:PostcodeCode', $this->source->queryValue('./cbc:PostalZone', $invoiceAccountingCustomerPartyPostalAddressNode));
+                        $this->destination->element('ram:LineOne', $this->source->queryValue('./cbc:StreetName', $invoiceAccountingCustomerPartyPostalAddressNode));
+                        $this->destination->element('ram:LineTwo', $this->source->queryValue('./cbc:AdditionalStreetName', $invoiceAccountingCustomerPartyPostalAddressNode));
+                        $this->destination->element('ram:LineThree', $this->source->queryValue('./cac:AddressLine/cbc:Line', $invoiceAccountingCustomerPartyPostalAddressNode));
+                        $this->destination->element('ram:CityName', $this->source->queryValue('./cbc:CityName', $invoiceAccountingCustomerPartyPostalAddressNode));
+                        $this->destination->element('ram:CountryID', $this->source->queryValue('./cac:Country/cbc:IdentificationCode', $invoiceAccountingCustomerPartyPostalAddressNode));
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cbc:EndpointID[@schemeID=\'EM\']',
+                    $invoicePayeePartyNode,
+                    function ($invoiceAccountingCustomerPartyEndpointNode) {
+                        $this->destination->startElement('ram:URIUniversalCommunication');
+                        $this->destination->elementWithAttribute('ram:URIID', $invoiceAccountingCustomerPartyEndpointNode->nodeValue, 'schemeID', 'EM');
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'VAT\']',
+                    $invoicePayeePartyNode,
+                    function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
+                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
+                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingCustomerPartyTaxSchemeNode), 'schemeID', 'VA');
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
+                    $invoicePayeePartyNode,
+                    function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
+                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
+                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingCustomerPartyTaxSchemeNode), 'schemeID', 'FC');
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'???\']',
+                    $invoicePayeePartyNode,
+                    function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
+                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
+                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingCustomerPartyTaxSchemeNode), 'schemeID', 'FC');
+                        $this->destination->endElement();
+                    }
+                );
+                $this->destination->endElement();
+            }
+        );
+        $this->source->whenExists(
+            './cac:PaymentMeans',
+            $docRootElement,
+            function ($paymentMeansNode) {
                 $this->destination->startElement('ram:SpecifiedTradeSettlementPaymentMeans');
                 $this->destination->element('ram:TypeCode', $this->source->queryValue('./cbc:PaymentMeansCode', $paymentMeansNode));
                 $this->source->whenExists(
-                    './cac:PayeeFinancialAccount', $paymentMeansNode, function ($payeeFinancialAccountNode) {
+                    './cac:PayeeFinancialAccount',
+                    $paymentMeansNode,
+                    function ($payeeFinancialAccountNode) {
                         $this->destination->startElement('ram:PayeePartyCreditorFinancialAccount');
                         $this->destination->element('ram:IBANID', $this->source->queryValue('./cbc:ID', $payeeFinancialAccountNode));
                         $this->destination->element('ram:AccountName', $this->source->queryValue('./cbc:Name', $payeeFinancialAccountNode));
                         $this->destination->endElement();
+                        $this->source->whenExists(
+                            './cac:FinancialInstitutionBranch', $payeeFinancialAccountNode, function ($financialInstitutionBranchNode) {
+                                $this->destination->startElement('ram:PayeeSpecifiedCreditorFinancialInstitution');
+                                $this->destination->element('ram:BICID', trim($financialInstitutionBranchNode->nodeValue));
+                                $this->destination->endElement();
+                            }
+                        );
                     }
                 );
                 $this->destination->endElement();
@@ -800,34 +976,118 @@ class XmlConverterUblToCii extends XmlConverterBase
         );
 
         $this->source->queryAll('./cac:TaxTotal/cac:TaxSubtotal', $docRootElement)->forEach(
-            function ($taxSubtotalNode) {
+            function ($taxSubtotalNode) use ($docRootElement) {
                 $this->destination->startElement('ram:ApplicableTradeTax');
                 $this->destination->element('ram:CalculatedAmount', $this->source->queryValue('./cbc:TaxAmount', $taxSubtotalNode));
                 $this->destination->element('ram:TypeCode', $this->source->queryValue('./cac:TaxCategory/cac:TaxScheme/cbc:ID', $taxSubtotalNode));
                 $this->destination->element('ram:BasisAmount', $this->source->queryValue('./cbc:TaxableAmount', $taxSubtotalNode));
                 $this->destination->element('ram:CategoryCode', $this->source->queryValue('./cac:TaxCategory/cbc:ID', $taxSubtotalNode));
+                $this->destination->element('ram:ExemptionReasonCode', $this->source->queryValue('./cac:TaxCategory/cbc:TaxExemptionReasonCode', $taxSubtotalNode));
                 $this->destination->element('ram:RateApplicablePercent', $this->source->queryValue('./cac:TaxCategory/cbc:Percent', $taxSubtotalNode));
                 $this->destination->endElement();
             }
         );
 
         $this->source->whenExists(
-            './cac:InvoicePeriod', $docRootElement, function ($invoicePeriodNode) {
+            './cac:InvoicePeriod',
+            $docRootElement,
+            function ($invoicePeriodNode) {
                 $this->destination->startElement('ram:BillingSpecifiedPeriod');
                 $this->source->whenExists(
-                    './cbc:StartDate', $invoicePeriodNode, function ($invoicePeriodStartDateNode) {
+                    './cbc:StartDate',
+                    $invoicePeriodNode,
+                    function ($invoicePeriodStartDateNode) {
                         $this->destination->startElement('ram:StartDateTime');
                         $this->destination->elementWithAttribute('udt:DateTimeString', $this->convertDateTime($invoicePeriodStartDateNode->nodeValue), 'format', '102');
                         $this->destination->endElement();
                     }
                 );
                 $this->source->whenExists(
-                    './cbc:EndDate', $invoicePeriodNode, function ($invoicePeriodStartDateNode) {
+                    './cbc:EndDate',
+                    $invoicePeriodNode,
+                    function ($invoicePeriodStartDateNode) {
                         $this->destination->startElement('ram:EndDateTime');
                         $this->destination->elementWithAttribute('udt:DateTimeString', $this->convertDateTime($invoicePeriodStartDateNode->nodeValue), 'format', '102');
                         $this->destination->endElement();
                     }
                 );
+                $this->destination->endElement();
+            }
+        );
+
+        $this->source->queryAll('./cac:AllowanceCharge', $docRootElement)->forEach(
+            function ($allowanceChargeNode) {
+                $this->destination->startElement('ram:SpecifiedTradeAllowanceCharge');
+                $this->source->whenExists(
+                    './cbc:ChargeIndicator', $allowanceChargeNode, function ($chargeIndicatorNode) {
+                        $this->destination->startElement('ram:ChargeIndicator');
+                        $this->destination->element('udt:Indicator', $chargeIndicatorNode->nodeValue);
+                        $this->destination->endElement();
+                    }
+                );
+                $this->destination->element('ram:CalculationPercent', $this->source->queryValue('./cbc:MultiplierFactorNumeric', $allowanceChargeNode));
+                $this->destination->element('ram:BasisAmount', $this->source->queryValue('./cbc:BaseAmount', $allowanceChargeNode));
+                $this->destination->element('ram:ActualAmount', $this->source->queryValue('./cbc:Amount', $allowanceChargeNode));
+                $this->destination->element('ram:ReasonCode', $this->source->queryValue('./cbc:AllowanceChargeReasonCode', $allowanceChargeNode));
+                $this->destination->element('ram:Reason', $this->source->queryValue('./cbc:AllowanceChargeReason', $allowanceChargeNode));
+                $this->source->whenExists(
+                    './cac:TaxCategory', $allowanceChargeNode, function ($AllowanceChargeTaxNode) {
+                        $this->destination->startElement('ram:CategoryTradeTax');
+                        $this->destination->element('ram:TypeCode', $this->source->queryValue('./cac:TaxScheme/cbc:ID', $AllowanceChargeTaxNode));
+                        $this->destination->element('ram:CategoryCode', $this->source->queryValue('./cbc:ID', $AllowanceChargeTaxNode));
+                        $this->destination->element('ram:RateApplicablePercent', $this->source->queryValue('./cbc:Percent', $AllowanceChargeTaxNode));
+                        $this->destination->endElement();
+                    }
+                );
+                $this->destination->endElement();
+            }
+        );
+
+        $this->source->whenExists(
+            './cbc:DueDate',
+            $docRootElement,
+            function ($invoiceDueDateNode) use ($docRootElement) {
+                $this->destination->startElement('ram:SpecifiedTradePaymentTerms');
+                $this->destination->element('ram:Description', $this->source->queryValue('./cac:PaymentTerms/cbc:Note', $docRootElement));
+                $this->destination->startElement('ram:DueDateDateTime');
+                $this->destination->elementWithAttribute('udt:DateTimeString', $this->convertDateTime($invoiceDueDateNode->nodeValue), "format", "102");
+                $this->destination->endElement();
+                $this->destination->endElement();
+            },
+            function () use ($docRootElement) {
+                $this->source->whenExists('./cac:PaymentTerms/cbc:Note', $docRootElement, function($paymentTermaNoteNode) {
+                    $this->destination->startElement('ram:SpecifiedTradePaymentTerms');
+                    $this->destination->element('ram:Description', $paymentTermaNoteNode->nodeValue);
+                    $this->destination->endElement();
+                });
+            }
+        );
+
+        $this->source->whenExists(
+            './cac:LegalMonetaryTotal', $docRootElement, function ($invoiceMoneraryTotalNode) use ($docRootElement) {
+                $invoiceCurrencyCode = $this->source->queryValue('./cbc:DocumentCurrencyCode', $docRootElement);
+                $taxCurrencyCode = $this->source->queryValue('./cbc:TaxCurrencyCode', $docRootElement);
+                $this->destination->startElement('ram:SpecifiedTradeSettlementHeaderMonetarySummation');
+                $this->destination->element('ram:LineTotalAmount', $this->source->queryValue('./cbc:LineExtensionAmount', $invoiceMoneraryTotalNode));
+                $this->destination->element('ram:ChargeTotalAmount', $this->source->queryValue('./cbc:ChargeTotalAmount', $invoiceMoneraryTotalNode));
+                $this->destination->element('ram:AllowanceTotalAmount', $this->source->queryValue('./cbc:AllowanceTotalAmount', $invoiceMoneraryTotalNode));
+                $this->destination->element('ram:TaxBasisTotalAmount', $this->source->queryValue('./cbc:TaxExclusiveAmount', $invoiceMoneraryTotalNode));
+                $this->destination->elementWithAttribute('ram:TaxTotalAmount', $this->source->queryValue(sprintf('./cac:TaxTotal/cbc:TaxAmount[@currencyID=\'%s\']', $invoiceCurrencyCode), $docRootElement), 'currencyID', $invoiceCurrencyCode);
+                $this->source->whenExists(
+                    sprintf('./cac:TaxTotal/cbc:TaxAmount[@currencyID=\'%s\']', $taxCurrencyCode), $docRootElement, function ($diffTaxNode) use ($taxCurrencyCode) {
+                        $this->destination->elementWithAttribute('ram:TaxTotalAmount', $diffTaxNode->nodeValue, 'currencyID', $taxCurrencyCode);
+                    }
+                );
+                $this->source->whenExists(
+                    './cbc:PayableRoundingAmount', $invoiceMoneraryTotalNode, function ($payableRoundingAmountNode) {
+                        $this->destination->element('ram:RoundingAmount', $payableRoundingAmountNode->nodeValue);
+                    }, function () {
+                        $this->destination->element('ram:RoundingAmount', '0');
+                    }
+                );
+                $this->destination->element('ram:GrandTotalAmount', $this->source->queryValue('./cbc:TaxInclusiveAmount', $invoiceMoneraryTotalNode));
+                $this->destination->element('ram:TotalPrepaidAmount', $this->source->queryValue('./cbc:PrepaidAmount', $invoiceMoneraryTotalNode));
+                $this->destination->element('ram:DuePayableAmount', $this->source->queryValue('./cbc:PayableAmount', $invoiceMoneraryTotalNode));
                 $this->destination->endElement();
             }
         );

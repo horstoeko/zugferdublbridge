@@ -1138,21 +1138,21 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             './ram:SpecifiedTradeSettlementPaymentMeans',
             $invoiceHeaderSettlement
         )->forEach(
-            function ($peymentMeansNode) use ($invoiceHeaderSettlement) {
+            function ($paymentMeansNode) use ($invoiceHeaderSettlement) {
                 $this->destination->startElement('cac:PaymentMeans');
                 $this->source->whenExists(
                     './ram:TypeCode',
-                    $peymentMeansNode,
-                    function ($paymentMeansTypeCodeNode) use ($peymentMeansNode) {
+                    $paymentMeansNode,
+                    function ($paymentMeansTypeCodeNode) use ($paymentMeansNode) {
                         $this->destination->startElement('cbc:PaymentMeansCode', $paymentMeansTypeCodeNode->nodeValue);
-                        $this->destination->attribute('name', $this->source->queryValue('./ram:Information', $peymentMeansNode));
+                        $this->destination->attribute('name', $this->source->queryValue('./ram:Information', $paymentMeansNode));
                         $this->destination->endElement();
                     }
                 );
                 $this->destination->element('cbc:PaymentID', $this->source->queryValue('./ram:PaymentReference', $invoiceHeaderSettlement));
                 $this->source->whenExists(
                     './ram:ApplicableTradeSettlementFinancialCard',
-                    $peymentMeansNode,
+                    $paymentMeansNode,
                     function ($paymentMeansFinancialCardNode) {
                         $this->destination->startElement('cac:CardAccount');
                         $this->destination->element('cbc:PrimaryAccountNumberID', $this->source->queryValue('./ram:ID', $paymentMeansFinancialCardNode));
@@ -1163,14 +1163,14 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 );
                 $this->source->whenExists(
                     './ram:PayeePartyCreditorFinancialAccount',
-                    $peymentMeansNode,
-                    function ($paymentMeansCreditorFinancialAccountNode) use ($peymentMeansNode) {
+                    $paymentMeansNode,
+                    function ($paymentMeansCreditorFinancialAccountNode) use ($paymentMeansNode) {
                         $this->destination->startElement('cac:PayeeFinancialAccount');
                         $this->destination->element('cbc:ID', $this->source->queryValue('./ram:IBANID', $paymentMeansCreditorFinancialAccountNode));
                         $this->destination->element('cbc:Name', $this->source->queryValue('./ram:AccountName', $paymentMeansCreditorFinancialAccountNode));
                         $this->source->whenExists(
                             './ram:PayeeSpecifiedCreditorFinancialInstitution',
-                            $peymentMeansNode,
+                            $paymentMeansNode,
                             function ($paymentMeansCreditorFinancialInstNode) {
                                 $this->destination->startElement('cac:FinancialInstitutionBranch');
                                 $this->destination->element('cbc:ID', $paymentMeansCreditorFinancialInstNode->nodeValue);
@@ -1183,12 +1183,12 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 $this->source->whenExists(
                     './ram:SpecifiedTradePaymentTerms/ram:DirectDebitMandateID',
                     $invoiceHeaderSettlement,
-                    function ($DirectDebitMandateNode) use ($peymentMeansNode) {
+                    function ($DirectDebitMandateNode) use ($paymentMeansNode) {
                         $this->destination->startElement('cac:PaymentMandate');
                         $this->destination->element('cbc:ID', $DirectDebitMandateNode->nodeValue);
                         $this->source->whenExists(
                             './ram:PayerPartyDebtorFinancialAccount',
-                            $peymentMeansNode,
+                            $paymentMeansNode,
                             function ($paymentMeansDebtorFinancialAccountNode) {
                                 $this->destination->startElement('cac:PayerFinancialAccount');
                                 $this->destination->element('cbc:ID', $this->source->queryValue('./ram:IBANID', $paymentMeansDebtorFinancialAccountNode));

@@ -802,7 +802,7 @@ class XmlConverterUblToCii extends XmlConverterBase
         $this->destination->startElement('ram:ApplicableHeaderTradeSettlement');
 
         $this->source->whenExists(
-            './cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID[@schemeID=\'SEPA\']', $docRootElement, function($CreditorReferenceNode) {
+            './cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID[@schemeID=\'SEPA\']', $docRootElement, function ($CreditorReferenceNode) {
                 $this->destination->element('ram:CreditorReferenceID', $CreditorReferenceNode->nodeValue);
             }
         );
@@ -1128,4 +1128,3 @@ class XmlConverterUblToCii extends XmlConverterBase
         return $dt->format('Ymd');
     }
 }
- 

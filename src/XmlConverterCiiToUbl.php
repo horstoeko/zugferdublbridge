@@ -78,13 +78,6 @@ class XmlConverterCiiToUbl extends XmlConverterBase
     private $automaticModeDisabled = true;
 
     /**
-     * Internal flag to disable name swapping (Legal Organisation and Party Name)
-     *
-     * @var boolean
-     */
-    private $nameSwappingDisabled = true;
-
-    /**
      * @inheritDoc
      */
     protected function getDestinationRoot(): string
@@ -199,30 +192,6 @@ class XmlConverterCiiToUbl extends XmlConverterBase
     public function enableAutomaticMode(): XmlConverterCiiToUbl
     {
         $this->automaticModeDisabled = false;
-
-        return $this;
-    }
-
-    /**
-     * Disable name swapping
-     *
-     * @return XmlConverterCiiToUbl
-     */
-    public function disableNameSwapping(): XmlConverterCiiToUbl
-    {
-        $this->nameSwappingDisabled = true;
-
-        return $this;
-    }
-
-    /**
-     * Enable name swapping
-     *
-     * @return XmlConverterCiiToUbl
-     */
-    public function enableNameSwapping(): XmlConverterCiiToUbl
-    {
-        $this->nameSwappingDisabled = false;
 
         return $this;
     }

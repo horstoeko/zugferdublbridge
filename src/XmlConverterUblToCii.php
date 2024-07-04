@@ -63,13 +63,6 @@ class XmlConverterUblToCii extends XmlConverterBase
     private $ublLineQuantityRootName = 'cbc:InvoicedQuantity';
 
     /**
-     * Internal flag to disable name swapping (Party Legal Entity and Party Name)
-     *
-     * @var boolean
-     */
-    private $nameSwappingDisabled = true;
-
-    /**
      * @inheritDoc
      */
     protected function getDestinationRoot(): string
@@ -148,30 +141,6 @@ class XmlConverterUblToCii extends XmlConverterBase
         $this->convertExchangedDocumentContext();
         $this->convertExchangedDocument();
         $this->convertSupplyChainTradeTransaction();
-
-        return $this;
-    }
-
-    /**
-     * Disable name swapping
-     *
-     * @return XmlConverterUblToCii
-     */
-    public function disableNameSwapping(): XmlConverterUblToCii
-    {
-        $this->nameSwappingDisabled = true;
-
-        return $this;
-    }
-
-    /**
-     * Enable name swapping
-     *
-     * @return XmlConverterUblToCii
-     */
-    public function enableNameSwapping(): XmlConverterUblToCii
-    {
-        $this->nameSwappingDisabled = false;
 
         return $this;
     }

@@ -176,4 +176,42 @@ abstract class XmlConverterBase
      * @return static
      */
     protected abstract function doConvert();
+
+    /**
+     * Call the callback function when $condition evaluates to true otherwise the
+     * else-callback will be invoked
+     *
+     * @param  bool          $condition
+     * @param  callable      $callback
+     * @param  callable|null $callbackElse
+     * @return static
+     */
+    protected function when($condition, $callback, $callbackElse = null)
+    {
+        if ($condition === true) {
+            if (is_callable($callback)) {
+                call_user_func($callback, $this, $this->source, $this->destination);
+            }
+        } else {
+            if (is_callable($callbackElse)) {
+                call_user_func($callbackElse, $this, $this->source, $this->destination);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Call the callback function when $condition evaluates to false otherwise the
+     * else-callback will be invoked
+     *
+     * @param  bool          $condition
+     * @param  callable      $callback
+     * @param  callable|null $callbackElse
+     * @return static
+     */
+    protected function whenNot($condition, $callback, $callbackElse = null)
+    {
+        return $this->when($condition === false, $callback, $callbackElse);
+    }
 }

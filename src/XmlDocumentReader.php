@@ -199,13 +199,15 @@ class XmlDocumentReader extends XmlDocumentBase
     public function whenExists(string $expression, ?DOMNode $contextNode, $callback, $callbackElse = null): XmlDocumentReader
     {
         if ($this->exists($expression, $contextNode)) {
-            call_user_func(
-                $callback,
-                $this->query($expression, $contextNode)->item(0),
-                $this->query($expression, $contextNode)->item(0)->parentNode
-            );
+            if (is_callable($callback)) {
+                call_user_func(
+                    $callback,
+                    $this->query($expression, $contextNode)->item(0),
+                    $this->query($expression, $contextNode)->item(0)->parentNode
+                );
+            }
         } else {
-            if (!is_null($callbackElse)) {
+            if (is_callable($callbackElse)) {
                 call_user_func($callbackElse);
             }
         }
@@ -225,13 +227,15 @@ class XmlDocumentReader extends XmlDocumentBase
     public function whenNotExists(string $expression, ?DOMNode $contextNode, $callback, $callbackElse = null): XmlDocumentReader
     {
         if (!$this->exists($expression, $contextNode)) {
-            call_user_func(
-                $callback,
-                $this->query($expression, $contextNode)->item(0),
-                $this->query($expression, $contextNode)->item(0)->parentNode
-            );
+            if (is_callable($callback)) {
+                call_user_func(
+                    $callback,
+                    $this->query($expression, $contextNode)->item(0),
+                    $this->query($expression, $contextNode)->item(0)->parentNode
+                );
+            }
         } else {
-            if (!is_null($callbackElse)) {
+            if (is_callable($callbackElse)) {
                 call_user_func($callbackElse);
             }
         }
@@ -265,13 +269,15 @@ class XmlDocumentReader extends XmlDocumentBase
         }
 
         if ($equals === true) {
-            call_user_func(
-                $callback,
-                $this->query($expression, $contextNode)->item(0),
-                $this->query($expression, $contextNode)->item(0)->parentNode
-            );
+            if (is_callable($callback)) {
+                call_user_func(
+                    $callback,
+                    $this->query($expression, $contextNode)->item(0),
+                    $this->query($expression, $contextNode)->item(0)->parentNode
+                );
+            }
         } else {
-            if (!is_null($callbackElse)) {
+            if (is_callable($callbackElse)) {
                 call_user_func($callbackElse);
             }
         }
@@ -305,13 +311,15 @@ class XmlDocumentReader extends XmlDocumentBase
         }
 
         if ($equals === false) {
-            call_user_func(
-                $callback,
-                $this->query($expression, $contextNode)->item(0),
-                $this->query($expression, $contextNode)->item(0)->parentNode
-            );
+            if (is_callable($callback)) {
+                call_user_func(
+                    $callback,
+                    $this->query($expression, $contextNode)->item(0),
+                    $this->query($expression, $contextNode)->item(0)->parentNode
+                );
+            }
         } else {
-            if (!is_null($callbackElse)) {
+            if (is_callable($callbackElse)) {
                 call_user_func($callbackElse);
             }
         }
@@ -332,12 +340,14 @@ class XmlDocumentReader extends XmlDocumentBase
     {
         foreach ($expressions as $expressionIndex => $expression) {
             if ($this->exists($expression, $contextNodes[$expressionIndex])) {
-                call_user_func($callback, $this->query($expression, $contextNodes[$expressionIndex])->item(0), $expressionIndex, $expression);
+                if (is_callable($callback)) {
+                    call_user_func($callback, $this->query($expression, $contextNodes[$expressionIndex])->item(0), $expressionIndex, $expression);
+                }
                 return $this;
             }
         }
 
-        if (!is_null($callbackElse)) {
+        if (is_callable($callbackElse)) {
             call_user_func($callbackElse);
         }
 

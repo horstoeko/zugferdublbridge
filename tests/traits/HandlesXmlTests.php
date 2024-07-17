@@ -5,7 +5,7 @@ namespace horstoeko\zugferdublbridge\tests\traits;
 trait HandlesXmlTests
 {
     /**
-     * @var \horstoeko\zugferdublbridge\XmlConverterCiiToUbl|\horstoeko\zugferdublbridge\XmlConverterUblToCii
+     * @var \horstoeko\zugferdublbridge\XmlConverterBase
      */
     protected static $document;
 
@@ -49,7 +49,7 @@ trait HandlesXmlTests
     protected function getXml(): \SimpleXMLElement
     {
         if ($this->renderingOfXmlDisabled === false) {
-            $this->latestXml = self::$document->saveXmlString();
+            $this->latestXml = new \SimpleXMLElement(self::$document->saveXmlString());
         }
         return $this->latestXml;
     }
@@ -61,7 +61,7 @@ trait HandlesXmlTests
      */
     protected function disableRenderXmlContent()
     {
-        $this->latestXml = self::$document->saveXmlString();
+        $this->latestXml = new \SimpleXMLElement(self::$document->saveXmlString());
         $this->renderingOfXmlDisabled = true;
     }
 

@@ -86,3 +86,4 @@ _backup*
 /examples/ubl/*.html
 /examples/cii/*.xml
 /examples/cii/*.html
+myfile_dbg.xml

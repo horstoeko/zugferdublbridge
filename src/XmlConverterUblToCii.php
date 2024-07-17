@@ -488,7 +488,7 @@ class XmlConverterUblToCii extends XmlConverterBase
             $docRootElement,
             function ($invoiceAccountingCustomerPartyNode) {
                 $this->destination->startElement('ram:BuyerTradeParty');
-                $this->destination->element('ram:ID', $this->source->queryValue('./cbc:ID[not(@schemeID)]', $invoiceAccountingCustomerPartyNode));
+                $this->destination->element('ram:ID', $this->source->queryValue('./cac:PartyIdentification/cbc:ID[not(@schemeID)]', $invoiceAccountingCustomerPartyNode));
                 $this->source->queryAll('./cac:PartyIdentification/cbc:ID[@schemeID != \'\' and @schemeID != \'SEPA\']', $invoiceAccountingCustomerPartyNode)->forEach(
                     function ($invoiceAccountingCustomerPartyIdNode) {
                         $this->destination->elementWithAttribute('ram:GlobalID', $invoiceAccountingCustomerPartyIdNode->nodeValue, 'schemeID', $invoiceAccountingCustomerPartyIdNode->getAttribute('schemeID'));

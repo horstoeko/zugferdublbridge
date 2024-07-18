@@ -1481,7 +1481,6 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                                 $this->destination->element('cbc:AllowanceChargeReasonCode', $this->source->queryValue('./ram:ReasonCode', $tradeLineItemAllowanceChargeNode));
                                 $this->destination->element('cbc:AllowanceChargeReason', $this->source->queryValue('./ram:Reason', $tradeLineItemAllowanceChargeNode));
                                 $this->destination->element('cbc:MultiplierFactorNumeric', $this->source->queryValue('./ram:CalculationPercent', $tradeLineItemAllowanceChargeNode));
-                                $this->destination->element('cbc:Amount', $this->source->queryValue('./ram:ActualAmount', $tradeLineItemAllowanceChargeNode));
                                 $this->destination->elementWithAttribute('cbc:Amount', $this->formatAmount($this->source->queryValue('./ram:ActualAmount', $tradeLineItemAllowanceChargeNode)), 'currencyID', $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement));
                                 $this->destination->elementWithAttribute('cbc:BaseAmount', $this->formatAmount($this->source->queryValue('./ram:BasisAmount', $tradeLineItemAllowanceChargeNode)), 'currencyID', $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement));
                                 $this->source->whenExists(

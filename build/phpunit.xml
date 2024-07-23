@@ -6,6 +6,7 @@
         </testsuite>
         <testsuite name="Cii2Ubl">
             <file>../tests/testcases/CiiToUblSimpleTest.php</file>
+            <file>../tests/testcases/CiiToUblDiscountTest.php</file>
         </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">

@@ -111,6 +111,7 @@ class CiiToUblSimplePayeeTest extends TestCase
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:PayeeParty/cac:PartyTaxScheme', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:PayeeParty/cac:PartyTaxScheme/cbc:CompanyID', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:PayeeParty/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID', 0);
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:PayeeParty/cac:PartyLegalEntity', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:PayeeParty/cac:Contact', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:PayeeParty/cac:Contact/cbc:Name', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:PayeeParty/cac:Contact/cbc:Telephone', 0);

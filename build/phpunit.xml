@@ -8,6 +8,7 @@
             <file>../tests/testcases/CiiToUblSimpleTest.php</file>
             <file>../tests/testcases/CiiToUblSimplePayeeTest.php</file>
             <file>../tests/testcases/CiiToUblDiscountTest.php</file>
+            <file>../tests/testcases/CiiToUblExtendedTest.php</file>
         </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">

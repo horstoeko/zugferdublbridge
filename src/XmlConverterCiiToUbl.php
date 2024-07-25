@@ -697,13 +697,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->endElement();
                     }
                 );
-                $this->source->queryAll('./ram:ID', $buyerTradePartyNode)->forEach(
-                    function ($buyerTradePartyIdNode) {
-                        $this->destination->startElement('cac:PartyIdentification');
-                        $this->destination->elementWithAttribute('cbc:ID', $buyerTradePartyIdNode->nodeValue, 'schemeID', $buyerTradePartyIdNode->getAttribute('schemeID'));
-                        $this->destination->endElement();
-                    }
-                );
+                // Cardinality 0:1
                 $this->source->whenExists(
                     './ram:GlobalID',
                     $buyerTradePartyNode,
@@ -711,6 +705,15 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->startElement('cac:PartyIdentification');
                         $this->destination->elementWithAttribute('cbc:ID', $buyerTradePartyGlobalIdNode->nodeValue, 'schemeID', $buyerTradePartyGlobalIdNode->getAttribute('schemeID'));
                         $this->destination->endElement();
+                    },
+                    function () use ($buyerTradePartyNode) {
+                        $this->source->whenExists(
+                            './ram:ID', $buyerTradePartyNode, function ($buyerTradePartyIdNode) {
+                                $this->destination->startElement('cac:PartyIdentification');
+                                $this->destination->elementWithAttribute('cbc:ID', $buyerTradePartyIdNode->nodeValue, 'schemeID', $buyerTradePartyIdNode->getAttribute('schemeID'));
+                                $this->destination->endElement();
+                            }
+                        );
                     }
                 );
                 $this->source->whenExists(

@@ -12,13 +12,13 @@ class CiiToUblExtendedTest extends TestCase
 
     public function testLoadAndConvert(): void
     {
-        self::$document = XmlConverterCiiToUbl::fromFile(dirname(__FILE__) . "/../assets/cii/2_cii_extended.xml")->enableAutomaticMode()->convert();
+        self::$document = XmlConverterCiiToUbl::fromFile(dirname(__FILE__) . "/../assets/cii/2_cii_extended.xml")->enableAutomaticMode()->setForceDestinationProfile('urn:cen.eu:en16931:2017')->convert();
         $this->assertNotNull(self::$document);
     }
 
     public function testDocumentGeneral(): void
     {
-        $this->assertXPathValue('/ubl:Invoice/cbc:CustomizationID', "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended");
+        $this->assertXPathValue('/ubl:Invoice/cbc:CustomizationID', "urn:cen.eu:en16931:2017");
         $this->assertXPathValue('/ubl:Invoice/cbc:ProfileID', "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0");
         $this->assertXPathValue('/ubl:Invoice/cbc:ID', "KR87654321012");
         $this->assertXPathValue('/ubl:Invoice/cbc:IssueDate', "2018-10-06");

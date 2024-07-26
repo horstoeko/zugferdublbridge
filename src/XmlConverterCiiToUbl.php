@@ -545,9 +545,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->endElement();
                     }
                 );
-                $this->source->whenExists(
-                    './ram:GlobalID',
-                    $sellerTradePartyNode,
+                $this->source->queryAll('./ram:GlobalID', $sellerTradePartyNode)->forEach(
                     function ($sellerTradePartyGlobalIdNode) {
                         $this->destination->startElement('cac:PartyIdentification');
                         $this->destination->elementWithAttribute('cbc:ID', $sellerTradePartyGlobalIdNode->nodeValue, 'schemeID', $sellerTradePartyGlobalIdNode->getAttribute('schemeID'));
@@ -697,7 +695,6 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->endElement();
                     }
                 );
-                // Cardinality 0:1
                 $this->source->whenExists(
                     './ram:GlobalID',
                     $buyerTradePartyNode,
@@ -847,13 +844,6 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->endElement();
                     }
                 );
-                $this->source->queryAll('./ram:ID', $payeeTradePartyNode)->forEach(
-                    function ($payeeTradePartyIdNode) {
-                        $this->destination->startElement('cac:PartyIdentification');
-                        $this->destination->elementWithAttribute('cbc:ID', $payeeTradePartyIdNode->nodeValue, 'schemeID', $payeeTradePartyIdNode->getAttribute('schemeID'));
-                        $this->destination->endElement();
-                    }
-                );
                 $this->source->whenExists(
                     './ram:GlobalID',
                     $payeeTradePartyNode,
@@ -861,6 +851,15 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->startElement('cac:PartyIdentification');
                         $this->destination->elementWithAttribute('cbc:ID', $payeeTradePartyGlobalIdNode->nodeValue, 'schemeID', $payeeTradePartyGlobalIdNode->getAttribute('schemeID'));
                         $this->destination->endElement();
+                    },
+                    function () use ($payeeTradePartyNode) {
+                        $this->source->whenExists(
+                            './ram:ID', $payeeTradePartyNode, function ($payeeTradePartyIdNode) {
+                                $this->destination->startElement('cac:PartyIdentification');
+                                $this->destination->elementWithAttribute('cbc:ID', $payeeTradePartyIdNode->nodeValue, 'schemeID', $payeeTradePartyIdNode->getAttribute('schemeID'));
+                                $this->destination->endElement();
+                            }
+                        );
                     }
                 );
                 $this->source->whenExists(
@@ -988,13 +987,6 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->endElement();
                     }
                 );
-                $this->source->queryAll('./ram:ID', $sellerTaxRepresentativePartyNode)->forEach(
-                    function ($sellerTaxRepresentativePartyIdNode) {
-                        $this->destination->startElement('cac:PartyIdentification');
-                        $this->destination->elementWithAttribute('cbc:ID', $sellerTaxRepresentativePartyIdNode->nodeValue, 'schemeID', $sellerTaxRepresentativePartyIdNode->getAttribute('schemeID'));
-                        $this->destination->endElement();
-                    }
-                );
                 $this->source->whenExists(
                     './ram:GlobalID',
                     $sellerTaxRepresentativePartyNode,
@@ -1002,6 +994,15 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->startElement('cac:PartyIdentification');
                         $this->destination->elementWithAttribute('cbc:ID', $sellerTaxRepresentativePartyGlobalIdNode->nodeValue, 'schemeID', $sellerTaxRepresentativePartyGlobalIdNode->getAttribute('schemeID'));
                         $this->destination->endElement();
+                    },
+                    function () use ($sellerTaxRepresentativePartyNode) {
+                        $this->source->whenExists(
+                            './ram:ID', $sellerTaxRepresentativePartyNode, function ($sellerTaxRepresentativePartyIdNode) {
+                                $this->destination->startElement('cac:PartyIdentification');
+                                $this->destination->elementWithAttribute('cbc:ID', $sellerTaxRepresentativePartyIdNode->nodeValue, 'schemeID', $sellerTaxRepresentativePartyIdNode->getAttribute('schemeID'));
+                                $this->destination->endElement();
+                            }
+                        );
                     }
                 );
                 $this->source->whenExists(

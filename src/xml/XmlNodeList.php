@@ -94,7 +94,7 @@ class XmlNodeList
     /**
      * Foreach for only $max nodes in internal nodelist.
      *
-     * @param integer $max
+     * @param  integer       $max
      * @param  callable      $callback
      * @param  callable|null $callBackBefore
      * @param  callable|null $callbackAfter

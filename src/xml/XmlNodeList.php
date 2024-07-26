@@ -65,6 +65,7 @@ class XmlNodeList
         if (is_null($this->domNodeList)) {
             return;
         }
+
         if (!is_callable($callback)) {
             return;
         }
@@ -77,7 +78,59 @@ class XmlNodeList
             if (is_callable($callbackBeforeEach)) {
                 call_user_func($callbackBeforeEach);
             }
+
             call_user_func($callback, $node);
+
+            if (is_callable($callbackAfterEach)) {
+                call_user_func($callbackAfterEach);
+            }
+        }
+
+        if (is_callable($callbackAfter)) {
+            call_user_func($callbackAfter);
+        }
+    }
+
+    /**
+     * Foreach for only $max nodes in internal nodelist.
+     *
+     * @param integer $max
+     * @param  callable      $callback
+     * @param  callable|null $callBackBefore
+     * @param  callable|null $callbackAfter
+     * @param  callable|null $callbackBeforeEach
+     * @param  callable|null $callbackAfterEach
+     * @return void
+     */
+    public function forEachMax(int $max, $callback, $callBackBefore = null, $callbackAfter = null, $callbackBeforeEach = null, $callbackAfterEach = null)
+    {
+        if (is_null($this->domNodeList)) {
+            return;
+        }
+
+        if (!is_callable($callback)) {
+            return;
+        }
+
+        if (is_callable($callBackBefore)) {
+            call_user_func($callBackBefore);
+        }
+
+        $count = 0;
+
+        foreach ($this->domNodeList as $node) {
+            $count++;
+
+            if ($count > $max) {
+                break;
+            }
+
+            if (is_callable($callbackBeforeEach)) {
+                call_user_func($callbackBeforeEach);
+            }
+
+            call_user_func($callback, $node);
+
             if (is_callable($callbackAfterEach)) {
                 call_user_func($callbackAfterEach);
             }

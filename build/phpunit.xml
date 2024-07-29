@@ -9,6 +9,7 @@
             <file>../tests/testcases/CiiToUblSimplePayeeTest.php</file>
             <file>../tests/testcases/CiiToUblDiscountTest.php</file>
             <file>../tests/testcases/CiiToUblExtendedTest.php</file>
+            <file>../tests/testcases/CiiToUblExtendedFwTest.php</file>
         </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">

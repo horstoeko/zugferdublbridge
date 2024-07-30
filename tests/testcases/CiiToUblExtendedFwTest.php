@@ -303,4 +303,15 @@ class CiiToUblExtendedFwTest extends TestCase
 
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine', 2);
     }
+
+    public function testSaveToFile(): void
+    {
+        $filename = sys_get_temp_dir() . '/output.xml';
+
+        self::$document->saveXmlFile($filename);
+
+        $this->assertFileExists($filename);
+
+        @unlink($filename);
+    }
 }

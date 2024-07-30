@@ -12,7 +12,7 @@ namespace horstoeko\zugferdublbridge\xml;
 use DOMNodeList;
 
 /**
- * Class representing the converter from CII syntax to UBL syntax
+ * Class representing a XML node list
  *
  * @category Zugferd-UBL-Bridge
  * @package  Zugferd-UBL-Bridge

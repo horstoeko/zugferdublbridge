@@ -12,7 +12,7 @@ namespace horstoeko\zugferdublbridge;
 use DOMDocument;
 
 /**
- * Class representing the XML writer helper
+ * Class representing the base XML document
  *
  * @category Zugferd-UBL-Bridge
  * @package  Zugferd-UBL-Bridge

@@ -123,6 +123,22 @@ trait HandlesXmlTests
     }
 
     /**
+     * Assert a xpath with $expected value in a multiple element resultset
+     *
+     * @param  string  $xpath
+     * @param  integer $index
+     * @param  string  $expected
+     * @return void
+     */
+    protected function assertXPathValueContainsWithIndex(string $xpath, int $index, string $expected): void
+    {
+        $xml = $this->getXml();
+        $xmlvalue = $xml->xpath($xpath);
+        $this->assertArrayHasKey($index, $xmlvalue);
+        $this->assertStringContainsString($expected, $xmlvalue[$index]);
+    }
+
+    /**
      * Assert a xpath with $expected value and an expected attribute value
      *
      * @param  string $xpath

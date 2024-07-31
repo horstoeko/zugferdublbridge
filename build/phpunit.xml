@@ -10,6 +10,8 @@
             <file>../tests/testcases/CiiToUblDiscountTest.php</file>
             <file>../tests/testcases/CiiToUblExtendedTest.php</file>
             <file>../tests/testcases/CiiToUblExtendedFwTest.php</file>
+            <file>../tests/testcases/CiiToUblTechnical1Test.php</file>
+            <file>../tests/testcases/CiiToUblTechnical2Test.php</file>
         </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">

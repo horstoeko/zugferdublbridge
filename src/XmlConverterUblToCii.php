@@ -257,7 +257,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                 $this->destination->startElement('ram:SpecifiedTradeProduct');
                 $this->destination->element('ram:SellerAssignedID', $this->source->queryValue('./cac:Item/cac:SellersItemIdentification/cbc:ID', $invoiceLineNode));
                 $this->destination->element('ram:BuyerAssignedID', $this->source->queryValue('./cac:Item/cac:BuyersItemIdentification/cbc:ID', $invoiceLineNode));
-                $this->destination->elementWithAttribute('ram:GlobalID', $this->source->queryValue('./cac:Item/cac:StandardItemIdentification/cbc:ID', $invoiceLineNode), 'schemeID', $this->source->queryValue('./cac:Item/cac:StandardItemIdentification/cbc:ID/@schemeID'));
+                $this->destination->elementWithAttribute('ram:GlobalID', $this->source->queryValue('./cac:Item/cac:StandardItemIdentification/cbc:ID', $invoiceLineNode), 'schemeID', $this->source->queryValue('./cac:Item/cac:StandardItemIdentification/cbc:ID/@schemeID', $invoiceLineNode));
                 $this->destination->element('ram:Name', $this->source->queryValue('./cac:Item/cbc:Name', $invoiceLineNode));
                 $this->destination->element('ram:Description', $this->source->queryValue('./cac:Item/cbc:Description', $invoiceLineNode));
                 $this->source->queryAll('./cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode', $invoiceLineNode)->forEach(
@@ -274,6 +274,13 @@ class XmlConverterUblToCii extends XmlConverterBase
                         $this->destination->startElement('ram:DesignatedProductClassification');
                     },
                     function () {
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:Item/cac:OriginCountry/cbc:IdentificationCode', $invoiceLineNode, function ($invoiceLineOriginCountryNode) {
+                        $this->destination->startElement('ram:OriginTradeCountry');
+                        $this->destination->element('ram:ID', $invoiceLineOriginCountryNode->nodeValue);
                         $this->destination->endElement();
                     }
                 );

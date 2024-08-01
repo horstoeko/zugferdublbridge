@@ -144,12 +144,17 @@
                 <ram:PostalTradeAddress>
                     <ram:PostcodeCode>12345</ram:PostcodeCode>
                     <ram:LineOne>[Seller address line 1]</ram:LineOne>
+                    <ram:LineTwo>[Seller address line 2]</ram:LineTwo>
+                    <ram:LineThree>[Seller address line 3]</ram:LineThree>
                     <ram:CityName>[Seller city]</ram:CityName>
                     <ram:CountryID>DE</ram:CountryID>
                 </ram:PostalTradeAddress>
                 <ram:URIUniversalCommunication>
                     <ram:URIID schemeID="EM">seller@email.de</ram:URIID>
                 </ram:URIUniversalCommunication>
+                <ram:SpecifiedTaxRegistration>
+                    <ram:ID schemeID="FC">201/113/40209</ram:ID>
+                </ram:SpecifiedTaxRegistration>
                 <ram:SpecifiedTaxRegistration>
                     <ram:ID schemeID="VA">DE123456789</ram:ID>
                 </ram:SpecifiedTaxRegistration>
@@ -160,12 +165,20 @@
                 <ram:PostalTradeAddress>
                     <ram:PostcodeCode>12345</ram:PostcodeCode>
                     <ram:LineOne>[Buyer address line 1]</ram:LineOne>
+                    <ram:LineTwo>[Buyer address line 2]</ram:LineTwo>
+                    <ram:LineThree>[Buyer address line 3]</ram:LineThree>
                     <ram:CityName>[Buyer city]</ram:CityName>
                     <ram:CountryID>DE</ram:CountryID>
                 </ram:PostalTradeAddress>
                 <ram:URIUniversalCommunication>
                     <ram:URIID schemeID="EM">buyer@info.de</ram:URIID>
                 </ram:URIUniversalCommunication>
+                <ram:SpecifiedTaxRegistration>
+                    <ram:ID schemeID="FC">201/113/99999</ram:ID>
+                </ram:SpecifiedTaxRegistration>
+                <ram:SpecifiedTaxRegistration>
+                    <ram:ID schemeID="VA">DE999999999</ram:ID>
+                </ram:SpecifiedTaxRegistration>
             </ram:BuyerTradeParty>
             <ram:SpecifiedProcuringProject>
                 <ram:ID>PR456789</ram:ID>

@@ -11,6 +11,9 @@ namespace horstoeko\zugferdublbridge;
 
 use DateTime;
 use Exception;
+use horstoeko\zugferdublbridge\traits\HandlesAmountFormatting;
+use horstoeko\zugferdublbridge\traits\HandlesDocumentTypes;
+use horstoeko\zugferdublbridge\traits\HandlesProfiles;
 
 /**
  * Class representing the converter from CII syntax to UBL syntax
@@ -23,66 +26,9 @@ use Exception;
  */
 class XmlConverterCiiToUbl extends XmlConverterBase
 {
-    /**
-     * List of supported profiles
-     *
-     * @var string[]
-     */
-    private const SUPPORTED_PROFILES = [
-        'urn:factur-x.eu:1p0:minimum',
-        'urn:factur-x.eu:1p0:basicwl',
-        'urn:cen.eu:en16931:2017#compliant#urn:factur-x.eu:1p0:basic',
-        'urn:cen.eu:en16931:2017',
-        'urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended',
-        'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_1.2',
-        'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.0',
-        'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.1',
-        'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2',
-        'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.3',
-        'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0',
-    ];
-
-    /**
-     * List of document types which represent an invoice
-     *
-     * @var string[]
-     */
-    private const INVOICE_TYPES = [
-        '80', '82', '84', '130', '202', '203', '204', '211', '295', '325', '326', '380', '383',
-        '384', '385', '386', '387', '388', '389', '390', '393', '394', '395', '456', '457', '527',
-        '575', '623', '633', '751', '780', '935',
-    ];
-
-    /**
-     * List of document types which represent a credit note
-     *
-     * @var string[]
-     */
-
-    private const CREDITNOTE_TYPES = [
-        '81', '83', '261', '262', '296', '308', '381', '396', '420', '458', '532',
-    ];
-
-    /**
-     * Internal flag to disable amount formattting
-     *
-     * @var boolean
-     */
-    private $amountFormatDisabled = true;
-
-    /**
-     * Internal flag to disable the automatic detection of Invoice or CreditNote
-     *
-     * @var boolean
-     */
-    private $automaticModeDisabled = true;
-
-    /**
-     * Internal Flag to force a profile in destination
-     *
-     * @var string
-     */
-    private $forceDestinationProfile = "";
+    use HandlesProfiles,
+        HandlesAmountFormatting,
+        HandlesDocumentTypes;
 
     /**
      * @inheritDoc
@@ -128,7 +74,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
 
         $submittedProfile = $this->source->queryValue('./ram:GuidelineSpecifiedDocumentContextParameter/ram:ID', $invoiceExchangeDocumentContext);
 
-        if (!in_array($submittedProfile, static::SUPPORTED_PROFILES)) {
+        if (!$this->isSupportedProfile($submittedProfile)) {
             throw new \RuntimeException(sprintf('The submitted profile %s is not supported', $submittedProfile));
         }
     }
@@ -156,97 +102,20 @@ class XmlConverterCiiToUbl extends XmlConverterBase
     }
 
     /**
-     * Disable amount formatting
-     *
-     * @return XmlConverterCiiToUbl
-     */
-    public function disableAmountFormatDisabled(): XmlConverterCiiToUbl
-    {
-        $this->amountFormatDisabled = true;
-
-        return $this;
-    }
-
-    /**
-     * Enable amount formatting
-     *
-     * @return XmlConverterCiiToUbl
-     */
-    public function enableAmountFormatDisabled(): XmlConverterCiiToUbl
-    {
-        $this->amountFormatDisabled = false;
-
-        return $this;
-    }
-
-    /**
-     * Disable automatic detection of Invoice/CreditNote
-     *
-     * @return XmlConverterCiiToUbl
-     */
-    public function disableAutomaticMode(): XmlConverterCiiToUbl
-    {
-        $this->automaticModeDisabled = true;
-
-        return $this;
-    }
-
-    /**
-     * Enable automatic detection of Invoice/CreditNote
-     *
-     * @return XmlConverterCiiToUbl
-     */
-    public function enableAutomaticMode(): XmlConverterCiiToUbl
-    {
-        $this->automaticModeDisabled = false;
-
-        return $this;
-    }
-
-    /**
-     * Set the profile to force in the destination (UBL) document
-     *
-     * @param  string $forceDestinationProfile
-     * @return XmlConverterCiiToUbl
-     */
-    public function setForceDestinationProfile(string $forceDestinationProfile): XmlConverterCiiToUbl
-    {
-        if (!in_array($forceDestinationProfile, static::SUPPORTED_PROFILES)) {
-            return $this;
-        }
-
-        $this->forceDestinationProfile = $forceDestinationProfile;
-
-        return $this;
-    }
-
-    /**
-     * Unsert the profile to force in the destination (UBL) document
-     *
-     * @return XmlConverterCiiToUbl
-     */
-    public function clearForceDestinationProfile(): XmlConverterCiiToUbl
-    {
-        $this->forceDestinationProfile = "";
-
-        return $this;
-    }
-
-    /**
      * Returns true if source is a credit note, otherwise false
      *
      * @return boolean
      */
     private function getIsCreditNote(): bool
     {
-        if ($this->automaticModeDisabled === true) {
+        if ($this->getAutomaticDocumentTypeModeDisabled()) {
             return false;
         }
 
         $invoiceElement = $this->source->query('//rsm:CrossIndustryInvoice')->item(0);
         $invoiceExchangeDocument = $this->source->query('./rsm:ExchangedDocument', $invoiceElement)->item(0);
 
-        return in_array($this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument), static::CREDITNOTE_TYPES);
+        return $this->isCreditMemoDocumentType($this->source->queryValue('./ram:TypeCode', $invoiceExchangeDocument));
     }
 
     /**
@@ -281,8 +150,8 @@ class XmlConverterCiiToUbl extends XmlConverterBase
 
         $customizationId = $this->source->queryValue('./ram:GuidelineSpecifiedDocumentContextParameter/ram:ID', $invoiceExchangeDocumentContext);
 
-        if ($this->forceDestinationProfile) {
-            $customizationId = $this->forceDestinationProfile;
+        if ($this->getForceDestinationProfile()) {
+            $customizationId = $this->getForceDestinationProfile();
         }
 
         $this->destination->element('cbc:CustomizationID', $customizationId);
@@ -1746,28 +1615,5 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         } else {
             throw new Exception($format);
         }
-    }
-
-    /**
-     * Format amount value
-     *
-     * @param  string|null $amount
-     * @return string|null
-     */
-    private function formatAmount(?string $amount): ?string
-    {
-        if ($this->amountFormatDisabled === true) {
-            return $amount;
-        }
-
-        if (is_null($amount)) {
-            return $amount;
-        }
-
-        if (!is_numeric($amount)) {
-            return $amount;
-        }
-
-        return (string)((float)$amount);
     }
 }

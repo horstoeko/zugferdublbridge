@@ -83,6 +83,18 @@ class XmlConverterUblToCii extends XmlConverterBase
     /**
      * @inheritDoc
      */
+    protected function initialize()
+    {
+        parent::initialize();
+
+        $this->setForceDestinationProfileEn16931();
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     protected function checkValidSource()
     {
         $this->source->whenExists(
@@ -153,11 +165,7 @@ class XmlConverterUblToCii extends XmlConverterBase
             $docRootElement,
             function ($customizationIdNode) {
                 $this->destination->startElement('ram:GuidelineSpecifiedDocumentContextParameter');
-                if ($this->getForceDestinationProfile()) {
-                    $this->destination->element('ram:ID', $this->getForceDestinationProfile());
-                } else {
-                    $this->destination->element('ram:ID', $customizationIdNode->nodeValue);
-                }
+                $this->destination->element('ram:ID', $this->getForceDestinationProfileWithDefault($customizationIdNode->nodeValue));
                 $this->destination->endElement();
             }
         );

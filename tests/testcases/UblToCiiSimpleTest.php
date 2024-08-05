@@ -3,7 +3,7 @@
 namespace horstoeko\zugferdublbridge\tests\testcases;
 
 use horstoeko\zugferdublbridge\tests\TestCase;
-use \horstoeko\zugferdublbridge\tests\traits\HandlesXmlTests;
+use horstoeko\zugferdublbridge\tests\traits\HandlesXmlTests;
 use horstoeko\zugferdublbridge\XmlConverterUblToCii;
 
 class UblToCiiSimpleTest extends TestCase
@@ -12,7 +12,7 @@ class UblToCiiSimpleTest extends TestCase
 
     public function testLoadAndConvert(): void
     {
-        self::$document = XmlConverterUblToCii::fromFile(dirname(__FILE__) . "/../assets/ubl/1_ubl_simple.xml")->setForceDestinationProfileEn16931()->convert();
+        self::$document = XmlConverterUblToCii::fromFile(dirname(__FILE__) . "/../assets/ubl/1_ubl_simple.xml")->convert();
         $this->assertNotNull(self::$document);
     }
 

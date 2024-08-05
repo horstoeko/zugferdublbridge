@@ -149,10 +149,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $invoiceHeaderDelivery = $this->source->query('./ram:ApplicableHeaderTradeDelivery', $invoiceSuppyChainTradeTransaction)->item(0);
 
         $customizationId = $this->source->queryValue('./ram:GuidelineSpecifiedDocumentContextParameter/ram:ID', $invoiceExchangeDocumentContext);
-
-        if ($this->getForceDestinationProfile()) {
-            $customizationId = $this->getForceDestinationProfile();
-        }
+        $customizationId = $this->getForceDestinationProfileWithDefault($customizationId);
 
         $this->destination->element('cbc:CustomizationID', $customizationId);
         $this->destination->element('cbc:ProfileID', 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0');

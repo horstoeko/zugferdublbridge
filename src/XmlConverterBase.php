@@ -53,6 +53,18 @@ abstract class XmlConverterBase
         foreach ($this->getDestinationNamespaces() as $namespace => $namespaceUri) {
             $this->destination->addNamespace($namespace, $namespaceUri);
         }
+
+        $this->initialize();
+    }
+
+    /**
+     * Custom initialization in derrived classes
+     *
+     * @return static
+     */
+    protected function initialize()
+    {
+        return $this;
     }
 
     /**

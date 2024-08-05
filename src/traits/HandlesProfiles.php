@@ -71,6 +71,22 @@ trait HandlesProfiles
     }
 
     /**
+     * Returns the profile code to force. If no profile to force is given the
+     * $default value will be returned
+     *
+     * @param string $defaultProfile
+     * @return string
+     */
+    public function getForceDestinationProfileWithDefault(string $defaultProfile): string
+    {
+        if ($this->getForceDestinationProfile()) {
+            return $this->getForceDestinationProfile();
+        }
+
+        return $defaultProfile;
+    }
+
+    /**
      * Set the profile to force in the destination (UBL) document
      *
      * @param  string $forceDestinationProfile

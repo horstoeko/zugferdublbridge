@@ -98,4 +98,76 @@ trait HandlesProfiles
 
         return $this;
     }
+
+    /**
+     * Force the MINIMUM profile
+     *
+     * @return static
+     */
+    public function setForceDestinationProfileMinimum()
+    {
+        $this->setForceDestinationProfile('urn:factur-x.eu:1p0:minimum');
+
+        return $this;
+    }
+
+    /**
+     * Force the BASICWL profile
+     *
+     * @return static
+     */
+    public function setForceDestinationProfileBasicWL()
+    {
+        $this->setForceDestinationProfile('urn:factur-x.eu:1p0:basicwl');
+
+        return $this;
+    }
+
+    /**
+     * Force the BASIC profile
+     *
+     * @return static
+     */
+    public function setForceDestinationProfileBasic()
+    {
+        $this->setForceDestinationProfile('urn:cen.eu:en16931:2017#compliant#urn:factur-x.eu:1p0:basic');
+
+        return $this;
+    }
+
+    /**
+     * Force the COMFORT (EN16931) profile
+     *
+     * @return static
+     */
+    public function setForceDestinationProfileEn16931()
+    {
+        $this->setForceDestinationProfile('urn:cen.eu:en16931:2017');
+
+        return $this;
+    }
+
+    /**
+     * Force the EXTENDED profile
+     *
+     * @return static
+     */
+    public function setForceDestinationProfileExtended()
+    {
+        $this->setForceDestinationProfile('urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended');
+
+        return $this;
+    }
+
+    /**
+     * Force the XRECHNUNG 3.0 profile
+     *
+     * @return static
+     */
+    public function setForceDestinationProfileXRechnung30()
+    {
+        $this->setForceDestinationProfile('urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0');
+
+        return $this;
+    }
 }

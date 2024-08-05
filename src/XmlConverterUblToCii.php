@@ -10,6 +10,7 @@
 namespace horstoeko\zugferdublbridge;
 
 use DateTime;
+use horstoeko\zugferdublbridge\traits\HandlesProfiles;
 
 /**
  * Class representing the converter from UBL syntax to CII syntax
@@ -22,24 +23,7 @@ use DateTime;
  */
 class XmlConverterUblToCii extends XmlConverterBase
 {
-    /**
-     * List of supported profiles
-     *
-     * @var string[]
-     */
-    private const SUPPORTED_PROFILES = [
-        'urn:factur-x.eu:1p0:minimum',
-        'urn:factur-x.eu:1p0:basicwl',
-        'urn:cen.eu:en16931:2017#compliant#urn:factur-x.eu:1p0:basic',
-        'urn:cen.eu:en16931:2017',
-        'urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended',
-        'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_1.2',
-        'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.0',
-        'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.1',
-        'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2',
-        'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.3',
-        'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0',
-    ];
+    use HandlesProfiles;
 
     /**
      * The UBL document root name
@@ -128,7 +112,7 @@ class XmlConverterUblToCii extends XmlConverterBase
         $rootElement = $this->source->query(sprintf('//%s', $this->ublRootName))->item(0);
         $submittedCustomizationID = $this->source->queryValue('./cbc:CustomizationID', $rootElement);
 
-        if (!in_array($submittedCustomizationID, static::SUPPORTED_PROFILES)) {
+        if ($this->isSupportedProfile($submittedCustomizationID) !== true) {
             throw new \RuntimeException(sprintf('The submitted profile %s is not supported', $submittedCustomizationID));
         }
     }
@@ -169,7 +153,11 @@ class XmlConverterUblToCii extends XmlConverterBase
             $docRootElement,
             function ($customizationIdNode) {
                 $this->destination->startElement('ram:GuidelineSpecifiedDocumentContextParameter');
-                $this->destination->element('ram:ID', $customizationIdNode->nodeValue);
+                if ($this->getForceDestinationProfile()) {
+                    $this->destination->element('ram:ID', $this->getForceDestinationProfile());
+                } else {
+                    $this->destination->element('ram:ID', $customizationIdNode->nodeValue);
+                }
                 $this->destination->endElement();
             }
         );
@@ -278,7 +266,9 @@ class XmlConverterUblToCii extends XmlConverterBase
                     }
                 );
                 $this->source->whenExists(
-                    './cac:Item/cac:OriginCountry/cbc:IdentificationCode', $invoiceLineNode, function ($invoiceLineOriginCountryNode) {
+                    './cac:Item/cac:OriginCountry/cbc:IdentificationCode',
+                    $invoiceLineNode,
+                    function ($invoiceLineOriginCountryNode) {
                         $this->destination->startElement('ram:OriginTradeCountry');
                         $this->destination->element('ram:ID', $invoiceLineOriginCountryNode->nodeValue);
                         $this->destination->endElement();
@@ -804,7 +794,9 @@ class XmlConverterUblToCii extends XmlConverterBase
         $this->destination->startElement('ram:ApplicableHeaderTradeSettlement');
 
         $this->source->whenExists(
-            './cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID[@schemeID=\'SEPA\']', $docRootElement, function ($CreditorReferenceNode) {
+            './cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID[@schemeID=\'SEPA\']',
+            $docRootElement,
+            function ($CreditorReferenceNode) {
                 $this->destination->element('ram:CreditorReferenceID', $CreditorReferenceNode->nodeValue);
             }
         );
@@ -983,7 +975,9 @@ class XmlConverterUblToCii extends XmlConverterBase
                 $this->destination->element('ram:CategoryCode', $this->source->queryValue('./cac:TaxCategory/cbc:ID', $taxSubtotalNode));
                 if ($this->source->queryValue('./cac:TaxCategory/cbc:ID', $taxSubtotalNode) == "E") {
                     $this->source->whenExists(
-                        './cbc:TaxPointDate', $docRootElement, function ($taxPointDateNode) {
+                        './cbc:TaxPointDate',
+                        $docRootElement,
+                        function ($taxPointDateNode) {
                             $this->destination->startElement('ram:TaxPointDate');
                             $this->destination->elementWithAttribute('udt:DateString', $this->convertDateTime($taxPointDateNode->nodeValue), 'format', '102');
                             $this->destination->endElement();
@@ -1069,7 +1063,9 @@ class XmlConverterUblToCii extends XmlConverterBase
             },
             function () use ($docRootElement) {
                 $this->source->whenExists(
-                    './cac:PaymentTerms/cbc:Note', $docRootElement, function ($paymentTermaNoteNode) {
+                    './cac:PaymentTerms/cbc:Note',
+                    $docRootElement,
+                    function ($paymentTermaNoteNode) {
                         $this->destination->startElement('ram:SpecifiedTradePaymentTerms');
                         $this->destination->element('ram:Description', $paymentTermaNoteNode->nodeValue);
                         $this->destination->element('ram:DirectDebitMandateID', $this->source->queryValue('./cac:PaymentMeans/cac:PaymentMandate/cbc:ID'));

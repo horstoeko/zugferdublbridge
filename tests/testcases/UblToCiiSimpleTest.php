@@ -12,7 +12,7 @@ class UblToCiiSimpleTest extends TestCase
 
     public function testLoadAndConvert(): void
     {
-        self::$document = XmlConverterUblToCii::fromFile(dirname(__FILE__) . "/../assets/ubl/1_ubl_simple.xml")->convert();
+        self::$document = XmlConverterUblToCii::fromFile(dirname(__FILE__) . "/../assets/ubl/1_ubl_simple.xml")->setForceDestinationProfileEn16931()->convert();
         $this->assertNotNull(self::$document);
     }
 

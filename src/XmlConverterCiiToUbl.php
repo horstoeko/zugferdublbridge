@@ -74,7 +74,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
 
         $submittedProfile = $this->source->queryValue('./ram:GuidelineSpecifiedDocumentContextParameter/ram:ID', $invoiceExchangeDocumentContext);
 
-        if (!$this->isSupportedProfile($submittedProfile)) {
+        if ($this->isSupportedProfile($submittedProfile) !== true) {
             throw new \RuntimeException(sprintf('The submitted profile %s is not supported', $submittedProfile));
         }
     }

@@ -74,7 +74,7 @@ trait HandlesProfiles
      * Returns the profile code to force. If no profile to force is given the
      * $default value will be returned
      *
-     * @param string $defaultProfile
+     * @param  string $defaultProfile
      * @return string
      */
     public function getForceDestinationProfileWithDefault(string $defaultProfile): string

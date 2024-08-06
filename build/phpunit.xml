@@ -12,6 +12,7 @@
             <file>../tests/testcases/CiiToUblExtendedFwTest.php</file>
             <file>../tests/testcases/CiiToUblTechnical1Test.php</file>
             <file>../tests/testcases/CiiToUblTechnical2Test.php</file>
+            <file>../tests/testcases/CiiToUblTechnical3Test.php</file>
             <file>../tests/testcases/UblToCiiSimpleTest.php</file>
         </testsuite>
     </testsuites>

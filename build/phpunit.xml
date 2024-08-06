@@ -13,6 +13,8 @@
             <file>../tests/testcases/CiiToUblTechnical1Test.php</file>
             <file>../tests/testcases/CiiToUblTechnical2Test.php</file>
             <file>../tests/testcases/CiiToUblTechnical3Test.php</file>
+            <file>../tests/testcases/CiiToUblTechnical4Test.php</file>
+            <file>../tests/testcases/CiiToUblTechnical5Test.php</file>
             <file>../tests/testcases/UblToCiiSimpleTest.php</file>
         </testsuite>
     </testsuites>

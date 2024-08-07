@@ -6,6 +6,7 @@
     <cbc:IssueDate>2017-11-13</cbc:IssueDate>
     <cbc:DueDate>2017-12-01</cbc:DueDate>
     <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+    <cbc:Note>#ADU#Bei Fragen steht Ihnen unsere Kundenbetreuung gern unter der Rufnummer [...] zur Verfügung. Beanstandungen am Inhalt dieser Rechnung sind uns innerhalb von 28 Tagen nach Erhalt der Rechnung schriftlich mitzuteilen. Nach Ablauf dieser Frist gilt der Saldo endgültig.</cbc:Note>
     <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
     <cbc:AccountingCost>4025:123:4343</cbc:AccountingCost>
     <cbc:BuyerReference>0150abc</cbc:BuyerReference>
@@ -37,6 +38,11 @@
                 <cbc:RegistrationName>SupplierOfficialName Ltd</cbc:RegistrationName>
                 <cbc:CompanyID>GB983294</cbc:CompanyID>
             </cac:PartyLegalEntity>
+            <cac:Contact>
+                <cbc:Name>Customer Service</cbc:Name>
+                <cbc:Telephone>012-3456789</cbc:Telephone>
+                <cbc:ElectronicMail>info@unknown.uucp</cbc:ElectronicMail>
+            </cac:Contact>
         </cac:Party>
     </cac:AccountingSupplierParty>
     <cac:AccountingCustomerParty>
@@ -143,9 +149,14 @@
     </cac:LegalMonetaryTotal>
     <cac:InvoiceLine>
         <cbc:ID>1</cbc:ID>
+        <cbc:Note>Some notes</cbc:Note>
         <cbc:InvoicedQuantity unitCode="DAY">7</cbc:InvoicedQuantity>
         <cbc:LineExtensionAmount currencyID="EUR">2800</cbc:LineExtensionAmount>
         <cbc:AccountingCost>Konteringsstreng</cbc:AccountingCost>
+        <cac:InvoicePeriod>
+            <cbc:StartDate>2017-10-01</cbc:StartDate>
+            <cbc:EndDate>2017-10-31</cbc:EndDate>
+        </cac:InvoicePeriod>
         <cac:OrderLineReference>
             <cbc:LineID>123</cbc:LineID>
         </cac:OrderLineReference>

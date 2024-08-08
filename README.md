@@ -12,6 +12,12 @@
 ## Table of Contents
 
 - [Title](#title)
+  - [Table of Contents](#table-of-contents)
+  - [License](#license)
+  - [Overview](#overview)
+  - [Dependencies](#dependencies)
+  - [Installation](#installation)
+  - [Usage](#usage)
 
 ## License
 
@@ -19,9 +25,14 @@ The code in this project is provided under the [MIT](https://opensource.org/lice
 
 ## Overview
 
+> [!CAUTION]
+> This library is currently still considered experimental and should therefore be used with caution. I would be happy for an issue to be posted if bugs are found.
+
+With `horstoeko/zugferdublbridge` you can convert the Factur-X/ZUGFeRD-CII-Syntax to PEPPOL UBL-Syntax and visa versa.
+
 ## Dependencies
 
-This package makes use of
+This package has no dependencies.
 
 ## Installation
 

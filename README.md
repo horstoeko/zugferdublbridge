@@ -31,6 +31,8 @@
       - [From XML string to XML file](#from-xml-string-to-xml-file-1)
       - [From XML file to XML string](#from-xml-file-to-xml-string-1)
   - [Usage with ``horstoeko/zugferd``](#usage-with-horstoekozugferd)
+    - [CII to UBL](#cii-to-ubl)
+    - [UBL to CII](#ubl-to-cii)
 
 ## License
 
@@ -145,7 +147,9 @@ $converterXmlString = XmlConverterUblToCii::fromFile($sourceXmlFilename)->conver
 
 ## Usage with ``horstoeko/zugferd``
 
-You can convert the output of ``horstoko\zugferd`` to UBL using this library:
+### CII to UBL
+
+You can convert the output of ``horstoko/zugferd`` to UBL using this library:
 
 ```php
 use horstoeko\zugferd\ZugferdDocumentBuilder;
@@ -161,4 +165,34 @@ $document
 $destinationXmlFilename = '/path/to/ubl.xml.file'
 
 XmlConverterCiiToUbl::fromString($document->getContent())->convert()->saveXmlFile($destinationXmlFilename);
+```
+
+### UBL to CII
+
+You can convert a UBL document and handle it with ``horstoko/zugferd``
+
+```php
+use horstoeko\zugferd\ZugferdDocumentReader
+use horstoeko\zugferdublbridge\XmlConverterUblToCii;
+
+$sourceXmlFilename = '/path/to/ubl.xml.file';
+
+$converterXmlString = XmlConverterUblToCii::fromFile($sourceXmlFilename)->convert()->saveXmlString();
+
+$document = ZugferdDocumentReader::readAndGuessFromContent($converterXmlString);
+
+$document->getDocumentInformation(
+    $documentno,
+    $documenttypecode,
+    $documentdate,
+    $duedate,
+    $invoiceCurrency,
+    $taxCurrency,
+    $documentname,
+    $documentlanguage,
+    $effectiveSpecifiedPeriod
+);
+
+echo "The Invoice No. is {$documentno}" . PHP_EOL;
+
 ```

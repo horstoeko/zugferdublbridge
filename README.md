@@ -1,6 +1,8 @@
 # ZUGFeRD/Factur-X (CII-Syntax) to PEPPOL (UBL-Syntax)
 
+<!--
 [![Latest Stable Version](http://poser.pugx.org/horstoeko/zugferdublbridge/v)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![Total Downloads](http://poser.pugx.org/horstoeko/zugferdublbridge/downloads)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![Latest Unstable Version](http://poser.pugx.org/horstoeko/zugferdublbridge/v/unstable)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![License](http://poser.pugx.org/horstoeko/zugferdublbridge/license)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![PHP Version Require](http://poser.pugx.org/horstoeko/zugferdublbridge/require/php)](https://packagist.org/packages/horstoeko/zugferdublbridge)
+-->
 
 [![CI (Ant, PHP 7.3)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php73.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php73.ant.yml)
 [![CI (Ant, PHP 7.4)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php74.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php74.ant.yml)

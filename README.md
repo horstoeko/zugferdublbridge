@@ -87,5 +87,5 @@ use horstoeko\zugferdublbridge\XmlConverterCiiToUbl;
 
 $sourceXmlFilename = '/path/to/cii.xml.file';
 
-$converterXmlString = XmlConverterCiiToUbl::fromFile($sourceXmlFilename)->convert()->saveXmlString($destinationXmlFilename);
+$converterXmlString = XmlConverterCiiToUbl::fromFile($sourceXmlFilename)->convert()->saveXmlString();
 ```

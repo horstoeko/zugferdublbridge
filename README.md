@@ -22,6 +22,10 @@
       - [From XML file to XML file](#from-xml-file-to-xml-file)
       - [From XML string to XML file](#from-xml-string-to-xml-file)
       - [From XML file to XML string](#from-xml-file-to-xml-string)
+    - [Convert UBL to CII](#convert-ubl-to-cii)
+      - [From XML file to XML file](#from-xml-file-to-xml-file-1)
+      - [From XML string to XML file](#from-xml-string-to-xml-file-1)
+      - [From XML file to XML string](#from-xml-file-to-xml-string-1)
 
 ## License
 
@@ -88,4 +92,38 @@ use horstoeko\zugferdublbridge\XmlConverterCiiToUbl;
 $sourceXmlFilename = '/path/to/cii.xml.file';
 
 $converterXmlString = XmlConverterCiiToUbl::fromFile($sourceXmlFilename)->convert()->saveXmlString();
+```
+
+### Convert UBL to CII
+
+#### From XML file to XML file
+
+```php
+use horstoeko\zugferdublbridge\XmlConverterUblToCii;
+
+$sourceXmlFilename = '/path/to/ubl.xml.file';
+$destinationXmlFilename = '/path/to/cii.xml.file'
+
+XmlConverterUblToCii::fromFile($sourceXmlFilename)->convert()->saveXmlFile($destinationXmlFilename);
+```
+
+#### From XML string to XML file
+
+```php
+use horstoeko\zugferdublbridge\XmlConverterUblToCii;
+
+$xmlContent = '<xml>....</xml>';
+$destinationXmlFilename = '/path/to/cii.xml.file'
+
+XmlConverterUblToCii::fromString($xmlContent)->convert()->saveXmlFile($destinationXmlFilename);
+```
+
+#### From XML file to XML string
+
+```php
+use horstoeko\zugferdublbridge\XmlConverterUblToCii;
+
+$sourceXmlFilename = '/path/to/ubl.xml.file';
+
+$converterXmlString = XmlConverterUblToCii::fromFile($sourceXmlFilename)->convert()->saveXmlString();
 ```

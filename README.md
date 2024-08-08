@@ -172,7 +172,7 @@ XmlConverterCiiToUbl::fromString($document->getContent())->convert()->saveXmlFil
 You can convert a UBL document and handle it with ``horstoko/zugferd``
 
 ```php
-use horstoeko\zugferd\ZugferdDocumentReader
+use horstoeko\zugferd\ZugferdDocumentReader;
 use horstoeko\zugferdublbridge\XmlConverterUblToCii;
 
 $sourceXmlFilename = '/path/to/ubl.xml.file';

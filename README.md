@@ -18,6 +18,10 @@
   - [Dependencies](#dependencies)
   - [Installation](#installation)
   - [Usage](#usage)
+    - [Convert CII to UBL](#convert-cii-to-ubl)
+      - [From XML file to XML file](#from-xml-file-to-xml-file)
+      - [From XML string to XML file](#from-xml-string-to-xml-file)
+      - [From XML file to XML string](#from-xml-file-to-xml-string)
 
 ## License
 
@@ -51,3 +55,37 @@ There is one recommended way to install `horstoeko/zugferdublbridge` via [Compos
 ## Usage
 
 For detailed eplanation you may have a look in the [examples](https://github.com/horstoeko/zugferdublbridge/tree/master/examples) of this package and the documentation attached to every release.
+
+### Convert CII to UBL
+
+#### From XML file to XML file
+
+```php
+use horstoeko\zugferdublbridge\XmlConverterCiiToUbl;
+
+$sourceXmlFilename = '/path/to/cii.xml.file';
+$destinationXmlFilename = '/path/to/ubl.xml.file'
+
+XmlConverterCiiToUbl::fromFile($sourceXmlFilename)->convert()->saveXmlFile($destinationXmlFilename);
+```
+
+#### From XML string to XML file
+
+```php
+use horstoeko\zugferdublbridge\XmlConverterCiiToUbl;
+
+$xmlContent = '<xml>....</xml>';
+$destinationXmlFilename = '/path/to/ubl.xml.file'
+
+XmlConverterCiiToUbl::fromString($xmlContent)->convert()->saveXmlFile($destinationXmlFilename);
+```
+
+#### From XML file to XML string
+
+```php
+use horstoeko\zugferdublbridge\XmlConverterCiiToUbl;
+
+$sourceXmlFilename = '/path/to/cii.xml.file';
+
+$converterXmlString = XmlConverterCiiToUbl::fromFile($sourceXmlFilename)->convert()->saveXmlString($destinationXmlFilename);
+```

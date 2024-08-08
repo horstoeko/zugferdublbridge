@@ -1,4 +1,4 @@
-# Title
+# ZUGFeRD/Factur-X (CII-Syntax) to PEPPOL (UBL-Syntax)
 
 [![Latest Stable Version](http://poser.pugx.org/horstoeko/zugferdublbridge/v)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![Total Downloads](http://poser.pugx.org/horstoeko/zugferdublbridge/downloads)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![Latest Unstable Version](http://poser.pugx.org/horstoeko/zugferdublbridge/v/unstable)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![License](http://poser.pugx.org/horstoeko/zugferdublbridge/license)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![PHP Version Require](http://poser.pugx.org/horstoeko/zugferdublbridge/require/php)](https://packagist.org/packages/horstoeko/zugferdublbridge)
 
@@ -11,7 +11,7 @@
 
 ## Table of Contents
 
-- [Title](#title)
+- [ZUGFeRD/Factur-X (CII-Syntax) to PEPPOL (UBL-Syntax)](#zugferdfactur-x-cii-syntax-to-peppol-ubl-syntax)
   - [Table of Contents](#table-of-contents)
   - [License](#license)
   - [Overview](#overview)

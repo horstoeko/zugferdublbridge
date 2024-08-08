@@ -1,7 +1,7 @@
 {
     "name": "horstoeko/zugferdublbridge",
-    "keywords": [],
-    "description": "A library",
+    "keywords": ["zugferd","xrechnung","factur-x","CII","UBL","electronic","invoice","convert"],
+    "description": "Convert Factur-X/ZUGFeRD (CII-Syntax) to PEPPOL (UBL-Syntax) and visa versa",
     "homepage": "https://github.com/horstoeko/zugferdublbridge",
     "type": "package",
     "license": "MIT",

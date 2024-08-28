@@ -82,13 +82,7 @@ class XmlNodeList
             return;
         }
 
-        if (!is_callable($callback)) {
-            return;
-        }
-
-        if (is_callable($callBackBefore)) {
-            call_user_func($callBackBefore);
-        }
+        $this->fireCallback($callBackBefore);
 
         $count = 0;
 
@@ -99,19 +93,27 @@ class XmlNodeList
                 break;
             }
 
-            if (is_callable($callbackBeforeEach)) {
-                call_user_func($callbackBeforeEach, $node);
-            }
-
-            call_user_func($callback, $node);
-
-            if (is_callable($callbackAfterEach)) {
-                call_user_func($callbackAfterEach, $node);
-            }
+            $this->fireCallback($callbackBeforeEach, $node);
+            $this->fireCallback($callback, $node);
+            $this->fireCallback($callbackAfterEach, $node);
         }
 
-        if (is_callable($callbackAfter)) {
-            call_user_func($callbackAfter);
+        $this->fireCallback($callbackAfter);
+    }
+
+    /**
+     * Internal helper function to fire a callback function
+     *
+     * @param  callable $callback
+     * @param  array    ...$args
+     * @return void
+     */
+    private function fireCallback($callback, ...$args)
+    {
+        if (!is_callable($callback)) {
+            return;
         }
+
+        call_user_func($callback, ...$args);
     }
 }

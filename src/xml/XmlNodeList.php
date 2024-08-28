@@ -62,33 +62,7 @@ class XmlNodeList
      */
     public function forEach($callback, $callBackBefore = null, $callbackAfter = null, $callbackBeforeEach = null, $callbackAfterEach = null)
     {
-        if (is_null($this->domNodeList)) {
-            return;
-        }
-
-        if (!is_callable($callback)) {
-            return;
-        }
-
-        if (is_callable($callBackBefore)) {
-            call_user_func($callBackBefore);
-        }
-
-        foreach ($this->domNodeList as $node) {
-            if (is_callable($callbackBeforeEach)) {
-                call_user_func($callbackBeforeEach);
-            }
-
-            call_user_func($callback, $node);
-
-            if (is_callable($callbackAfterEach)) {
-                call_user_func($callbackAfterEach);
-            }
-        }
-
-        if (is_callable($callbackAfter)) {
-            call_user_func($callbackAfter);
-        }
+        $this->forEachMax(0, $callback, $callBackBefore, $callbackAfter, $callbackBeforeEach, $callbackAfterEach);
     }
 
     /**
@@ -121,7 +95,7 @@ class XmlNodeList
         foreach ($this->domNodeList as $node) {
             $count++;
 
-            if ($count > $max) {
+            if ($count > $max && $max > 0) {
                 break;
             }
 

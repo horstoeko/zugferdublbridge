@@ -100,13 +100,13 @@ class XmlNodeList
             }
 
             if (is_callable($callbackBeforeEach)) {
-                call_user_func($callbackBeforeEach);
+                call_user_func($callbackBeforeEach, $node);
             }
 
             call_user_func($callback, $node);
 
             if (is_callable($callbackAfterEach)) {
-                call_user_func($callbackAfterEach);
+                call_user_func($callbackAfterEach, $node);
             }
         }
 

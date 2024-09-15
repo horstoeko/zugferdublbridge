@@ -15,6 +15,8 @@ use DOMDocument;
 use DOMNodeList;
 use horstoeko\zugferdublbridge\xml\XmlNodeList;
 use horstoeko\zugferdublbridge\XmlDocumentBase;
+use RuntimeException;
+use Throwable;
 
 /**
  * Class representing the XML reader helper
@@ -67,7 +69,19 @@ class XmlDocumentReader extends XmlDocumentBase
      */
     public function loadFromXmlString(string $source): XmlDocumentReader
     {
-        $this->internalDomDocument->loadXML($source);
+        $prevUseInternalErrors = \libxml_use_internal_errors(true);
+
+        try {
+            $this->internalDomDocument->loadXML($source);
+            if (libxml_get_last_error()) {
+                throw new RuntimeException("Invalid XML detected.");
+            }
+        } catch (Throwable $e) {
+            throw new RuntimeException("Invalid XML detected.");
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($prevUseInternalErrors);
+        }
 
         $this->registerDomXPath();
         $this->registerNamespacesInDomXPath();

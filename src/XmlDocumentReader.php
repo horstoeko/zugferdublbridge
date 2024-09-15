@@ -97,7 +97,19 @@ class XmlDocumentReader extends XmlDocumentBase
      */
     public function loadFromXmlFile(string $filename): XmlDocumentReader
     {
-        $this->internalDomDocument->load($filename);
+        $prevUseInternalErrors = \libxml_use_internal_errors(true);
+        
+        try {
+            $this->internalDomDocument->load($filename);
+            if (libxml_get_last_error()) {
+                throw new RuntimeException("Invalid XML detected.");
+            }
+        } catch (Throwable $e) {
+            throw new RuntimeException("Invalid XML detected.");
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($prevUseInternalErrors);
+        }
 
         $this->registerDomXPath();
         $this->registerNamespacesInDomXPath();

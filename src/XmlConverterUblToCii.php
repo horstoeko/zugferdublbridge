@@ -467,7 +467,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                     }
                 );
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'TAX\']',
                     $invoiceAccountingSupplierPartyNode,
                     function ($invoiceAccountingSupplierPartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');
@@ -586,7 +586,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                     }
                 );
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'TAX\']',
                     $invoiceAccountingCustomerPartyNode,
                     function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');
@@ -643,7 +643,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                     }
                 );
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'TAX\']',
                     $invoiceTaxRepresentativePartyNode,
                     function ($invoiceTaxRepresentativePartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');
@@ -906,7 +906,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                     }
                 );
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'TAX\']',
                     $invoicePayeePartyNode,
                     function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');

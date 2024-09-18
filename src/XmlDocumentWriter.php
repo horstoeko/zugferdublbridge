@@ -251,6 +251,26 @@ class XmlDocumentWriter extends XmlDocumentBase
     }
 
     /**
+     * Start a group
+     *
+     * @param  string   $tagName
+     * @param  callable $callback
+     * @return void
+     */
+    public function group(string $tagName, $callback): void
+    {
+        if (!is_callable($callback)) {
+            return;
+        }
+
+        $this->startElement($tagName);
+
+        call_user_func($callback);
+
+        $this->endElement();
+    }
+
+    /**
      * Get XML as a string
      *
      * @return string

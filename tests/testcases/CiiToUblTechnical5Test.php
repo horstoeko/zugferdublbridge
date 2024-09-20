@@ -57,7 +57,7 @@ class CiiToUblTechnical5Test extends TestCase
     {
         $this->assertXPathValueWithIndexAndAttribute('/ubl:CreditNote/cac:AccountingSupplierParty/cac:Party/cbc:EndpointID', 0, 'seller@email.de', 'schemeID', 'EM');
         $this->assertXPathNotExistsWithIndex('/ubl:CreditNote/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID', 0);
-        $this->assertXPathValueWithIndex('/ubl:CreditNote/cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name', 0, "[Seller name]");
+        $this->assertXPathNotExistsWithIndex('/ubl:CreditNote/cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name', 0);
         $this->assertXPathValueWithIndex('/ubl:CreditNote/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:StreetName', 0, "[Seller street]");
         $this->assertXPathNotExistsWithIndex('/ubl:CreditNote/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName', 0);
         $this->assertXPathValueWithIndex('/ubl:CreditNote/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName', 0, "[Seller city]");
@@ -81,7 +81,7 @@ class CiiToUblTechnical5Test extends TestCase
         $this->assertXPathValueWithIndexAndAttribute('/ubl:CreditNote/cac:AccountingCustomerParty/cac:Party/cbc:EndpointID', 0, 'buyer@info.de', 'schemeID', 'EM');
         $this->assertXPathNotExistsWithIndex('/ubl:CreditNote/cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:CreditNote/cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID', 1);
-        $this->assertXPathValueWithIndex('/ubl:CreditNote/cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name', 0, "[Buyer name]");
+        $this->assertXPathNotExistsWithIndex('/ubl:CreditNote/cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name', 0);
         $this->assertXPathValueWithIndex('/ubl:CreditNote/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:StreetName', 0, "[Buyer street]");
         $this->assertXPathNotExistsWithIndex('/ubl:CreditNote/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName', 0);
         $this->assertXPathValueWithIndex('/ubl:CreditNote/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CityName', 0, "[Buyer city]");

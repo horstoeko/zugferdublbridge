@@ -1,15 +1,11 @@
 # ZUGFeRD/Factur-X (CII-Syntax) to PEPPOL (UBL-Syntax)
 
-<!--
-[![Latest Stable Version](http://poser.pugx.org/horstoeko/zugferdublbridge/v)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![Total Downloads](http://poser.pugx.org/horstoeko/zugferdublbridge/downloads)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![Latest Unstable Version](http://poser.pugx.org/horstoeko/zugferdublbridge/v/unstable)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![License](http://poser.pugx.org/horstoeko/zugferdublbridge/license)](https://packagist.org/packages/horstoeko/zugferdublbridge) [![PHP Version Require](http://poser.pugx.org/horstoeko/zugferdublbridge/require/php)](https://packagist.org/packages/horstoeko/zugferdublbridge)
--->
+[![Latest Stable Version](https://img.shields.io/packagist/v/horstoeko/zugferdublbridge.svg?style=plastic)](https://packagist.org/packages/horstoeko/zugferdublbridge)
+[![PHP version](https://img.shields.io/packagist/php-v/horstoeko/zugferdublbridge.svg?style=plastic)](https://packagist.org/packages/horstoeko/zugferdublbridge)
+[![License](https://img.shields.io/packagist/l/horstoeko/zugferdublbridge.svg?style=plastic)](https://packagist.org/packages/horstoeko/zugferdublbridge)
 
-[![CI (Ant, PHP 7.3)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php73.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php73.ant.yml)
-[![CI (Ant, PHP 7.4)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php74.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php74.ant.yml)
-[![CI (Ant, PHP 8.0)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php80.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php80.ant.yml)
-[![CI (Ant, PHP 8.1)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php81.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php81.ant.yml)
-[![CI (Ant, PHP 8.2)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php82.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php82.ant.yml)
-[![CI (Ant, PHP 8.3)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php83.ant.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.php83.ant.yml)
+[![Build Status](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.ci.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.ci.yml)
+[![Release Status](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.release.yml/badge.svg)](https://github.com/horstoeko/zugferdublbridge/actions/workflows/build.release.yml)
 
 ## Table of Contents
 

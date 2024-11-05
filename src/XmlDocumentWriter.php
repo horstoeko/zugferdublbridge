@@ -188,7 +188,7 @@ class XmlDocumentWriter extends XmlDocumentBase
         $this->startElement($tag, $value);
 
         foreach ($attributes as $attributeName => $attributeValue) {
-            if (!is_null($attributeName) && $attributeName != '' && !is_null($attributeValue) && $attributeValue != '') {
+            if ($attributeName != null && $attributeName != '' && $attributeValue != null && $attributeValue != '') {
                 $this->attribute($attributeName, $attributeValue);
             }
         }

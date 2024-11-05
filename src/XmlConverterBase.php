@@ -41,7 +41,7 @@ abstract class XmlConverterBase
     /**
      * Constructor
      */
-    protected final function __construct()
+    final protected function __construct()
     {
         $this->source = (new XmlDocumentReader());
         $this->destination = (new XmlDocumentWriter($this->getDestinationRoot()));
@@ -159,33 +159,33 @@ abstract class XmlConverterBase
      *
      * @return string
      */
-    protected abstract function getDestinationRoot(): string;
+    abstract protected function getDestinationRoot(): string;
 
     /**
      * Get namespaces for the source document
      *
      * @return array<string,string>
      */
-    protected abstract function getSourceNamespaces(): array;
+    abstract protected function getSourceNamespaces(): array;
 
     /**
      * Get namespaces for the destination document
      *
      * @return array<string,string>
      */
-    protected abstract function getDestinationNamespaces(): array;
+    abstract protected function getDestinationNamespaces(): array;
 
     /**
      * Checks that the source is valid
      *
      * @return static
      */
-    protected abstract function checkValidSource();
+    abstract protected function checkValidSource();
 
     /**
      * Perform convert
      *
      * @return static
      */
-    protected abstract function doConvert();
+    abstract protected function doConvert();
 }

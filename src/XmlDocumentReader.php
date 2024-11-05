@@ -39,8 +39,6 @@ class XmlDocumentReader extends XmlDocumentBase
     /**
      * Constructor
      *
-     * @param  string $tag
-     * Specify the root tag of the document
      * @return XmlDocumentReader
      */
     public function __construct()
@@ -54,9 +52,9 @@ class XmlDocumentReader extends XmlDocumentBase
      *
      * @param  string $namespace
      * @param  string $value
-     * @return XmlDocumentReader
+     * @return static
      */
-    public function addNamespace(string $namespace, string $value): XmlDocumentBase
+    public function addNamespace(string $namespace, string $value)
     {
         return parent::addNamespace($namespace, $value);
     }
@@ -98,7 +96,7 @@ class XmlDocumentReader extends XmlDocumentBase
     public function loadFromXmlFile(string $filename): XmlDocumentReader
     {
         $prevUseInternalErrors = \libxml_use_internal_errors(true);
-        
+
         try {
             $this->internalDomDocument->load($filename);
             if (libxml_get_last_error()) {

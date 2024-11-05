@@ -77,6 +77,8 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         if ($this->isSupportedProfile($submittedProfile) !== true) {
             throw new \RuntimeException(sprintf('The submitted profile %s is not supported', $submittedProfile));
         }
+
+        return $this;
     }
 
     /**
@@ -252,7 +254,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $this->source->whenExists(
             './ram:InvoiceReferencedDocument',
             $invoiceHeaderSettlement,
-            function ($nodeFound) use ($invoiceHeaderSettlement) {
+            function ($nodeFound) {
                 $this->destination->startElement('cac:BillingReference');
                 $this->destination->startElement('cac:InvoiceDocumentReference');
                 $this->destination->element('cbc:ID', $this->source->queryValue('./ram:IssuerAssignedID', $nodeFound));
@@ -392,7 +394,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $this->source->whenExists(
             './ram:SellerTradeParty',
             $invoiceHeaderAgreement,
-            function ($sellerTradePartyNode) use ($invoiceHeaderAgreement, $invoiceHeaderSettlement) {
+            function ($sellerTradePartyNode) use ($invoiceHeaderSettlement) {
                 $this->destination->startElement('cac:AccountingSupplierParty');
                 $this->destination->startElement('cac:Party');
 
@@ -542,7 +544,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $this->source->whenExists(
             './ram:BuyerTradeParty',
             $invoiceHeaderAgreement,
-            function ($buyerTradePartyNode) use ($invoiceHeaderAgreement) {
+            function ($buyerTradePartyNode) {
                 $this->destination->startElement('cac:AccountingCustomerParty');
                 $this->destination->startElement('cac:Party');
 

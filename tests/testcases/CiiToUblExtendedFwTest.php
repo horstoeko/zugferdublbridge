@@ -124,7 +124,7 @@ class CiiToUblExtendedFwTest extends TestCase
     public function testTaxRepresentativeParty(): void
     {
         $this->assertXPathNotExists('/ubl:Invoice/cac:TaxRepresentativeParty/cbc:EndpointID');
-        $this->assertXPathNotExists('/ubl:Invoice/cac:TaxRepresentativeParty/cac:PartyIdentification/cbc:ID', 0);
+        $this->assertXPathNotExists('/ubl:Invoice/cac:TaxRepresentativeParty/cac:PartyIdentification/cbc:ID');
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:TaxRepresentativeParty/cac:PartyName/cbc:Name', 0, "Global Supplies Financial Services");
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:TaxRepresentativeParty/cac:PostalAddress/cbc:StreetName', 0, 'Friedrichstraße 165');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:TaxRepresentativeParty/cac:PostalAddress/cbc:AdditionalStreetName', 0);

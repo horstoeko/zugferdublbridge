@@ -37,7 +37,7 @@ class XmlNodeList
      */
     public static function createFromDomNodelist(?DOMNodeList $domNodeList = null): XmlNodeList
     {
-        return new static($domNodeList);
+        return new XmlNodeList($domNodeList);
     }
 
     /**

@@ -39,11 +39,11 @@ class XmlDocumentBase
     /**
      * Add a namespace declaration to the root
      *
-     * @param  string $qualifiedName
+     * @param  string $namespace
      * @param  string $value
-     * @return XmlDocumentBase
+     * @return static
      */
-    public function addNamespace(string $namespace, string $value): XmlDocumentBase
+    public function addNamespace(string $namespace, string $value)
     {
         $this->registeredNamespaces[$namespace] = $value;
 

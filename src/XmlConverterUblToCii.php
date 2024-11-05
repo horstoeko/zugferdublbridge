@@ -127,6 +127,8 @@ class XmlConverterUblToCii extends XmlConverterBase
         if ($this->isSupportedProfile($submittedCustomizationID) !== true) {
             throw new \RuntimeException(sprintf('The submitted profile %s is not supported', $submittedCustomizationID));
         }
+
+        return $this;
     }
 
     /**
@@ -395,7 +397,9 @@ class XmlConverterUblToCii extends XmlConverterBase
                     }
                 );
                 $this->source->whenOneExists(
-                    ['./cac:PartyLegalEntity/cbc:CompanyID', './cac:PartyName/cbc:Name'], [$invoiceAccountingSupplierPartyNode, $invoiceAccountingSupplierPartyNode], function () use ($invoiceAccountingSupplierPartyNode) {
+                    ['./cac:PartyLegalEntity/cbc:CompanyID', './cac:PartyName/cbc:Name'],
+                    [$invoiceAccountingSupplierPartyNode, $invoiceAccountingSupplierPartyNode],
+                    function () use ($invoiceAccountingSupplierPartyNode) {
                         $this->destination->startElement('ram:SpecifiedLegalOrganization');
                         $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('./cac:PartyLegalEntity/cbc:CompanyID', $invoiceAccountingSupplierPartyNode), 'schemeID', $this->source->queryValue('./cac:PartyLegalEntity/cbc:CompanyID/@schemeID', $invoiceAccountingSupplierPartyNode));
                         $this->destination->element('ram:TradingBusinessName', $this->source->queryValue('./cac:PartyName/cbc:Name', $invoiceAccountingSupplierPartyNode));
@@ -518,7 +522,9 @@ class XmlConverterUblToCii extends XmlConverterBase
                     }
                 );
                 $this->source->whenOneExists(
-                    ['./cac:PartyLegalEntity/cbc:CompanyID', './cac:PartyName/cbc:Name'], [$invoiceAccountingCustomerPartyNode, $invoiceAccountingCustomerPartyNode], function () use ($invoiceAccountingCustomerPartyNode) {
+                    ['./cac:PartyLegalEntity/cbc:CompanyID', './cac:PartyName/cbc:Name'],
+                    [$invoiceAccountingCustomerPartyNode, $invoiceAccountingCustomerPartyNode],
+                    function () use ($invoiceAccountingCustomerPartyNode) {
                         $this->destination->startElement('ram:SpecifiedLegalOrganization');
                         $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('./cac:PartyLegalEntity/cbc:CompanyID', $invoiceAccountingCustomerPartyNode), 'schemeID', $this->source->queryValue('./cac:PartyLegalEntity/cbc:CompanyID/@schemeID', $invoiceAccountingCustomerPartyNode));
                         $this->destination->element('ram:TradingBusinessName', $this->source->queryValue('./cac:PartyName/cbc:Name', $invoiceAccountingCustomerPartyNode));
@@ -875,12 +881,12 @@ class XmlConverterUblToCii extends XmlConverterBase
                 $this->source->whenExists(
                     './cac:Contact',
                     $invoicePayeePartyNode,
-                    function ($invoiceAccountingCustomerPartyContactNode) {
+                    function ($invoicePayeePartyContactNode) {
                         $this->destination->startElement('ram:DefinedTradeContact');
-                        $this->destination->element('ram:PersonName', $this->source->queryValue('./cbc:Name', $invoiceAccountingCustomerPartyContactNode));
+                        $this->destination->element('ram:PersonName', $this->source->queryValue('./cbc:Name', $invoicePayeePartyContactNode));
                         $this->source->whenExists(
                             './cbc:Telephone',
-                            $invoiceAccountingCustomerPartyContactNode,
+                            $invoicePayeePartyContactNode,
                             function ($invoiceAccountingCustomerPartyContactPhoneNode) {
                                 $this->destination->startElement('ram:TelephoneUniversalCommunication');
                                 $this->destination->element('ram:CompleteNumber', $invoiceAccountingCustomerPartyContactPhoneNode->nodeValue);
@@ -889,7 +895,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                         );
                         $this->source->whenExists(
                             './cbc:ElectronicMail',
-                            $invoiceAccountingCustomerPartyContactNode,
+                            $invoicePayeePartyContactNode,
                             function ($invoiceAccountingCustomerPartyContactMailNode) {
                                 $this->destination->startElement('ram:EmailURIUniversalCommunication');
                                 $this->destination->element('ram:URIID', $invoiceAccountingCustomerPartyContactMailNode->nodeValue);
@@ -902,14 +908,14 @@ class XmlConverterUblToCii extends XmlConverterBase
                 $this->source->whenExists(
                     './cac:PostalAddress',
                     $invoicePayeePartyNode,
-                    function ($invoiceAccountingCustomerPartyPostalAddressNode) {
+                    function ($invoicePayeePartyyPostalAddressNode) {
                         $this->destination->startElement('ram:PostalTradeAddress');
-                        $this->destination->element('ram:PostcodeCode', $this->source->queryValue('./cbc:PostalZone', $invoiceAccountingCustomerPartyPostalAddressNode));
-                        $this->destination->element('ram:LineOne', $this->source->queryValue('./cbc:StreetName', $invoiceAccountingCustomerPartyPostalAddressNode));
-                        $this->destination->element('ram:LineTwo', $this->source->queryValue('./cbc:AdditionalStreetName', $invoiceAccountingCustomerPartyPostalAddressNode));
-                        $this->destination->element('ram:LineThree', $this->source->queryValue('./cac:AddressLine/cbc:Line', $invoiceAccountingCustomerPartyPostalAddressNode));
-                        $this->destination->element('ram:CityName', $this->source->queryValue('./cbc:CityName', $invoiceAccountingCustomerPartyPostalAddressNode));
-                        $this->destination->element('ram:CountryID', $this->source->queryValue('./cac:Country/cbc:IdentificationCode', $invoiceAccountingCustomerPartyPostalAddressNode));
+                        $this->destination->element('ram:PostcodeCode', $this->source->queryValue('./cbc:PostalZone', $invoicePayeePartyyPostalAddressNode));
+                        $this->destination->element('ram:LineOne', $this->source->queryValue('./cbc:StreetName', $invoicePayeePartyyPostalAddressNode));
+                        $this->destination->element('ram:LineTwo', $this->source->queryValue('./cbc:AdditionalStreetName', $invoicePayeePartyyPostalAddressNode));
+                        $this->destination->element('ram:LineThree', $this->source->queryValue('./cac:AddressLine/cbc:Line', $invoicePayeePartyyPostalAddressNode));
+                        $this->destination->element('ram:CityName', $this->source->queryValue('./cbc:CityName', $invoicePayeePartyyPostalAddressNode));
+                        $this->destination->element('ram:CountryID', $this->source->queryValue('./cac:Country/cbc:IdentificationCode', $invoicePayeePartyyPostalAddressNode));
                         $this->destination->endElement();
                     }
                 );
@@ -1161,9 +1167,9 @@ class XmlConverterUblToCii extends XmlConverterBase
      * Convert UBL date to CII date
      *
      * @param  string|null $dateTimeString
-     * @return string
+     * @return string|null
      */
-    private function convertDateTime(?string $dateTimeString): string
+    private function convertDateTime(?string $dateTimeString): ?string
     {
         if (is_null($dateTimeString)) {
             return null;

@@ -409,6 +409,11 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     }
                 );
 
+                // Set the IDs of the seller
+                // ID's cardinallity
+                // CII - ID is 0..unbounded, GlobalID is 0..unbounded
+                // UBL - PartyIdentification is 0..unbounded
+
                 $this->source->queryAll('./ram:ID', $sellerTradePartyNode)->forEach(
                     function ($sellerTradePartyIdNode) {
                         $this->destination->startElement('cac:PartyIdentification');
@@ -430,9 +435,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     $invoiceHeaderSettlement,
                     function ($DirectDebitMandateNode) {
                         $this->destination->startElement('cac:PartyIdentification');
-                        $this->destination->startElement('cbc:ID', $DirectDebitMandateNode->nodeValue);
-                        $this->destination->attribute('schemeID', 'SEPA');
-                        $this->destination->endElement();
+                        $this->destination->elementWithAttribute('cbc:ID', $DirectDebitMandateNode->nodeValue, 'schemeID', 'SEPA');
                         $this->destination->endElement();
                     }
                 );
@@ -558,6 +561,11 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->endElement();
                     }
                 );
+
+                // Set the IDs of the buyer
+                // ID's cardinallity
+                // CII - ID is 0..1, GlobalID is 0..1
+                // UBL - PartyIdentification is 0..1
 
                 $this->source->whenExists(
                     './ram:GlobalID',
@@ -702,6 +710,11 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     }
                 );
 
+                // Set the IDs of the payee
+                // ID's cardinallity
+                // CII - ID is 0..1, GlobalID is 0..1
+                // UBL - PartyIdentification is 0..1
+
                 $this->source->whenExists(
                     './ram:GlobalID',
                     $payeeTradePartyNode,
@@ -836,16 +849,6 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 $this->destination->startElement('cac:TaxRepresentativeParty');
 
                 $this->source->whenExists(
-                    './ram:URIUniversalCommunication/ram:URIID',
-                    $sellerTaxRepresentativePartyNode,
-                    function ($sellerTaxRepresentativePartyUniversalCommNode) {
-                        $this->destination->startElement('cbc:EndpointID', $sellerTaxRepresentativePartyUniversalCommNode->nodeValue);
-                        $this->destination->attribute('schemeID', $this->source->queryValue('./@schemeID', $sellerTaxRepresentativePartyUniversalCommNode));
-                        $this->destination->endElement();
-                    }
-                );
-
-                $this->source->whenExists(
                     './ram:Name',
                     $sellerTaxRepresentativePartyNode,
                     function ($sellerTaxRepresentativePartyNameNode) {
@@ -944,6 +947,11 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 );
 
                 $this->destination->startElement('cac:DeliveryLocation');
+
+                // Set the IDs of the ship to party
+                // ID's cardinallity
+                // CII - ID is 0..1, GlobalID is 0..1
+                // UBL - PartyIdentification is 0..1
 
                 $this->source->whenExists(
                     './ram:GlobalID',

@@ -11,6 +11,7 @@ namespace horstoeko\zugferdublbridge;
 
 use DOMElement;
 use DOMDocument;
+use horstoeko\zugferdublbridge\traits\HandlesCallbacks;
 use horstoeko\zugferdublbridge\XmlDocumentBase;
 
 /**
@@ -24,6 +25,8 @@ use horstoeko\zugferdublbridge\XmlDocumentBase;
  */
 class XmlDocumentWriter extends XmlDocumentBase
 {
+    use HandlesCallbacks;
+
     /**
      * Internal stack
      *
@@ -264,9 +267,7 @@ class XmlDocumentWriter extends XmlDocumentBase
         }
 
         $this->startElement($tagName);
-
-        call_user_func($callback);
-
+        $this->fireCallback($callback);
         $this->endElement();
     }
 

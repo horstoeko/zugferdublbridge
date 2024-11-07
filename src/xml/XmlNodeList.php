@@ -10,6 +10,7 @@
 namespace horstoeko\zugferdublbridge\xml;
 
 use DOMNodeList;
+use horstoeko\zugferdublbridge\traits\HandlesCallbacks;
 
 /**
  * Class representing a XML node list
@@ -22,6 +23,8 @@ use DOMNodeList;
  */
 class XmlNodeList
 {
+    use HandlesCallbacks;
+
     /**
      * Nodelist
      *
@@ -99,21 +102,5 @@ class XmlNodeList
         }
 
         $this->fireCallback($callbackAfter);
-    }
-
-    /**
-     * Internal helper function to fire a callback function
-     *
-     * @param  callable $callback
-     * @param  array    ...$args
-     * @return void
-     */
-    private function fireCallback($callback, ...$args)
-    {
-        if (!is_callable($callback)) {
-            return;
-        }
-
-        call_user_func($callback, ...$args);
     }
 }

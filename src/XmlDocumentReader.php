@@ -13,6 +13,7 @@ use DOMNode;
 use DOMXPath;
 use DOMDocument;
 use DOMNodeList;
+use horstoeko\zugferdublbridge\traits\HandlesCallbacks;
 use horstoeko\zugferdublbridge\xml\XmlNodeList;
 use horstoeko\zugferdublbridge\XmlDocumentBase;
 use RuntimeException;
@@ -29,6 +30,8 @@ use Throwable;
  */
 class XmlDocumentReader extends XmlDocumentBase
 {
+    use HandlesCallbacks;
+
     /**
      * Internal XPath
      *
@@ -223,17 +226,13 @@ class XmlDocumentReader extends XmlDocumentBase
     public function whenExists(string $expression, ?DOMNode $contextNode, $callback, $callbackElse = null): XmlDocumentReader
     {
         if ($this->exists($expression, $contextNode)) {
-            if (is_callable($callback)) {
-                call_user_func(
-                    $callback,
-                    $this->query($expression, $contextNode)->item(0),
-                    $this->query($expression, $contextNode)->item(0)->parentNode
-                );
-            }
+            $this->fireCallback(
+                $callback,
+                $this->query($expression, $contextNode)->item(0),
+                $this->query($expression, $contextNode)->item(0)->parentNode
+            );
         } else {
-            if (is_callable($callbackElse)) {
-                call_user_func($callbackElse);
-            }
+            $this->fireCallback($callbackElse);
         }
 
         return $this;
@@ -251,17 +250,13 @@ class XmlDocumentReader extends XmlDocumentBase
     public function whenNotExists(string $expression, ?DOMNode $contextNode, $callback, $callbackElse = null): XmlDocumentReader
     {
         if (!$this->exists($expression, $contextNode)) {
-            if (is_callable($callback)) {
-                call_user_func(
-                    $callback,
-                    $this->query($expression, $contextNode)->item(0),
-                    $this->query($expression, $contextNode)->item(0)->parentNode
-                );
-            }
+            $this->fireCallback(
+                $callback,
+                $this->query($expression, $contextNode)->item(0),
+                $this->query($expression, $contextNode)->item(0)->parentNode
+            );
         } else {
-            if (is_callable($callbackElse)) {
-                call_user_func($callbackElse);
-            }
+            $this->fireCallback($callbackElse);
         }
 
         return $this;
@@ -293,17 +288,13 @@ class XmlDocumentReader extends XmlDocumentBase
         }
 
         if ($equals === true) {
-            if (is_callable($callback)) {
-                call_user_func(
-                    $callback,
-                    $this->query($expression, $contextNode)->item(0),
-                    $this->query($expression, $contextNode)->item(0)->parentNode
-                );
-            }
+            $this->fireCallback(
+                $callback,
+                $this->query($expression, $contextNode)->item(0),
+                $this->query($expression, $contextNode)->item(0)->parentNode
+            );
         } else {
-            if (is_callable($callbackElse)) {
-                call_user_func($callbackElse);
-            }
+            $this->fireCallback($callbackElse);
         }
 
         return $this;
@@ -335,21 +326,9 @@ class XmlDocumentReader extends XmlDocumentBase
         }
 
         if ($equals === false) {
-            if (is_callable($callback)) {
-                if ($this->query($expression, $contextNode)->item(0)) {
-                    call_user_func(
-                        $callback,
-                        $this->query($expression, $contextNode)->item(0),
-                        $this->query($expression, $contextNode)->item(0)->parentNode
-                    );
-                } else {
-                    call_user_func($callback);
-                }
-            }
+            $this->fireCallback($callback);
         } else {
-            if (is_callable($callbackElse)) {
-                call_user_func($callbackElse);
-            }
+            $this->fireCallback($callbackElse);
         }
 
         return $this;
@@ -368,16 +347,12 @@ class XmlDocumentReader extends XmlDocumentBase
     {
         foreach ($expressions as $expressionIndex => $expression) {
             if ($this->exists($expression, $contextNodes[$expressionIndex])) {
-                if (is_callable($callback)) {
-                    call_user_func($callback, $this->query($expression, $contextNodes[$expressionIndex])->item(0), $expressionIndex, $expression);
-                }
+                $this->fireCallback($callback, $this->query($expression, $contextNodes[$expressionIndex])->item(0), $expressionIndex, $expression);
                 return $this;
             }
         }
 
-        if (is_callable($callbackElse)) {
-            call_user_func($callbackElse);
-        }
+        $this->fireCallback($callbackElse);
 
         return $this;
     }

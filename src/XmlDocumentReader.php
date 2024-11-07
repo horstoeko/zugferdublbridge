@@ -336,11 +336,15 @@ class XmlDocumentReader extends XmlDocumentBase
 
         if ($equals === false) {
             if (is_callable($callback)) {
-                call_user_func(
-                    $callback,
-                    $this->query($expression, $contextNode)->item(0),
-                    $this->query($expression, $contextNode)->item(0)->parentNode
-                );
+                if ($this->query($expression, $contextNode)->item(0)) {
+                    call_user_func(
+                        $callback,
+                        $this->query($expression, $contextNode)->item(0),
+                        $this->query($expression, $contextNode)->item(0)->parentNode
+                    );
+                } else {
+                    call_user_func($callback);
+                }
             }
         } else {
             if (is_callable($callbackElse)) {

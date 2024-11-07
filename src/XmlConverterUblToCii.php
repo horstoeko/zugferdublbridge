@@ -494,27 +494,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'TAX\']',
-                    $invoiceAccountingSupplierPartyNode,
-                    function ($invoiceAccountingSupplierPartyTaxSchemeNode) {
-                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
-                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingSupplierPartyTaxSchemeNode), 'schemeID', 'FC');
-                        $this->destination->endElement();
-                    }
-                );
-
-                $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
-                    $invoiceAccountingSupplierPartyNode,
-                    function ($invoiceAccountingSupplierPartyTaxSchemeNode) {
-                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
-                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingSupplierPartyTaxSchemeNode), 'schemeID', 'FC');
-                        $this->destination->endElement();
-                    }
-                );
-
-                $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'???\']',
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'LOC\']',
                     $invoiceAccountingSupplierPartyNode,
                     function ($invoiceAccountingSupplierPartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');
@@ -645,27 +625,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'TAX\']',
-                    $invoiceAccountingCustomerPartyNode,
-                    function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
-                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
-                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingCustomerPartyTaxSchemeNode), 'schemeID', 'FC');
-                        $this->destination->endElement();
-                    }
-                );
-
-                $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
-                    $invoiceAccountingCustomerPartyNode,
-                    function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
-                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
-                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingCustomerPartyTaxSchemeNode), 'schemeID', 'FC');
-                        $this->destination->endElement();
-                    }
-                );
-
-                $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'???\']',
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'LOC\']',
                     $invoiceAccountingCustomerPartyNode,
                     function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');
@@ -712,27 +672,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'TAX\']',
-                    $invoiceTaxRepresentativePartyNode,
-                    function ($invoiceTaxRepresentativePartyTaxSchemeNode) {
-                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
-                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceTaxRepresentativePartyTaxSchemeNode), 'schemeID', 'FC');
-                        $this->destination->endElement();
-                    }
-                );
-
-                $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
-                    $invoiceTaxRepresentativePartyNode,
-                    function ($invoiceTaxRepresentativePartyTaxSchemeNode) {
-                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
-                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceTaxRepresentativePartyTaxSchemeNode), 'schemeID', 'FC');
-                        $this->destination->endElement();
-                    }
-                );
-
-                $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'???\']',
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'LOC\']',
                     $invoiceTaxRepresentativePartyNode,
                     function ($invoiceTaxRepresentativePartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');
@@ -1035,27 +975,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'TAX\']',
-                    $invoicePayeePartyNode,
-                    function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
-                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
-                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingCustomerPartyTaxSchemeNode), 'schemeID', 'FC');
-                        $this->destination->endElement();
-                    }
-                );
-
-                $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
-                    $invoicePayeePartyNode,
-                    function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
-                        $this->destination->startElement('ram:SpecifiedTaxRegistration');
-                        $this->destination->elementWithAttribute('ram:ID', $this->source->queryValue('../../cbc:CompanyID', $invoiceAccountingCustomerPartyTaxSchemeNode), 'schemeID', 'FC');
-                        $this->destination->endElement();
-                    }
-                );
-
-                $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'???\']',
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'LOC\']',
                     $invoicePayeePartyNode,
                     function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');

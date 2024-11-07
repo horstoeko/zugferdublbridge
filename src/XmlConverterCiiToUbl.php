@@ -502,7 +502,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->startElement('cac:PartyTaxScheme');
                         $this->destination->element('cbc:CompanyID', $sellerTradePartyTaxRegNode->nodeValue);
                         $this->destination->startElement('cac:TaxScheme');
-                        $this->destination->element('cbc:ID', 'TAX');
+                        $this->destination->element('cbc:ID', 'LOC');
                         $this->destination->endElement();
                         $this->destination->endElement();
                     }
@@ -650,7 +650,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->startElement('cac:PartyTaxScheme');
                         $this->destination->element('cbc:CompanyID', $sellerTradePartyTaxRegNode->nodeValue);
                         $this->destination->startElement('cac:TaxScheme');
-                        $this->destination->element('cbc:ID', 'TAX');
+                        $this->destination->element('cbc:ID', 'LOC');
                         $this->destination->endElement();
                         $this->destination->endElement();
                     }
@@ -798,7 +798,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->startElement('cac:PartyTaxScheme');
                         $this->destination->element('cbc:CompanyID', $sellerTradePartyTaxRegNode->nodeValue);
                         $this->destination->startElement('cac:TaxScheme');
-                        $this->destination->element('cbc:ID', 'TAX');
+                        $this->destination->element('cbc:ID', 'LOC');
                         $this->destination->endElement();
                         $this->destination->endElement();
                     }
@@ -910,7 +910,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->startElement('cac:PartyTaxScheme');
                         $this->destination->element('cbc:CompanyID', $sellerTradePartyTaxRegNode->nodeValue);
                         $this->destination->startElement('cac:TaxScheme');
-                        $this->destination->element('cbc:ID', 'TAX');
+                        $this->destination->element('cbc:ID', 'LOC');
                         $this->destination->endElement();
                         $this->destination->endElement();
                     }
@@ -1053,10 +1053,9 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $invoiceSuppyChainTradeTransaction = $this->source->query('./rsm:SupplyChainTradeTransaction', $invoiceElement)->item(0);
         $invoiceHeaderSettlement = $this->source->query('./ram:ApplicableHeaderTradeSettlement', $invoiceSuppyChainTradeTransaction)->item(0);
 
-        $this->source->queryAll(
+        $this->source->whenExists(
             './ram:SpecifiedTradeSettlementPaymentMeans',
-            $invoiceHeaderSettlement
-        )->forEach(
+            $invoiceHeaderSettlement,
             function ($paymentMeansNode) use ($invoiceHeaderSettlement) {
                 $this->destination->startElement('cac:PaymentMeans');
 

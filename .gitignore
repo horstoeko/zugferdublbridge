@@ -82,6 +82,7 @@ _backup*
 /*.phar
 /composer.lock
 /examples/*.xml
+/examples/*.html
 /examples/ubl/*.xml
 /examples/ubl/*.html
 /examples/cii/*.xml

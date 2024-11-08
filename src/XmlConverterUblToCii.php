@@ -262,9 +262,9 @@ class XmlConverterUblToCii extends XmlConverterBase
                 $this->destination->endElement();
 
                 $this->destination->startElement('ram:SpecifiedTradeProduct');
+                $this->destination->elementWithAttribute('ram:GlobalID', $this->source->queryValue('./cac:Item/cac:StandardItemIdentification/cbc:ID', $invoiceLineNode), 'schemeID', $this->source->queryValue('./cac:Item/cac:StandardItemIdentification/cbc:ID/@schemeID', $invoiceLineNode));
                 $this->destination->element('ram:SellerAssignedID', $this->source->queryValue('./cac:Item/cac:SellersItemIdentification/cbc:ID', $invoiceLineNode));
                 $this->destination->element('ram:BuyerAssignedID', $this->source->queryValue('./cac:Item/cac:BuyersItemIdentification/cbc:ID', $invoiceLineNode));
-                $this->destination->elementWithAttribute('ram:GlobalID', $this->source->queryValue('./cac:Item/cac:StandardItemIdentification/cbc:ID', $invoiceLineNode), 'schemeID', $this->source->queryValue('./cac:Item/cac:StandardItemIdentification/cbc:ID/@schemeID', $invoiceLineNode));
                 $this->destination->element('ram:Name', $this->source->queryValue('./cac:Item/cbc:Name', $invoiceLineNode));
                 $this->destination->element('ram:Description', $this->source->queryValue('./cac:Item/cbc:Description', $invoiceLineNode));
 
@@ -717,7 +717,16 @@ class XmlConverterUblToCii extends XmlConverterBase
             function ($additionalDocumentReferenceNode) {
                 $this->destination->startElement('ram:AdditionalReferencedDocument');
                 $this->destination->element('ram:IssuerAssignedID', $this->source->queryValue('./cbc:ID', $additionalDocumentReferenceNode));
-                $this->destination->element('ram:TypeCode', '916');
+                $this->source->whenExists(
+                    './cbc:DocumentTypeCode',
+                    $additionalDocumentReferenceNode,
+                    function ($docTypeCodeNode) {
+                        $this->destination->element('ram:TypeCode', $docTypeCodeNode->nodeValue);
+                    },
+                    function () {
+                        $this->destination->element('ram:TypeCode', '916');
+                    }
+                );
                 $this->destination->element('ram:Name', $this->source->queryValue('./cbc:DocumentDescription', $additionalDocumentReferenceNode));
                 $this->source->whenExists(
                     './cac:Attachment/cbc:EmbeddedDocumentBinaryObject',

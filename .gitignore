@@ -80,6 +80,7 @@ _backup*
 /build/phpdox/
 /build/phpdoc/
 /build/xmlresults/
+/build/generated/
 /*.phar
 /composer.lock
 /examples/*.xml

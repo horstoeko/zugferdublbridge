@@ -257,7 +257,7 @@ trait HandlesXmlTests
     public function saveFinalXmlToBuildResults(string $filename)
     {
         $buildDir = dirname(__FILE__) . '/../../build';
-        $buildXmlResultDir = $buildDir . '/xmlresults';
+        $buildXmlResultDir = $buildDir . '/generated';
 
         if (!is_dir($buildXmlResultDir)) {
             @mkdir($buildXmlResultDir);

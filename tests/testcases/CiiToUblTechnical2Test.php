@@ -3,8 +3,8 @@
 namespace horstoeko\zugferdublbridge\tests\testcases;
 
 use horstoeko\zugferdublbridge\tests\TestCase;
+use horstoeko\zugferdublbridge\tests\traits\HandlesXmlTests;
 use horstoeko\zugferdublbridge\XmlConverterCiiToUbl;
-use \horstoeko\zugferdublbridge\tests\traits\HandlesXmlTests;
 
 class CiiToUblTechnical2Test extends TestCase
 {

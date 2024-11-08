@@ -79,6 +79,7 @@ _backup*
 /build/pdepend/
 /build/phpdox/
 /build/phpdoc/
+/build/xmlresults/
 /*.phar
 /composer.lock
 /examples/*.xml

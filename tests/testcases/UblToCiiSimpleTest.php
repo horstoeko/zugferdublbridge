@@ -14,6 +14,7 @@ class UblToCiiSimpleTest extends TestCase
     {
         self::$document = XmlConverterUblToCii::fromFile(dirname(__FILE__) . "/../assets/ubl/1_ubl_simple.xml")->convert();
         $this->assertNotNull(self::$document);
+        $this->assertNotFalse($this->saveFinalXmlToBuildResults('1_ubl_simple_as_cii.xml'));
     }
 
     public function testDocumentGeneral(): void

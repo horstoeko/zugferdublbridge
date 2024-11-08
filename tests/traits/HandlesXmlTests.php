@@ -239,10 +239,30 @@ trait HandlesXmlTests
     }
 
     /**
-     * @covers \horstoeko\zugferd\ZugferdDocumentBuilder::writeFile
+     * Write debug file
+     *
+     * @return void
      */
     public function debugWriteFile(): void
     {
         self::$document->saveXmlFile(getcwd() . "/myfile_dbg.xml");
+    }
+
+    /**
+     * Save generated XML to buildlogs
+     *
+     * @param  string $filename
+     * @return int|false
+     */
+    public function saveFinalXmlToBuildResults(string $filename)
+    {
+        $buildDir = dirname(__FILE__) . '/../../build';
+        $buildXmlResultDir = $buildDir . '/xmlresults';
+
+        if (!is_dir($buildXmlResultDir)) {
+            @mkdir($buildXmlResultDir);
+        }
+
+        return self::$document->saveXmlFile($buildXmlResultDir . '/' . $filename);
     }
 }

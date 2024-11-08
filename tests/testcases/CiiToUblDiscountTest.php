@@ -14,6 +14,7 @@ class CiiToUblDiscountTest extends TestCase
     {
         self::$document = XmlConverterCiiToUbl::fromFile(dirname(__FILE__) . "/../assets/cii/1_cii_discount.xml")->enableAutomaticMode()->convert();
         $this->assertNotNull(self::$document);
+        $this->assertNotFalse($this->saveFinalXmlToBuildResults('1_cii_discount_as_ubl.xml'));
     }
 
     public function testDocumentGeneral(): void

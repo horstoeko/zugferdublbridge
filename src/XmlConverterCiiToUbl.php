@@ -310,14 +310,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                             function () use ($additionalReferencedDocumentNode) {
                                 $this->destination->startElement('cac:AdditionalDocumentReference');
                                 $this->destination->element('cbc:ID', $this->source->queryValue('./ram:IssuerAssignedID', $additionalReferencedDocumentNode));
-                                $this->source->whenEquals(
-                                    './ram:TypeCode',
-                                    $additionalReferencedDocumentNode,
-                                    '130',
-                                    function () use ($additionalReferencedDocumentNode) {
-                                        $this->destination->element('cbc:DocumentTypeCode', $this->source->queryValue('./ram:TypeCode', $additionalReferencedDocumentNode));
-                                    }
-                                );
+                                $this->destination->element('cbc:DocumentTypeCode', $this->source->queryValue('./ram:TypeCode', $additionalReferencedDocumentNode));
                                 $this->destination->element('cbc:DocumentDescription', $this->source->queryValue('./ram:Name', $additionalReferencedDocumentNode));
                                 $this->source->whenExists(
                                     './ram:AttachmentBinaryObject',

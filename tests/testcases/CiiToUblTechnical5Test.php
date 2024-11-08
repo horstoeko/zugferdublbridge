@@ -41,11 +41,11 @@ class CiiToUblTechnical5Test extends TestCase
         $this->assertXPathNotExists('/ubl:CreditNote/cac:DespatchDocumentReference/cbc:ID');
         $this->assertXPathNotExists('/ubl:CreditNote/cac:ReceiptDocumentReference/cbc:ID');
         $this->assertXPathValueWithIndex('/ubl:CreditNote/cac:AdditionalDocumentReference/cbc:ID', 0, '01_15_Anhang_01');
-        $this->assertXPathValueWithIndex('/ubl:CreditNote/cac:AdditionalDocumentReference/cbc:DocumentTypeCode', 1, '916');
+        $this->assertXPathNotExistsWithIndex('/ubl:CreditNote/cac:AdditionalDocumentReference/cbc:DocumentTypeCode', 0);
         $this->assertXPathValueWithIndex('/ubl:CreditNote/cac:AdditionalDocumentReference/cbc:DocumentDescription', 0, 'Aufschlüsselung der einzelnen Leistungspositionen');
         $this->assertXPathNotExistsWithIndex('/ubl:CreditNote/cac:AdditionalDocumentReference/cbc:EmbeddedDocumentBinaryObject', 0);
         $this->assertXPathValueWithIndex('/ubl:CreditNote/cac:AdditionalDocumentReference/cbc:ID', 1, '01_15_Anhang_02');
-        $this->assertXPathValueWithIndex('/ubl:CreditNote/cac:AdditionalDocumentReference/cbc:DocumentTypeCode', 1, '916');
+        $this->assertXPathNotExistsWithIndex('/ubl:CreditNote/cac:AdditionalDocumentReference/cbc:DocumentTypeCode', 1);
         $this->assertXPathValueWithIndex('/ubl:CreditNote/cac:AdditionalDocumentReference/cbc:DocumentDescription', 1, 'Gesamtübersicht der Leistungspositionen');
         $this->assertXPathNotExistsWithIndex('/ubl:CreditNote/cac:AdditionalDocumentReference/cbc:EmbeddedDocumentBinaryObject', 1);
         $this->assertXPathNotExists('/ubl:CreditNote/cac:OriginatorDocumentReference/cbc:ID');

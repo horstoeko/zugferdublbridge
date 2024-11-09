@@ -31,7 +31,8 @@ class CiiToUblSimpleTest extends TestCase
         $this->assertXPathNotExists('/ubl:Invoice/cbc:TaxPointDate');
         $this->assertXPathValue('/ubl:Invoice/cbc:DocumentCurrencyCode', "EUR");
         $this->assertXPathNotExists('/ubl:Invoice/cbc:TaxCurrencyCode');
-        $this->assertXPathNotExists('/ubl:Invoice/cbc:AccountingCost');
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cbc:AccountingCost', 0, '4025:123:4343');
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cbc:AccountingCost', 1);
         $this->assertXPathNotExists('/ubl:Invoice/cbc:BuyerReference');
         $this->assertXPathNotExists('/ubl:Invoice/cbc:StartDate');
         $this->assertXPathNotExists('/ubl:Invoice/cbc:EndDate');
@@ -39,8 +40,10 @@ class CiiToUblSimpleTest extends TestCase
         $this->assertXPathNotExists('/ubl:Invoice/cac:OrderReference/cbc:SalesOrderID');
         $this->assertXPathNotExists('/ubl:Invoice/cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID');
         $this->assertXPathNotExists('/ubl:Invoice/cac:BillingReference/cac:InvoiceDocumentReference/cbc:IssueDate');
-        $this->assertXPathNotExists('/ubl:Invoice/cac:DespatchDocumentReference/cbc:ID');
-        $this->assertXPathNotExists('/ubl:Invoice/cac:ReceiptDocumentReference/cbc:ID');
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:DespatchDocumentReference/cbc:ID', 0, '5433');
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:DespatchDocumentReference/cbc:ID', 1);
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:ReceiptDocumentReference/cbc:ID', 0, '3544');
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:ReceiptDocumentReference/cbc:ID', 1);
         $this->assertXPathNotExists('/ubl:Invoice/cac:AdditionalDocumentReference/cbc:ID');
         $this->assertXPathNotExists('/ubl:Invoice/cac:AdditionalDocumentReference/cbc:DocumentTypeCode');
         $this->assertXPathNotExists('/ubl:Invoice/cac:AdditionalDocumentReference/cbc:DocumentDescription');
@@ -218,7 +221,8 @@ class CiiToUblSimpleTest extends TestCase
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:Note', 0);
         $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:InvoiceLine/cbc:InvoicedQuantity', 0, "20.0000", "unitCode", "H87");
         $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:InvoiceLine/cbc:LineExtensionAmount', 0, "198.00", "currencyID", "EUR");
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:AccountingCost', 0);
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:AccountingCost', 0, '0815');
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:AccountingCost', 1);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:InvoicePeriod', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:InvoicePeriod/cbc:StartDate', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:InvoicePeriod/cbc:EndDate', 0);

@@ -55,6 +55,9 @@
                 <ram:SpecifiedTradeSettlementLineMonetarySummation>
                     <ram:LineTotalAmount>198.00</ram:LineTotalAmount>
                 </ram:SpecifiedTradeSettlementLineMonetarySummation>
+                <ram:ReceivableSpecifiedTradeAccountingAccount>
+                    <ram:ID>0815</ram:ID>
+                </ram:ReceivableSpecifiedTradeAccountingAccount>
             </ram:SpecifiedLineTradeSettlement>
         </ram:IncludedSupplyChainTradeLineItem>
         <ram:IncludedSupplyChainTradeLineItem>
@@ -123,6 +126,12 @@
                     <udt:DateTimeString format="102">20180305</udt:DateTimeString>
                 </ram:OccurrenceDateTime>
             </ram:ActualDeliverySupplyChainEvent>
+            <ram:DespatchAdviceReferencedDocument>
+                <ram:IssuerAssignedID>5433</ram:IssuerAssignedID>
+            </ram:DespatchAdviceReferencedDocument>
+            <ram:ReceivingAdviceReferencedDocument>
+                <ram:IssuerAssignedID>3544</ram:IssuerAssignedID>
+            </ram:ReceivingAdviceReferencedDocument>
         </ram:ApplicableHeaderTradeDelivery>
         <ram:ApplicableHeaderTradeSettlement>
             <ram:InvoiceCurrencyCode>EUR</ram:InvoiceCurrencyCode>
@@ -153,6 +162,9 @@
                 <ram:TotalPrepaidAmount>0.00</ram:TotalPrepaidAmount>
                 <ram:DuePayableAmount>529.87</ram:DuePayableAmount>
             </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+            <ram:ReceivableSpecifiedTradeAccountingAccount>
+                <ram:ID>4025:123:4343</ram:ID>
+            </ram:ReceivableSpecifiedTradeAccountingAccount>
         </ram:ApplicableHeaderTradeSettlement>
     </rsm:SupplyChainTradeTransaction>
 </rsm:CrossIndustryInvoice>

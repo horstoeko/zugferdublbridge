@@ -310,7 +310,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                             function () use ($additionalReferencedDocumentNode) {
                                 $this->destination->startElement('cac:AdditionalDocumentReference');
                                 $this->destination->element('cbc:ID', $this->source->queryValue('./ram:IssuerAssignedID', $additionalReferencedDocumentNode));
-                                if ($this->source->queryValue('./ram:TypeCode', $additionalReferencedDocumentNode) === "50" || $this->source->queryValue('./ram:TypeCode', $additionalReferencedDocumentNode) === "130") {
+                                if ($this->source->queryValue('./ram:TypeCode', $additionalReferencedDocumentNode) === "130") {
                                     $this->destination->element('cbc:DocumentTypeCode', $this->source->queryValue('./ram:TypeCode', $additionalReferencedDocumentNode));
                                 }
                                 $this->destination->element('cbc:DocumentDescription', $this->source->queryValue('./ram:Name', $additionalReferencedDocumentNode));
@@ -1389,7 +1389,13 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                             $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement)
                         );
 
-                        $this->destination->element('cbc:AccountingCost', $this->source->queryValue('./ram:SpecifiedLineTradeSettlement/ram:ReceivableSpecifiedTradeAccountingAccount/ram:ID', $tradeLineItemNode));
+                        $this->source->whenExists(
+                            './ram:SpecifiedLineTradeSettlement/ram:ReceivableSpecifiedTradeAccountingAccount/ram:ID',
+                            $tradeLineItemNode,
+                            function ($accountingCostNode) {
+                                $this->destination->element('cbc:AccountingCost', $accountingCostNode->nodeValue);
+                            }
+                        );
 
                         $this->source->whenExists(
                             './ram:SpecifiedLineTradeSettlement/ram:BillingSpecifiedPeriod',

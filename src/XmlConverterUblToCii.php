@@ -72,6 +72,7 @@ class XmlConverterUblToCii extends XmlConverterBase
     protected function getDestinationNamespaces(): array
     {
         return [
+            'a' => 'urn:un:unece:uncefact:data:standard:QualifiedDataType:100',
             'rsm' => 'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100',
             'ram' => 'urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100',
             'qdt' => 'urn:un:unece:uncefact:data:Standard:QualifiedDataType:100',
@@ -360,6 +361,16 @@ class XmlConverterUblToCii extends XmlConverterBase
                 $this->destination->startElement('ram:SpecifiedTradeSettlementLineMonetarySummation');
                 $this->destination->element('ram:LineTotalAmount', $this->source->queryValue('cbc:LineExtensionAmount', $invoiceLineNode));
                 $this->destination->endElement();
+                $this->source->whenExists(
+                    './cbc:AccountingCost',
+                    $invoiceLineNode,
+                    function ($invoiceLineAccountingCostNode) {
+                        $this->destination->startElement('ram:ReceivableSpecifiedTradeAccountingAccount');
+                        $this->destination->element('ram:ID', $invoiceLineAccountingCostNode->nodeValue);
+                        $this->destination->endElement();
+                    }
+                );
+
                 $this->destination->endElement();
 
                 $this->destination->endElement();
@@ -721,7 +732,9 @@ class XmlConverterUblToCii extends XmlConverterBase
                     './cbc:DocumentTypeCode',
                     $additionalDocumentReferenceNode,
                     function ($docTypeCodeNode) {
-                        $this->destination->element('ram:TypeCode', $docTypeCodeNode->nodeValue);
+                        if ($docTypeCodeNode->nodeValue == "50" || $docTypeCodeNode->nodeValue == "130" || $docTypeCodeNode->nodeValue == "916") {
+                            $this->destination->element('ram:TypeCode', $docTypeCodeNode->nodeValue);
+                        }
                     },
                     function () {
                         $this->destination->element('ram:TypeCode', '916');
@@ -831,6 +844,26 @@ class XmlConverterUblToCii extends XmlConverterBase
                 $this->destination->startElement('ram:OccurrenceDateTime');
                 $this->destination->elementWithAttribute('udt:DateTimeString', $this->convertDateTime($actualDeliveryDateNode->nodeValue), 'format', '102');
                 $this->destination->endElement();
+                $this->destination->endElement();
+            }
+        );
+
+        $this->source->whenExists(
+            './cac:DespatchDocumentReference/cbc:ID',
+            $docRootElement,
+            function ($despatchDocumentReferenceNode) {
+                $this->destination->startElement('ram:DespatchAdviceReferencedDocument');
+                $this->destination->element('ram:IssuerAssignedID', $despatchDocumentReferenceNode->nodeValue);
+                $this->destination->endElement();
+            }
+        );
+
+        $this->source->whenExists(
+            './cac:ReceiptDocumentReference/cbc:ID',
+            $docRootElement,
+            function ($receiptDocumentReferenceNode) {
+                $this->destination->startElement('ram:ReceivingAdviceReferencedDocument');
+                $this->destination->element('ram:IssuerAssignedID', $receiptDocumentReferenceNode->nodeValue);
                 $this->destination->endElement();
             }
         );
@@ -1206,6 +1239,27 @@ class XmlConverterUblToCii extends XmlConverterBase
                 $this->destination->element('ram:TotalPrepaidAmount', $this->source->queryValue('./cbc:PrepaidAmount', $invoiceMoneraryTotalNode));
                 $this->destination->element('ram:DuePayableAmount', $this->source->queryValue('./cbc:PayableAmount', $invoiceMoneraryTotalNode));
 
+                $this->destination->endElement();
+            }
+        );
+
+        $this->source->queryAll('./cac:BillingReference/cac:InvoiceDocumentReference', $docRootElement)->foreach(
+            function ($billingReferenceNode) {
+                $this->destination->startElement('ram:InvoiceReferencedDocument');
+                $this->destination->element('ram:IssuerAssignedID', $this->source->queryValue('./cbc:ID', $billingReferenceNode));
+                $this->destination->startElement('ram:FormattedIssueDateTime');
+                $this->destination->elementWithAttribute('a:DateTimeString', $this->convertDateTime($this->source->queryValue('./cbc:IssueDate', $billingReferenceNode)), 'format', '102');
+                $this->destination->endElement();
+                $this->destination->endElement();
+            }
+        );
+
+        $this->source->whenExists(
+            './cbc:AccountingCost',
+            $docRootElement,
+            function ($accountingCostNode) {
+                $this->destination->startElement('ram:ReceivableSpecifiedTradeAccountingAccount');
+                $this->destination->element('ram:ID', $accountingCostNode->nodeValue);
                 $this->destination->endElement();
             }
         );

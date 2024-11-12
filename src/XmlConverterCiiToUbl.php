@@ -70,6 +70,11 @@ class XmlConverterCiiToUbl extends XmlConverterBase
     protected function checkValidSource()
     {
         $invoiceElement = $this->source->query('//rsm:CrossIndustryInvoice')->item(0);
+
+        if (is_null($invoiceElement)) {
+            throw new \RuntimeException('The document is not a valid CII document');
+        }
+
         $invoiceExchangeDocumentContext = $this->source->query('./rsm:ExchangedDocumentContext', $invoiceElement)->item(0);
 
         if (is_null($invoiceExchangeDocumentContext)) {

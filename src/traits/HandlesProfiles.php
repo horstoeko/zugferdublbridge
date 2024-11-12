@@ -94,7 +94,7 @@ trait HandlesProfiles
      */
     public function setForceDestinationProfile(string $forceDestinationProfile)
     {
-        if (!in_array($forceDestinationProfile, $this->getSupportedProfiles())) {
+        if ($this->isSupportedProfile($forceDestinationProfile)) {
             return $this;
         }
 

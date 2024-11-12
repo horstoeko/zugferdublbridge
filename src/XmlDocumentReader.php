@@ -102,6 +102,7 @@ class XmlDocumentReader extends XmlDocumentBase
         $prevUseInternalErrors = \libxml_use_internal_errors(true);
 
         try {
+            libxml_clear_errors();
             $this->internalDomDocument->load($filename);
             if (libxml_get_last_error()) {
                 throw new RuntimeException("Invalid XML detected.");

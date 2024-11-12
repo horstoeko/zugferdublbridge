@@ -72,6 +72,10 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $invoiceElement = $this->source->query('//rsm:CrossIndustryInvoice')->item(0);
         $invoiceExchangeDocumentContext = $this->source->query('./rsm:ExchangedDocumentContext', $invoiceElement)->item(0);
 
+        if (is_null($invoiceExchangeDocumentContext)) {
+            throw new \RuntimeException('The document is not a valid CII document');
+        }
+
         $submittedProfile = $this->source->queryValue('./ram:GuidelineSpecifiedDocumentContextParameter/ram:ID', $invoiceExchangeDocumentContext);
 
         if ($this->isSupportedProfile($submittedProfile) !== true) {

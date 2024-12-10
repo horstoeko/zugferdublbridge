@@ -269,6 +269,25 @@ class XmlConverterUblToCii extends XmlConverterBase
                 $this->destination->element('ram:Name', $this->source->queryValue('./cac:Item/cbc:Name', $invoiceLineNode));
                 $this->destination->element('ram:Description', $this->source->queryValue('./cac:Item/cbc:Description', $invoiceLineNode));
 
+                $this->source->queryAll('./cac:Item/cac:AdditionalItemProperty', $invoiceLineNode)->forEach(
+                    function ($invoiceLineAdditionalItemPropertyNode) {
+                        $this->destination->element('ram:Description', $this->source->queryValue('./cbc:Name', $invoiceLineAdditionalItemPropertyNode));
+                        $this->destination->element('ram:Value', $this->source->queryValue('./cbc:Value', $invoiceLineAdditionalItemPropertyNode));
+                    },
+                    function () {
+                        // Do nothing here
+                    },
+                    function () {
+                        // Do nothing here
+                    },
+                    function () {
+                        $this->destination->startElement('ram:ApplicableProductCharacteristic');
+                    },
+                    function () {
+                        $this->destination->endElement();
+                    }
+                );
+
                 $this->source->queryAll('./cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode', $invoiceLineNode)->forEach(
                     function ($invoiceLineItemClassificationCode) {
                         $this->destination->elementWithMultipleAttributes('ram:ClassCode', $invoiceLineItemClassificationCode->nodeValue, ['listID' => $invoiceLineItemClassificationCode->getAttribute('listID'), 'listVersionID' => $invoiceLineItemClassificationCode->getAttribute('listVersionID')]);

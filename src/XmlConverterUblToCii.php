@@ -377,18 +377,6 @@ class XmlConverterUblToCii extends XmlConverterBase
                         $this->destination->endElement();
                     }
                 );
-                $this->destination->startElement('ram:SpecifiedTradeSettlementLineMonetarySummation');
-                $this->destination->element('ram:LineTotalAmount', $this->source->queryValue('cbc:LineExtensionAmount', $invoiceLineNode));
-                $this->destination->endElement();
-                $this->source->whenExists(
-                    './cbc:AccountingCost',
-                    $invoiceLineNode,
-                    function ($invoiceLineAccountingCostNode) {
-                        $this->destination->startElement('ram:ReceivableSpecifiedTradeAccountingAccount');
-                        $this->destination->element('ram:ID', $invoiceLineAccountingCostNode->nodeValue);
-                        $this->destination->endElement();
-                    }
-                );
 
                 $this->source->queryAll('./cac:AllowanceCharge', $invoiceLineNode)->forEach(
                     function ($allowanceChargeNode) {
@@ -410,6 +398,19 @@ class XmlConverterUblToCii extends XmlConverterBase
                         $this->destination->element('ram:ReasonCode', $this->source->queryValue('./cbc:AllowanceChargeReasonCode', $allowanceChargeNode));
                         $this->destination->element('ram:Reason', $this->source->queryValue('./cbc:AllowanceChargeReason', $allowanceChargeNode));
 
+                        $this->destination->endElement();
+                    }
+                );
+
+                $this->destination->startElement('ram:SpecifiedTradeSettlementLineMonetarySummation');
+                $this->destination->element('ram:LineTotalAmount', $this->source->queryValue('cbc:LineExtensionAmount', $invoiceLineNode));
+                $this->destination->endElement();
+                $this->source->whenExists(
+                    './cbc:AccountingCost',
+                    $invoiceLineNode,
+                    function ($invoiceLineAccountingCostNode) {
+                        $this->destination->startElement('ram:ReceivableSpecifiedTradeAccountingAccount');
+                        $this->destination->element('ram:ID', $invoiceLineAccountingCostNode->nodeValue);
                         $this->destination->endElement();
                     }
                 );

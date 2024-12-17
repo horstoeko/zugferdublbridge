@@ -390,6 +390,30 @@ class XmlConverterUblToCii extends XmlConverterBase
                     }
                 );
 
+                $this->source->queryAll('./cac:AllowanceCharge', $invoiceLineNode)->forEach(
+                    function ($allowanceChargeNode) {
+                        $this->destination->startElement('ram:SpecifiedTradeAllowanceCharge');
+
+                        $this->source->whenExists(
+                            './cbc:ChargeIndicator',
+                            $allowanceChargeNode,
+                            function ($chargeIndicatorNode) {
+                                $this->destination->startElement('ram:ChargeIndicator');
+                                $this->destination->element('udt:Indicator', $chargeIndicatorNode->nodeValue);
+                                $this->destination->endElement();
+                            }
+                        );
+
+                        $this->destination->element('ram:CalculationPercent', $this->source->queryValue('./cbc:MultiplierFactorNumeric', $allowanceChargeNode));
+                        $this->destination->element('ram:BasisAmount', $this->source->queryValue('./cbc:BaseAmount', $allowanceChargeNode));
+                        $this->destination->element('ram:ActualAmount', $this->source->queryValue('./cbc:Amount', $allowanceChargeNode));
+                        $this->destination->element('ram:ReasonCode', $this->source->queryValue('./cbc:AllowanceChargeReasonCode', $allowanceChargeNode));
+                        $this->destination->element('ram:Reason', $this->source->queryValue('./cbc:AllowanceChargeReason', $allowanceChargeNode));
+
+                        $this->destination->endElement();
+                    }
+                );
+
                 $this->destination->endElement();
 
                 $this->destination->endElement();

@@ -1,7 +1,6 @@
 <?php
 
 use horstoeko\stringmanagement\PathUtils;
-use horstoeko\stringmanagement\StringUtils;
 use horstoeko\zugferdublbridge\XmlConverterCiiToUbl;
 
 require dirname(__FILE__) . "/../vendor/autoload.php";

@@ -1225,10 +1225,10 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                             $taxTotalAmountNode->getAttribute('currencyID')
                         );
                     },
-                    function() use ($invoiceHeaderSettlement) {
+                    function () use ($invoiceHeaderSettlement) {
                         $this->destination->elementWithAttribute(
                             'cbc:TaxAmount',
-                            0.0,
+                            '0.0',
                             'currencyID',
                             $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement)
                         );

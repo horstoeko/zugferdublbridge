@@ -257,7 +257,8 @@ class XmlDocumentReader extends XmlDocumentBase
             $this->fireCallback(
                 $callbackElse,
                 $this->query($expression, $contextNode)->item(0),
-                $this->query($expression, $contextNode)->item(0)->parentNode);
+                $this->query($expression, $contextNode)->item(0)->parentNode
+            );
         }
 
         return $this;

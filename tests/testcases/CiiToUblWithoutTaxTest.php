@@ -129,7 +129,7 @@ class CiiToUblWithoutTaxTest extends TestCase
     public function testPaymentMeans(): void
     {
         $this->assertXPathExists('/ubl:Invoice/cac:PaymentMeans');
-        $this->assertXPathValue('/ubl:Invoice/cac:PaymentMeans/cbc:PaymentMeansCode', 58);
+        $this->assertXPathValue('/ubl:Invoice/cac:PaymentMeans/cbc:PaymentMeansCode', "58");
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:PaymentMeans/cbc:PaymentMeansCode/@name', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:PaymentMeans/cbc:PaymentMeansCode', 1);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:PaymentMeans/cbc:PaymentID', 0);
@@ -304,5 +304,4 @@ class CiiToUblWithoutTaxTest extends TestCase
 
         @unlink($filename);
     }
-
 }

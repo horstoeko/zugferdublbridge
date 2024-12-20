@@ -1224,6 +1224,14 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                             'currencyID',
                             $taxTotalAmountNode->getAttribute('currencyID')
                         );
+                    },
+                    function() use ($invoiceHeaderSettlement) {
+                        $this->destination->elementWithAttribute(
+                            'cbc:TaxAmount',
+                            0.0,
+                            'currencyID',
+                            $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement)
+                        );
                     }
                 );
 
@@ -1236,12 +1244,14 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                             $this->formatAmount($this->source->queryValue('./ram:BasisAmount', $tradeTaxNode)),
                             'currencyID',
                             $this->source->queryValue('./ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount/@currencyID', $invoiceHeaderSettlement)
+                            ?? $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement)
                         );
                         $this->destination->elementWithAttribute(
                             'cbc:TaxAmount',
                             $this->formatAmount($this->source->queryValue('./ram:CalculatedAmount', $tradeTaxNode)),
                             'currencyID',
                             $this->source->queryValue('./ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount/@currencyID', $invoiceHeaderSettlement)
+                            ?? $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement)
                         );
 
                         $this->destination->startElement('cac:TaxCategory');

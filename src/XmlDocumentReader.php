@@ -252,13 +252,12 @@ class XmlDocumentReader extends XmlDocumentBase
     public function whenNotExists(string $expression, ?DOMNode $contextNode, $callback, $callbackElse = null): XmlDocumentReader
     {
         if (!$this->exists($expression, $contextNode)) {
-            $this->fireCallback(
-                $callback,
-                $this->query($expression, $contextNode)->item(0),
-                $this->query($expression, $contextNode)->item(0)->parentNode
-            );
+            $this->fireCallback($callback);
         } else {
-            $this->fireCallback($callbackElse);
+            $this->fireCallback(
+                $callbackElse,
+                $this->query($expression, $contextNode)->item(0),
+                $this->query($expression, $contextNode)->item(0)->parentNode);
         }
 
         return $this;
@@ -330,7 +329,11 @@ class XmlDocumentReader extends XmlDocumentBase
         if ($equals === false) {
             $this->fireCallback($callback);
         } else {
-            $this->fireCallback($callbackElse);
+            $this->fireCallback(
+                $callbackElse,
+                $this->query($expression, $contextNode)->item(0),
+                $this->query($expression, $contextNode)->item(0)->parentNode
+            );
         }
 
         return $this;

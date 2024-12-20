@@ -33,7 +33,7 @@ jobs:
       - name: Setup PHP with PECL extension
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.4"
+          php-version: "8.3"
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, bcmath, intl, gd, exif, iconv, imagick, json, xdebug
           coverage: xdebug
 
@@ -51,9 +51,9 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-8.4-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-8.3-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-8.4-composer-
+            ${{ runner.os }}-8.3-composer-
 
       - name: Install composer dependencies
         run: |
@@ -145,6 +145,7 @@ jobs:
         continue-on-error: true
         run: |
           zip -r build/dist/doc.zip build/doc
+          zip -r build/dist/builddoc.zip build/builddoc build/coverage build/coverage-html build/logs build/pdepend build/phpdoc
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
@@ -154,7 +155,7 @@ jobs:
       - name: Publish Build Logs
         uses: actions/upload-artifact@v4
         with:
-          name: Build log artifacts for ubuntu-24.04 PHP 8.4 (Release)
+          name: Build log artifacts for ubuntu-24.04 PHP 8.3 (Release)
           path: build/logs
 
       - name: Make Release
@@ -164,3 +165,4 @@ jobs:
           prerelease: false
           files: |
             build/dist/doc.zip
+            build/dist/builddoc.zip

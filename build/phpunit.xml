@@ -15,6 +15,7 @@
             <file>../tests/testcases/CiiToUblTechnical3Test.php</file>
             <file>../tests/testcases/CiiToUblTechnical4Test.php</file>
             <file>../tests/testcases/CiiToUblTechnical5Test.php</file>
+            <file>../tests/testcases/CiiToUblWithoutTaxTest.php</file>
             <file>../tests/testcases/UblToCiiSimpleTest.php</file>
             <file>../tests/testcases/UblToCiiSimple2Test.php</file>
         </testsuite>

@@ -1,17 +1,17 @@
 <?php
 
-use Nette\PhpGenerator\Printer;
-use Nette\PhpGenerator\ClassType;
 use horstoeko\stringmanagement\StringUtils;
-use phpDocumentor\Reflection\DocBlockFactory;
-use Webmozart\Assert\InvalidArgumentException;
-use horstoeko\zugferdublbridge\XmlDocumentReader;
-use horstoeko\zugferdublbridge\XmlDocumentWriter;
-use phpDocumentor\Reflection\DocBlock\Tags\Param;
-use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 use horstoeko\zugferdublbridge\XmlConverterCiiToUbl;
 use horstoeko\zugferdublbridge\XmlConverterUblToCii;
+use horstoeko\zugferdublbridge\XmlDocumentReader;
+use horstoeko\zugferdublbridge\XmlDocumentWriter;
+use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\Printer;
+use phpDocumentor\Reflection\DocBlock\Tags\Param;
+use phpDocumentor\Reflection\DocBlock\Tags\Return_;
+use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Exception\PcreException;
+use Webmozart\Assert\InvalidArgumentException;
 
 require dirname(__FILE__) . "/../vendor/autoload.php";
 
@@ -706,4 +706,19 @@ BatchMarkDownGenerator::generate([
     XmlConverterUblToCii::class => dirname(__FILE__) . '/Class-XmlConverterUblToCii.md',
     XmlDocumentReader::class => dirname(__FILE__) . '/Class-XmlDocumentReader.md',
     XmlDocumentWriter::class => dirname(__FILE__) . '/Class-XmlDocumentWriter.md',
-], []);
+], [
+    'horstoeko\zugferdublbridge\XmlConverterCiiToUbl::fromFile',
+    'horstoeko\zugferdublbridge\XmlConverterCiiToUbl::fromString',
+    'horstoeko\zugferdublbridge\XmlConverterCiiToUbl::loadFromXmlString',
+    'horstoeko\zugferdublbridge\XmlConverterCiiToUbl::loadFromXmlFile',
+    'horstoeko\zugferdublbridge\XmlConverterCiiToUbl::saveXmlString',
+    'horstoeko\zugferdublbridge\XmlConverterCiiToUbl::saveXmlFile',
+    'horstoeko\zugferdublbridge\XmlConverterCiiToUbl::convert',
+    'horstoeko\zugferdublbridge\XmlConverterUblToCii::fromFile',
+    'horstoeko\zugferdublbridge\XmlConverterUblToCii::fromString',
+    'horstoeko\zugferdublbridge\XmlConverterUblToCii::loadFromXmlString',
+    'horstoeko\zugferdublbridge\XmlConverterUblToCii::loadFromXmlFile',
+    'horstoeko\zugferdublbridge\XmlConverterUblToCii::saveXmlString',
+    'horstoeko\zugferdublbridge\XmlConverterUblToCii::saveXmlFile',
+    'horstoeko\zugferdublbridge\XmlConverterUblToCii::convert',
+]);

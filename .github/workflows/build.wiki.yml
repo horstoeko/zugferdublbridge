@@ -48,7 +48,7 @@ jobs:
         continue-on-error: true
         run: |
           php -f make/genmethoddocs.php
-          git clone https://$GH_PAT@github.com/horstoeko/zugferdublbridge.wiki.git
+          git clone https://$GH_PAT@github.com/horstoeko/zugferdublbridge.wiki.git wiki
           mv make/*.md wiki
           cd wiki
           git config user.name "HorstOeko"

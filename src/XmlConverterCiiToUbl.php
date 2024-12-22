@@ -1225,33 +1225,31 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                             $taxTotalAmountNode->getAttribute('currencyID')
                         );
                     },
-                    function () use ($invoiceHeaderSettlement) {
+                    function () use ($invoiceCurrencyCode) {
                         $this->destination->elementWithAttribute(
                             'cbc:TaxAmount',
                             '0.0',
                             'currencyID',
-                            $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement)
+                            $invoiceCurrencyCode
                         );
                     }
                 );
 
                 $this->source->queryAll('./ram:ApplicableTradeTax', $invoiceHeaderSettlement)->forEach(
-                    function ($tradeTaxNode) use ($invoiceHeaderSettlement) {
+                    function ($tradeTaxNode) use ($invoiceHeaderSettlement, $invoiceCurrencyCode) {
                         $this->destination->startElement('cac:TaxSubtotal');
 
                         $this->destination->elementWithAttribute(
                             'cbc:TaxableAmount',
                             $this->formatAmount($this->source->queryValue('./ram:BasisAmount', $tradeTaxNode)),
                             'currencyID',
-                            $this->source->queryValue('./ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount/@currencyID', $invoiceHeaderSettlement)
-                            ?? $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement)
+                            $this->source->queryValue('./ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount/@currencyID', $invoiceHeaderSettlement) ?? $invoiceCurrencyCode
                         );
                         $this->destination->elementWithAttribute(
                             'cbc:TaxAmount',
                             $this->formatAmount($this->source->queryValue('./ram:CalculatedAmount', $tradeTaxNode)),
                             'currencyID',
-                            $this->source->queryValue('./ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount/@currencyID', $invoiceHeaderSettlement)
-                            ?? $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement)
+                            $this->source->queryValue('./ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount/@currencyID', $invoiceHeaderSettlement) ?? $invoiceCurrencyCode
                         );
 
                         $this->destination->startElement('cac:TaxCategory');

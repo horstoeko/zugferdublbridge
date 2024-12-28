@@ -660,6 +660,9 @@ class MarkDownGenerator
         if (stripos($string, '[]') !== false) {
             $string = 'array';
         }
+        if (stripos($string, 'array<') === 0) {
+            $string = 'array';
+        }
         if ($string == '$this') {
             $string = 'static';
         }

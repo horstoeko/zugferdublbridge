@@ -61,6 +61,7 @@ class XmlConverterUblToCii extends XmlConverterBase
     {
         return [
             'ubl' => 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',
+            'ublc' => 'urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2',
             'cac' => 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',
             'cbc' => 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2',
         ];
@@ -99,10 +100,10 @@ class XmlConverterUblToCii extends XmlConverterBase
     protected function checkValidSource()
     {
         $this->source->whenExists(
-            '//ubl:CreditNote',
+            '//ublc:CreditNote',
             null,
             function () {
-                $this->ublRootName = 'ubl:CreditNote';
+                $this->ublRootName = 'ublc:CreditNote';
                 $this->ublLineRootName = 'cac:CreditNoteLine';
                 $this->ublLineQuantityRootName = 'cbc:CreditedQuantity';
             },
@@ -351,7 +352,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                 $this->destination->endElement();
 
                 $this->destination->startElement('ram:SpecifiedLineTradeDelivery');
-                $this->destination->elementWithAttribute('ram:BilledQuantity', $this->source->queryValue($this->ublLineQuantityRootName, $invoiceLineNode), 'unitCode', $this->source->queryValue('cbc:InvoicedQuantity/@unitCode', $invoiceLineNode));
+                $this->destination->elementWithAttribute('ram:BilledQuantity', $this->source->queryValue($this->ublLineQuantityRootName, $invoiceLineNode), 'unitCode', $this->source->queryValue(sprintf('%s/@unitCode', $this->ublLineQuantityRootName), $invoiceLineNode));
                 $this->destination->endElement();
 
                 $this->destination->startElement('ram:SpecifiedLineTradeSettlement');

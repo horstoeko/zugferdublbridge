@@ -18,6 +18,7 @@
             <file>../tests/testcases/CiiToUblWithoutTaxTest.php</file>
             <file>../tests/testcases/UblToCiiSimpleTest.php</file>
             <file>../tests/testcases/UblToCiiSimple2Test.php</file>
+            <file>../tests/testcases/UblToCiiSimple3Test.php</file>
         </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">

@@ -191,7 +191,22 @@ class XmlConverterUblToCii extends XmlConverterBase
 
         $this->destination->element('ram:ID', $this->source->queryValue('./cbc:ID', $docRootElement));
 
-        $this->destination->element('ram:TypeCode', $this->source->queryValue('./cbc:InvoiceTypeCode', $docRootElement));
+        $this->source->whenExists(
+            './cbc:InvoiceTypeCode',
+            $docRootElement,
+            function ($invoiceTypeCodeNode) {
+                $this->destination->element('ram:TypeCode', $invoiceTypeCodeNode->nodeValue);
+            },
+            function () use ($docRootElement) {
+                $this->source->whenExists(
+                    './cbc:CreditNoteTypeCode',
+                    $docRootElement,
+                    function ($creditNoteTypeCodeNode) {
+                        $this->destination->element('ram:TypeCode', $creditNoteTypeCodeNode->nodeValue);
+                    },
+                );
+            }
+        );
 
         $this->source->whenExists(
             './cbc:IssueDate',

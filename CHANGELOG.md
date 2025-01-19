@@ -1,3 +1,15 @@
+## v1.0.11
+
+``Previous version v1.0.10``
+
+| Type | Hash    | Date    | Author  | Subject  | Issue(s)
+| :--- | :------ | :------ | :------ | :------- | :-----------: 
+| :bug:  | [97ea47a](https://github.com/horstoeko/zugferdublbridge/commit/97ea47a) | 2025-01-15 16:50:28 CET | HorstOeko | [FIX] Fixed NameSpace Problems for CreditNotes | 
+| :new:  | [aaf91c0](https://github.com/horstoeko/zugferdublbridge/commit/aaf91c0) | 2025-01-15 05:08:07 CET | HorstOeko | [ENH] Check for CreditNoteTypeCode | 
+| :bug:  | [f89d2ca](https://github.com/horstoeko/zugferdublbridge/commit/f89d2ca) | 2025-01-14 06:04:09 CET | HorstOeko | [FIX] Fixed "Without VAT"-Test | 
+
+:exclamation: _There are 16 internal commit(s)_
+
 ## v1.0.10
 
 :exclamation: _There is one internal commit_

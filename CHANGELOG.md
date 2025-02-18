@@ -1,3 +1,14 @@
+## v1.0.12
+
+``Previous version v1.0.11``
+
+| Type | Hash    | Date    | Author  | Subject  | Issue(s)
+| :--- | :------ | :------ | :------ | :------- | :-----------: 
+| :new_moon:  | [08d213f](https://github.com/horstoeko/zugferdublbridge/commit/08d213f) | 2025-02-18 13:19:09 CET | HorstOeko | Merged PR | [#9](https://github.com/horstoeko/zugferdublbridge/issues/9)
+| :bug:  | [8e61272](https://github.com/horstoeko/zugferdublbridge/commit/8e61272) | 2025-02-18 13:10:15 CET | HorstOeko | [FIX]  Switch back TaxScheme LOC to FC | [#8](https://github.com/horstoeko/zugferdublbridge/issues/8)
+
+:exclamation: _There are 3 internal commit(s)_
+
 ## v1.0.11
 
 ``Previous version v1.0.10``

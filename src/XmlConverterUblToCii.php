@@ -565,7 +565,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'LOC\']',
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
                     $invoiceAccountingSupplierPartyNode,
                     function ($invoiceAccountingSupplierPartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');
@@ -696,7 +696,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'LOC\']',
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
                     $invoiceAccountingCustomerPartyNode,
                     function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');
@@ -743,7 +743,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'LOC\']',
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
                     $invoiceTaxRepresentativePartyNode,
                     function ($invoiceTaxRepresentativePartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');
@@ -1077,7 +1077,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'LOC\']',
+                    './cac:PartyTaxScheme/cac:TaxScheme/cbc:ID[text() = \'FC\']',
                     $invoicePayeePartyNode,
                     function ($invoiceAccountingCustomerPartyTaxSchemeNode) {
                         $this->destination->startElement('ram:SpecifiedTaxRegistration');

@@ -506,7 +506,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->startElement('cac:PartyTaxScheme');
                         $this->destination->element('cbc:CompanyID', $sellerTradePartyTaxRegNode->nodeValue);
                         $this->destination->startElement('cac:TaxScheme');
-                        $this->destination->element('cbc:ID', 'LOC');
+                        $this->destination->element('cbc:ID', 'FC');
                         $this->destination->endElement();
                         $this->destination->endElement();
                     }
@@ -654,7 +654,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->startElement('cac:PartyTaxScheme');
                         $this->destination->element('cbc:CompanyID', $sellerTradePartyTaxRegNode->nodeValue);
                         $this->destination->startElement('cac:TaxScheme');
-                        $this->destination->element('cbc:ID', 'LOC');
+                        $this->destination->element('cbc:ID', 'FC');
                         $this->destination->endElement();
                         $this->destination->endElement();
                     }
@@ -802,7 +802,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->startElement('cac:PartyTaxScheme');
                         $this->destination->element('cbc:CompanyID', $sellerTradePartyTaxRegNode->nodeValue);
                         $this->destination->startElement('cac:TaxScheme');
-                        $this->destination->element('cbc:ID', 'LOC');
+                        $this->destination->element('cbc:ID', 'FC');
                         $this->destination->endElement();
                         $this->destination->endElement();
                     }
@@ -914,7 +914,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->startElement('cac:PartyTaxScheme');
                         $this->destination->element('cbc:CompanyID', $sellerTradePartyTaxRegNode->nodeValue);
                         $this->destination->startElement('cac:TaxScheme');
-                        $this->destination->element('cbc:ID', 'LOC');
+                        $this->destination->element('cbc:ID', 'FC');
                         $this->destination->endElement();
                         $this->destination->endElement();
                     }

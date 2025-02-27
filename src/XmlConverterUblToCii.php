@@ -1132,7 +1132,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                             $payeeFinancialAccountNode,
                             function ($financialInstitutionBranchNode) {
                                 $this->destination->startElement('ram:PayeeSpecifiedCreditorFinancialInstitution');
-                                $this->destination->element('ram:BICID', trim($financialInstitutionBranchNode->nodeValue));
+                                $this->destination->element('ram:BICID', $this->source->queryValue('./cbc:ID', $financialInstitutionBranchNode));
                                 $this->destination->endElement();
                             }
                         );

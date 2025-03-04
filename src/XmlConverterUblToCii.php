@@ -777,9 +777,9 @@ class XmlConverterUblToCii extends XmlConverterBase
         );
 
         $this->source->queryAll('./cac:ContractDocumentReference', $docRootElement)->forEach(
-            function ($contractReferenceDocumenntNode) {
+            function ($contractReferenceDocumentNode) {
                 $this->destination->startElement('ram:ContractReferencedDocument');
-                $this->destination->element('ram:IssuerAssignedID', trim($contractReferenceDocumenntNode->nodeValue));
+                $this->destination->element('ram:IssuerAssignedID', trim($this->source->queryValue('./cbc:ID', $contractReferenceDocumentNode)));
                 $this->destination->endElement();
             }
         );
@@ -1132,7 +1132,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                             $payeeFinancialAccountNode,
                             function ($financialInstitutionBranchNode) {
                                 $this->destination->startElement('ram:PayeeSpecifiedCreditorFinancialInstitution');
-                                $this->destination->element('ram:BICID', $this->source->queryValue('./cbc:ID', $financialInstitutionBranchNode));
+                                $this->destination->element('ram:BICID', trim($this->source->queryValue('./cbc:ID', $financialInstitutionBranchNode) ?? $this->source->queryValue('./cac:FinancialInstitution/cbc:ID', $financialInstitutionBranchNode)));
                                 $this->destination->endElement();
                             }
                         );

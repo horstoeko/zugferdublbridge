@@ -8,10 +8,9 @@
 
 | Type | Hash    | Date    | Author  | Subject  | Issue(s)
 | :--- | :------ | :------ | :------ | :------- | :-----------: 
-| :new_moon:  | [08d213f](https://github.com/horstoeko/zugferdublbridge/commit/08d213f) | 2025-02-18 13:19:09 CET | HorstOeko | Merged PR | [#9](https://github.com/horstoeko/zugferdublbridge/issues/9)
 | :bug:  | [8e61272](https://github.com/horstoeko/zugferdublbridge/commit/8e61272) | 2025-02-18 13:10:15 CET | HorstOeko | [FIX]  Switch back TaxScheme LOC to FC | [#8](https://github.com/horstoeko/zugferdublbridge/issues/8)
 
-:exclamation: _There are 3 internal commit(s)_
+:exclamation: _There are 2 internal commit(s)_
 
 ## v1.0.11
 
@@ -35,7 +34,6 @@
 
 | Type | Hash    | Date    | Author  | Subject  | Issue(s)
 | :--- | :------ | :------ | :------ | :------- | :-----------: 
-| :new_moon:  | [8a4d16f](https://github.com/horstoeko/zugferdublbridge/commit/8a4d16f) | 2024-12-20 11:23:05 CET | HorstOeko | Merged PR | [#7](https://github.com/horstoeko/zugferdublbridge/issues/7)
 | :new_moon:  | [ebfbaf5](https://github.com/horstoeko/zugferdublbridge/commit/ebfbaf5) | 2024-12-20 11:14:24 CET | Jörg Wedekind | added test to build/phpunit.xml | 
 | :new_moon:  | [b7ea528](https://github.com/horstoeko/zugferdublbridge/commit/b7ea528) | 2024-12-20 10:38:12 CET | Jörg Wedekind | fix reference issue on whenNotExists and whenNotEquals | 
 | :new_moon:  | [4a541fe](https://github.com/horstoeko/zugferdublbridge/commit/4a541fe) | 2024-12-20 10:34:44 CET | Jörg Wedekind | added unit test | 
@@ -48,7 +46,6 @@
 | Type | Hash    | Date    | Author  | Subject  | Issue(s)
 | :--- | :------ | :------ | :------ | :------- | :-----------: 
 | :new_moon:  | [8054662](https://github.com/horstoeko/zugferdublbridge/commit/8054662) | 2024-12-17 12:12:09 CET | HorstOeko | Fix for PR | [#4](https://github.com/horstoeko/zugferdublbridge/issues/4)
-| :new_moon:  | [f6e992b](https://github.com/horstoeko/zugferdublbridge/commit/f6e992b) | 2024-12-17 12:07:30 CET | HorstOeko | Merged PR | [#4](https://github.com/horstoeko/zugferdublbridge/issues/4)
 | :new_moon:  | [d953181](https://github.com/horstoeko/zugferdublbridge/commit/d953181) | 2024-12-17 11:14:47 CET | Marvin G | + Add SpecifiedTradeAllowanceCharge to IncludedSupplyChainTradeLineItem->SpecifiedLineTradeSettlement | 
 
 :exclamation: _There is one internal commit_
@@ -59,7 +56,6 @@
 
 | Type | Hash    | Date    | Author  | Subject  | Issue(s)
 | :--- | :------ | :------ | :------ | :------- | :-----------: 
-| :new_moon:  | [f9cc1ca](https://github.com/horstoeko/zugferdublbridge/commit/f9cc1ca) | 2024-12-10 12:21:10 CET | HorstOeko | Added reading of AdditionalItemProperty in XmlConverterUblToCii | [#2](https://github.com/horstoeko/zugferdublbridge/issues/2)
 | :new_moon:  | [0456ef4](https://github.com/horstoeko/zugferdublbridge/commit/0456ef4) | 2024-12-10 12:12:20 CET | HorstOeko | Added reading of AdditionalItemProperty in XmlConverterUblToCii | [#2](https://github.com/horstoeko/zugferdublbridge/issues/2)
 | :new_moon:  | [accf3c8](https://github.com/horstoeko/zugferdublbridge/commit/accf3c8) | 2024-11-12 10:59:52 CET | HorstOeko | Fix XmlConverterCiiToUbl::checkValidSource | 
 | :new_moon:  | [419425d](https://github.com/horstoeko/zugferdublbridge/commit/419425d) | 2024-11-12 10:56:33 CET | HorstOeko | Fix XmlConverterCiiToUbl::checkValidSource | 

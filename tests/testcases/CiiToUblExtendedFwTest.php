@@ -12,7 +12,7 @@ class CiiToUblExtendedFwTest extends TestCase
 
     public function testLoadAndConvert(): void
     {
-        self::$document = XmlConverterCiiToUbl::fromFile(dirname(__FILE__) . "/../assets/cii/2_cii_extended_fw.xml")->enableAutomaticMode()->setForceDestinationProfileEn16931()->convert();
+        self::$document = XmlConverterCiiToUbl::fromFile(__DIR__ . "/../assets/cii/2_cii_extended_fw.xml")->enableAutomaticMode()->setForceDestinationProfileEn16931()->convert();
         $this->assertNotNull(self::$document);
     }
 

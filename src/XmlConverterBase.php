@@ -29,14 +29,14 @@ abstract class XmlConverterBase
      *
      * @var XmlDocumentReader
      */
-    protected $source = null;
+    protected $source;
 
     /**
      * The output document
      *
      * @var XmlDocumentWriter
      */
-    protected $destination = null;
+    protected $destination;
 
     /**
      * Constructor
@@ -112,7 +112,7 @@ abstract class XmlConverterBase
     public function loadFromXmlFile(string $filename)
     {
         if (!is_file($filename)) {
-            throw new RuntimeException("File $filename does not exists");
+            throw new RuntimeException(sprintf('File %s does not exists', $filename));
         }
 
         $this->source->loadFromXmlFile($filename);

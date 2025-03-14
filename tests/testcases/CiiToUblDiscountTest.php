@@ -12,7 +12,7 @@ class CiiToUblDiscountTest extends TestCase
 
     public function testLoadAndConvert(): void
     {
-        self::$document = XmlConverterCiiToUbl::fromFile(dirname(__FILE__) . "/../assets/cii/1_cii_discount.xml")->enableAutomaticMode()->convert();
+        self::$document = XmlConverterCiiToUbl::fromFile(__DIR__ . "/../assets/cii/1_cii_discount.xml")->enableAutomaticMode()->convert();
         $this->assertNotNull(self::$document);
         $this->assertNotFalse($this->saveFinalXmlToBuildResults('1_cii_discount_as_ubl.xml'));
     }

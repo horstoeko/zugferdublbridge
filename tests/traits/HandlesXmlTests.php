@@ -51,6 +51,7 @@ trait HandlesXmlTests
         if ($this->renderingOfXmlDisabled === false) {
             $this->latestXml = new \SimpleXMLElement(self::$document->saveXmlString());
         }
+        
         return $this->latestXml;
     }
 
@@ -256,7 +257,7 @@ trait HandlesXmlTests
      */
     public function saveFinalXmlToBuildResults(string $filename)
     {
-        $buildDir = dirname(__FILE__) . '/../../build';
+        $buildDir = __DIR__ . '/../../build';
         $buildXmlResultDir = $buildDir . '/generated';
 
         if (!is_dir($buildXmlResultDir)) {

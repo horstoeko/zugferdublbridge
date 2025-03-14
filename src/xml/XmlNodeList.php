@@ -30,7 +30,7 @@ class XmlNodeList
      *
      * @var DOMNodeList|null
      */
-    private $domNodeList = null;
+    private $domNodeList;
 
     /**
      * Factory

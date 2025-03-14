@@ -14,7 +14,7 @@ class CiiToUblTechnical4Test extends TestCase
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The submitted profile urn:cen.eu:en16931:2017#compliant#unknownprofile is not supported');
-        self::$document = XmlConverterCiiToUbl::fromFile(dirname(__FILE__) . "/../assets/cii/3_cii_technical_4.xml")->enableAutomaticMode()->convert();
+        self::$document = XmlConverterCiiToUbl::fromFile(__DIR__ . "/../assets/cii/3_cii_technical_4.xml")->enableAutomaticMode()->convert();
         $this->assertNull(self::$document);
     }
 }

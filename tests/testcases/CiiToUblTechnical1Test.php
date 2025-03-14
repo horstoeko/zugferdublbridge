@@ -12,7 +12,7 @@ class CiiToUblTechnical1Test extends TestCase
 
     public function testLoadAndConvert(): void
     {
-        self::$document = XmlConverterCiiToUbl::fromFile(dirname(__FILE__) . "/../assets/cii/3_cii_technical_1.xml")->enableAutomaticMode()->convert();
+        self::$document = XmlConverterCiiToUbl::fromFile(__DIR__ . "/../assets/cii/3_cii_technical_1.xml")->enableAutomaticMode()->convert();
         $this->assertNotNull(self::$document);
         $this->assertNotFalse($this->saveFinalXmlToBuildResults('3_cii_technical_1_as_ubl.xml'));
     }

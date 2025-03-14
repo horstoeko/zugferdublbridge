@@ -12,7 +12,7 @@ class UblToCiiSimple3Test extends TestCase
 
     public function testLoadAndConvert(): void
     {
-        self::$document = XmlConverterUblToCii::fromFile(dirname(__FILE__) . "/../assets/ubl/3_ubl_simple_creditnote.xml")->convert();
+        self::$document = XmlConverterUblToCii::fromFile(__DIR__ . "/../assets/ubl/3_ubl_simple_creditnote.xml")->convert();
         $this->assertNotNull(self::$document);
         $this->assertNotFalse($this->saveFinalXmlToBuildResults('3_ubl_simple_creditnote_as_cii.xml'));
     }

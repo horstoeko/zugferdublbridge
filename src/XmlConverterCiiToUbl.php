@@ -26,10 +26,9 @@ use horstoeko\zugferdublbridge\traits\HandlesProfiles;
  */
 class XmlConverterCiiToUbl extends XmlConverterBase
 {
-    use HandlesProfiles,
-        HandlesAmountFormatting,
-        HandlesDocumentTypes;
-
+    use HandlesProfiles;
+    use HandlesAmountFormatting;
+    use HandlesDocumentTypes;
     /**
      * @inheritDoc
      */
@@ -83,7 +82,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
 
         $submittedProfile = $this->source->queryValue('./ram:GuidelineSpecifiedDocumentContextParameter/ram:ID', $invoiceExchangeDocumentContext);
 
-        if ($this->isSupportedProfile($submittedProfile) !== true) {
+        if (!$this->isSupportedProfile($submittedProfile)) {
             throw new \RuntimeException(sprintf('The submitted profile %s is not supported', $submittedProfile));
         }
 
@@ -194,6 +193,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 if ($this->source->queryValue('./ram:SubjectCode', $includedNoteNode)) {
                     $note = sprintf('#%s#%s', $this->source->queryValue('./ram:SubjectCode', $includedNoteNode), $note);
                 }
+                
                 $this->destination->element('cbc:Note', $note);
             }
         );
@@ -299,7 +299,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $addDocuments = $this->getIsCreditNote() ? ['CON', 'ADD', 'ORI'] : ['ORI', 'CON', 'ADD', 'PRJ'];
 
         foreach ($addDocuments as $addDocument) {
-            if ($addDocument == 'CON') {
+            if ($addDocument === 'CON') {
                 $this->source->queryAll('./ram:ContractReferencedDocument/ram:IssuerAssignedID', $invoiceHeaderAgreement)->forEach(
                     function ($nodeFound) {
                         $this->destination->startElement('cac:ContractDocumentReference');
@@ -309,7 +309,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 );
             }
 
-            if ($addDocument == 'ADD') {
+            if ($addDocument === 'ADD') {
                 $this->source->queryAll('./ram:AdditionalReferencedDocument', $invoiceHeaderAgreement)->forEach(
                     function ($additionalReferencedDocumentNode) {
                         $this->source->whenNotEquals(
@@ -322,6 +322,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                                 if ($this->source->queryValue('./ram:TypeCode', $additionalReferencedDocumentNode) === "130") {
                                     $this->destination->element('cbc:DocumentTypeCode', $this->source->queryValue('./ram:TypeCode', $additionalReferencedDocumentNode));
                                 }
+                                
                                 $this->destination->element('cbc:DocumentDescription', $this->source->queryValue('./ram:Name', $additionalReferencedDocumentNode));
                                 $this->source->whenExists(
                                     './ram:AttachmentBinaryObject',
@@ -355,7 +356,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 );
             }
 
-            if ($addDocument == 'ORI') {
+            if ($addDocument === 'ORI') {
                 $this->source->queryAll('./ram:AdditionalReferencedDocument', $invoiceHeaderAgreement)->forEach(
                     function ($nodeFound) {
                         $this->source->whenEquals(
@@ -372,7 +373,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 );
             }
 
-            if ($addDocument == 'PRJ') {
+            if ($addDocument === 'PRJ') {
                 $this->source->queryAll('./ram:SpecifiedProcuringProject/ram:ID', $invoiceHeaderAgreement)->forEach(
                     function ($nodeFound) {
                         $this->destination->startElement('cac:ProjectReference');
@@ -464,6 +465,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->element('cbc:CityName', $this->source->queryValue('./ram:CityName', $sellerTradePartyPostalAddressNode));
                         $this->destination->element('cbc:PostalZone', $this->source->queryValue('./ram:PostcodeCode', $sellerTradePartyPostalAddressNode));
                         $this->destination->element('cbc:CountrySubentity', $this->source->queryValue('./ram:CountrySubDivisionName', $sellerTradePartyPostalAddressNode));
+                        
                         $this->source->whenExists(
                             './ram:LineThree',
                             $sellerTradePartyPostalAddressNode,
@@ -487,7 +489,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './ram:SpecifiedTaxRegistration/ram:ID[@schemeID=\'VA\']',
+                    "./ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA']",
                     $sellerTradePartyNode,
                     function ($sellerTradePartyTaxRegNode) {
                         $this->destination->startElement('cac:PartyTaxScheme');
@@ -500,7 +502,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './ram:SpecifiedTaxRegistration/ram:ID[@schemeID=\'FC\']',
+                    "./ram:SpecifiedTaxRegistration/ram:ID[@schemeID='FC']",
                     $sellerTradePartyNode,
                     function ($sellerTradePartyTaxRegNode) {
                         $this->destination->startElement('cac:PartyTaxScheme');
@@ -612,6 +614,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->element('cbc:CityName', $this->source->queryValue('./ram:CityName', $buyerTradePartyPostalAddressNode));
                         $this->destination->element('cbc:PostalZone', $this->source->queryValue('./ram:PostcodeCode', $buyerTradePartyPostalAddressNode));
                         $this->destination->element('cbc:CountrySubentity', $this->source->queryValue('./ram:CountrySubDivisionName', $buyerTradePartyPostalAddressNode));
+                        
                         $this->source->whenExists(
                             './ram:LineThree',
                             $buyerTradePartyPostalAddressNode,
@@ -635,7 +638,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './ram:SpecifiedTaxRegistration/ram:ID[@schemeID=\'VA\']',
+                    "./ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA']",
                     $buyerTradePartyNode,
                     function ($buyerTradePartyTaxRegNode) {
                         $this->destination->startElement('cac:PartyTaxScheme');
@@ -648,7 +651,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './ram:SpecifiedTaxRegistration/ram:ID[@schemeID=\'FC\']',
+                    "./ram:SpecifiedTaxRegistration/ram:ID[@schemeID='FC']",
                     $buyerTradePartyNode,
                     function ($sellerTradePartyTaxRegNode) {
                         $this->destination->startElement('cac:PartyTaxScheme');
@@ -760,6 +763,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->element('cbc:CityName', $this->source->queryValue('./ram:CityName', $payeeTradePartyPostalAddressNode));
                         $this->destination->element('cbc:PostalZone', $this->source->queryValue('./ram:PostcodeCode', $payeeTradePartyPostalAddressNode));
                         $this->destination->element('cbc:CountrySubentity', $this->source->queryValue('./ram:CountrySubDivisionName', $payeeTradePartyPostalAddressNode));
+                        
                         $this->source->whenExists(
                             './ram:LineThree',
                             $payeeTradePartyPostalAddressNode,
@@ -783,7 +787,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './ram:SpecifiedTaxRegistration/ram:ID[@schemeID=\'VA\']',
+                    "./ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA']",
                     $payeeTradePartyNode,
                     function ($payeeTradePartyTaxRegNode) {
                         $this->destination->startElement('cac:PartyTaxScheme');
@@ -796,7 +800,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './ram:SpecifiedTaxRegistration/ram:ID[@schemeID=\'FC\']',
+                    "./ram:SpecifiedTaxRegistration/ram:ID[@schemeID='FC']",
                     $payeeTradePartyNode,
                     function ($sellerTradePartyTaxRegNode) {
                         $this->destination->startElement('cac:PartyTaxScheme');
@@ -872,6 +876,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->element('cbc:CityName', $this->source->queryValue('./ram:CityName', $sellerTaxRepresentativePartyPostalAddressNode));
                         $this->destination->element('cbc:PostalZone', $this->source->queryValue('./ram:PostcodeCode', $sellerTaxRepresentativePartyPostalAddressNode));
                         $this->destination->element('cbc:CountrySubentity', $this->source->queryValue('./ram:CountrySubDivisionName', $sellerTaxRepresentativePartyPostalAddressNode));
+                        
                         $this->source->whenExists(
                             './ram:LineThree',
                             $sellerTaxRepresentativePartyPostalAddressNode,
@@ -895,7 +900,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './ram:SpecifiedTaxRegistration/ram:ID[@schemeID=\'VA\']',
+                    "./ram:SpecifiedTaxRegistration/ram:ID[@schemeID='VA']",
                     $sellerTaxRepresentativePartyNode,
                     function ($sellerTaxRepresentativePartyTaxRegNode) {
                         $this->destination->startElement('cac:PartyTaxScheme');
@@ -908,7 +913,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 );
 
                 $this->source->whenExists(
-                    './ram:SpecifiedTaxRegistration/ram:ID[@schemeID=\'FC\']',
+                    "./ram:SpecifiedTaxRegistration/ram:ID[@schemeID='FC']",
                     $sellerTaxRepresentativePartyNode,
                     function ($sellerTradePartyTaxRegNode) {
                         $this->destination->startElement('cac:PartyTaxScheme');
@@ -1094,6 +1099,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->startElement('cac:PayeeFinancialAccount');
                         $this->destination->element('cbc:ID', $this->source->queryValue('./ram:IBANID', $paymentMeansCreditorFinancialAccountNode));
                         $this->destination->element('cbc:Name', $this->source->queryValue('./ram:AccountName', $paymentMeansCreditorFinancialAccountNode));
+                        
                         $this->source->whenExists(
                             './ram:PayeeSpecifiedCreditorFinancialInstitution',
                             $paymentMeansNode,
@@ -1113,6 +1119,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     function ($DirectDebitMandateNode) use ($paymentMeansNode) {
                         $this->destination->startElement('cac:PaymentMandate');
                         $this->destination->element('cbc:ID', $DirectDebitMandateNode->nodeValue);
+                        
                         $this->source->whenExists(
                             './ram:PayerPartyDebtorFinancialAccount',
                             $paymentMeansNode,
@@ -1215,7 +1222,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 $this->destination->startElement('cac:TaxTotal');
 
                 $this->source->whenExists(
-                    sprintf('./ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID=\'%s\']', $invoiceCurrencyCode),
+                    sprintf("./ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID='%s']", $invoiceCurrencyCode),
                     $invoiceHeaderSettlement,
                     function ($taxTotalAmountNode) {
                         $this->destination->elementWithAttribute(
@@ -1269,7 +1276,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
 
                 if ($invoiceCurrencyCode && $taxCurrencyCode && ($invoiceCurrencyCode != $taxCurrencyCode)) {
                     $this->source->whenExists(
-                        sprintf('./ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID=\'%s\']', $taxCurrencyCode),
+                        sprintf("./ram:SpecifiedTradeSettlementHeaderMonetarySummation/ram:TaxTotalAmount[@currencyID='%s']", $taxCurrencyCode),
                         $invoiceHeaderSettlement,
                         function ($taxTotalAmountNode) {
                             $this->destination->startElement('cac:TaxTotal');
@@ -1632,20 +1639,30 @@ class XmlConverterCiiToUbl extends XmlConverterBase
             return false;
         }
 
-        if ($format == "102") {
+        if ($format === "102") {
             return DateTime::createFromFormat("Ymd", $dateTimeString);
-        } elseif ($format == "101") {
-            return DateTime::createFromFormat("ymd", $dateTimeString);
-        } elseif ($format == "201") {
-            return DateTime::createFromFormat("ymdHi", $dateTimeString);
-        } elseif ($format == "202") {
-            return DateTime::createFromFormat("ymdHis", $dateTimeString);
-        } elseif ($format == "203") {
-            return DateTime::createFromFormat("YmdHi", $dateTimeString);
-        } elseif ($format == "204") {
-            return DateTime::createFromFormat("YmdHis", $dateTimeString);
-        } else {
-            throw new Exception($format);
         }
+
+        if ($format === "101") {
+            return DateTime::createFromFormat("ymd", $dateTimeString);
+        }
+
+        if ($format === "201") {
+            return DateTime::createFromFormat("ymdHi", $dateTimeString);
+        }
+
+        if ($format === "202") {
+            return DateTime::createFromFormat("ymdHis", $dateTimeString);
+        }
+
+        if ($format === "203") {
+            return DateTime::createFromFormat("YmdHi", $dateTimeString);
+        }
+
+        if ($format === "204") {
+            return DateTime::createFromFormat("YmdHis", $dateTimeString);
+        }
+
+        throw new Exception($format);
     }
 }

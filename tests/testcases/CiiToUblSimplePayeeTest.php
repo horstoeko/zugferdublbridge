@@ -12,7 +12,7 @@ class CiiToUblSimplePayeeTest extends TestCase
 
     public function testLoadAndConvert(): void
     {
-        self::$document = XmlConverterCiiToUbl::fromFile(dirname(__FILE__) . "/../assets/cii/1_cii_simple_payee.xml")->enableAutomaticMode()->convert();
+        self::$document = XmlConverterCiiToUbl::fromFile(__DIR__ . "/../assets/cii/1_cii_simple_payee.xml")->enableAutomaticMode()->convert();
         $this->assertNotNull(self::$document);
     }
 

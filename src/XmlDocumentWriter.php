@@ -45,6 +45,7 @@ class XmlDocumentWriter extends XmlDocumentBase
     {
         $this->internalDomDocument = new DOMDocument($version, $encoding);
         $this->internalDomDocument->formatOutput = true;
+        
         $root = $this->internalDomDocument->createElement($tag);
         $this->internalDomDocument->appendChild($root);
 
@@ -78,12 +79,12 @@ class XmlDocumentWriter extends XmlDocumentBase
     {
         $this->splitNamespaceAndTag($tag, $newNameSpace, $newTag);
 
-        if ($value) {
+        if ($value !== '' && $value !== '0') {
             $value = trim($value, ' ');
             $value = htmlspecialchars($value);
         }
 
-        if ($newNameSpace) {
+        if ($newNameSpace !== null && $newNameSpace !== '' && $newNameSpace !== '0') {
             if ($this->isNamespaceRegistered($newNameSpace)) {
                 $node = $this->internalDomDocument->createElementNS($this->registeredNamespaces[$newNameSpace], sprintf('%s:%s', $newNameSpace, $newTag), $value);
             } else {
@@ -122,7 +123,7 @@ class XmlDocumentWriter extends XmlDocumentBase
      */
     public function element(string $tag, ?string $value = ''): XmlDocumentWriter
     {
-        if (is_null($value) || $value == '') {
+        if (is_null($value) || $value === '') {
             return $this;
         }
 
@@ -159,13 +160,13 @@ class XmlDocumentWriter extends XmlDocumentBase
      */
     public function elementWithAttribute(string $tag, ?string $value = '', ?string $attributeName = '', ?string $attributeValue = ''): XmlDocumentWriter
     {
-        if (is_null($value) || $value == '') {
+        if (is_null($value) || $value === '') {
             return $this;
         }
 
         $this->startElement($tag, $value);
 
-        if (!is_null($attributeName) && $attributeName != '' && !is_null($attributeValue) && $attributeValue != '') {
+        if (!is_null($attributeName) && $attributeName !== '' && !is_null($attributeValue) && $attributeValue !== '') {
             $this->attribute($attributeName, $attributeValue);
         }
 
@@ -184,7 +185,7 @@ class XmlDocumentWriter extends XmlDocumentBase
      */
     public function elementWithMultipleAttributes(string $tag, ?string $value = '', array $attributes = []): XmlDocumentWriter
     {
-        if (is_null($value) || $value == '') {
+        if (is_null($value) || $value === '') {
             return $this;
         }
 
@@ -210,7 +211,7 @@ class XmlDocumentWriter extends XmlDocumentBase
      */
     public function attribute(string $name, ?string $value = null): XmlDocumentWriter
     {
-        if (is_null($value) || $value == '') {
+        if (is_null($value) || $value === '') {
             return $this;
         }
 
@@ -300,7 +301,7 @@ class XmlDocumentWriter extends XmlDocumentBase
      */
     private function stackPush(\DOMElement $node): void
     {
-        array_push($this->stack, $node);
+        $this->stack[] = $node;
     }
 
     /**

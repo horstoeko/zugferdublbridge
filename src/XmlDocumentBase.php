@@ -27,7 +27,7 @@ class XmlDocumentBase
      *
      * @var DOMDocument
      */
-    protected $internalDomDocument = null;
+    protected $internalDomDocument;
 
     /**
      * List of registered namespaces

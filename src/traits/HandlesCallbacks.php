@@ -30,7 +30,7 @@ trait HandlesCallbacks
     private function fireCallback($callback, ...$args)
     {
         if (!is_callable($callback)) {
-            return;
+            return null;
         }
 
         return call_user_func($callback, ...$args);

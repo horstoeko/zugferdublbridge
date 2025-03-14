@@ -37,7 +37,7 @@ class XmlDocumentReader extends XmlDocumentBase
      *
      * @var DOMXPath
      */
-    protected $internalDomXPath = null;
+    protected $internalDomXPath;
 
     /**
      * Constructor
@@ -78,8 +78,8 @@ class XmlDocumentReader extends XmlDocumentBase
             if (libxml_get_last_error()) {
                 throw new RuntimeException("Invalid XML detected.");
             }
-        } catch (Throwable $e) {
-            throw new RuntimeException("Invalid XML detected.");
+        } catch (Throwable $throwable) {
+            throw new RuntimeException("Invalid XML detected.", $throwable->getCode(), $throwable);
         } finally {
             libxml_clear_errors();
             libxml_use_internal_errors($prevUseInternalErrors);
@@ -107,8 +107,8 @@ class XmlDocumentReader extends XmlDocumentBase
             if (libxml_get_last_error()) {
                 throw new RuntimeException("Invalid XML detected.");
             }
-        } catch (Throwable $e) {
-            throw new RuntimeException("Invalid XML detected.");
+        } catch (Throwable $throwable) {
+            throw new RuntimeException("Invalid XML detected.", $throwable->getCode(), $throwable);
         } finally {
             libxml_clear_errors();
             libxml_use_internal_errors($prevUseInternalErrors);
@@ -165,11 +165,7 @@ class XmlDocumentReader extends XmlDocumentBase
             return false;
         }
 
-        if (is_null($nodeList->item(0)->nodeValue) || $nodeList->item(0)->nodeValue == "") {
-            return false;
-        }
-
-        return true;
+        return !is_null($nodeList->item(0)->nodeValue) && $nodeList->item(0)->nodeValue != "";
     }
 
     /**
@@ -289,7 +285,7 @@ class XmlDocumentReader extends XmlDocumentBase
             }
         }
 
-        if ($equals === true) {
+        if ($equals) {
             $this->fireCallback(
                 $callback,
                 $this->query($expression, $contextNode)->item(0),

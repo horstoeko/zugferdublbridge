@@ -193,7 +193,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                 if ($this->source->queryValue('./ram:SubjectCode', $includedNoteNode)) {
                     $note = sprintf('#%s#%s', $this->source->queryValue('./ram:SubjectCode', $includedNoteNode), $note);
                 }
-                
+
                 $this->destination->element('cbc:Note', $note);
             }
         );
@@ -322,7 +322,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                                 if ($this->source->queryValue('./ram:TypeCode', $additionalReferencedDocumentNode) === "130") {
                                     $this->destination->element('cbc:DocumentTypeCode', $this->source->queryValue('./ram:TypeCode', $additionalReferencedDocumentNode));
                                 }
-                                
+
                                 $this->destination->element('cbc:DocumentDescription', $this->source->queryValue('./ram:Name', $additionalReferencedDocumentNode));
                                 $this->source->whenExists(
                                     './ram:AttachmentBinaryObject',
@@ -465,7 +465,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->element('cbc:CityName', $this->source->queryValue('./ram:CityName', $sellerTradePartyPostalAddressNode));
                         $this->destination->element('cbc:PostalZone', $this->source->queryValue('./ram:PostcodeCode', $sellerTradePartyPostalAddressNode));
                         $this->destination->element('cbc:CountrySubentity', $this->source->queryValue('./ram:CountrySubDivisionName', $sellerTradePartyPostalAddressNode));
-                        
+
                         $this->source->whenExists(
                             './ram:LineThree',
                             $sellerTradePartyPostalAddressNode,
@@ -614,7 +614,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->element('cbc:CityName', $this->source->queryValue('./ram:CityName', $buyerTradePartyPostalAddressNode));
                         $this->destination->element('cbc:PostalZone', $this->source->queryValue('./ram:PostcodeCode', $buyerTradePartyPostalAddressNode));
                         $this->destination->element('cbc:CountrySubentity', $this->source->queryValue('./ram:CountrySubDivisionName', $buyerTradePartyPostalAddressNode));
-                        
+
                         $this->source->whenExists(
                             './ram:LineThree',
                             $buyerTradePartyPostalAddressNode,
@@ -763,7 +763,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->element('cbc:CityName', $this->source->queryValue('./ram:CityName', $payeeTradePartyPostalAddressNode));
                         $this->destination->element('cbc:PostalZone', $this->source->queryValue('./ram:PostcodeCode', $payeeTradePartyPostalAddressNode));
                         $this->destination->element('cbc:CountrySubentity', $this->source->queryValue('./ram:CountrySubDivisionName', $payeeTradePartyPostalAddressNode));
-                        
+
                         $this->source->whenExists(
                             './ram:LineThree',
                             $payeeTradePartyPostalAddressNode,
@@ -876,7 +876,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->element('cbc:CityName', $this->source->queryValue('./ram:CityName', $sellerTaxRepresentativePartyPostalAddressNode));
                         $this->destination->element('cbc:PostalZone', $this->source->queryValue('./ram:PostcodeCode', $sellerTaxRepresentativePartyPostalAddressNode));
                         $this->destination->element('cbc:CountrySubentity', $this->source->queryValue('./ram:CountrySubDivisionName', $sellerTaxRepresentativePartyPostalAddressNode));
-                        
+
                         $this->source->whenExists(
                             './ram:LineThree',
                             $sellerTaxRepresentativePartyPostalAddressNode,
@@ -1099,13 +1099,13 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                         $this->destination->startElement('cac:PayeeFinancialAccount');
                         $this->destination->element('cbc:ID', $this->source->queryValue('./ram:IBANID', $paymentMeansCreditorFinancialAccountNode));
                         $this->destination->element('cbc:Name', $this->source->queryValue('./ram:AccountName', $paymentMeansCreditorFinancialAccountNode));
-                        
+
                         $this->source->whenExists(
                             './ram:PayeeSpecifiedCreditorFinancialInstitution',
                             $paymentMeansNode,
                             function ($paymentMeansCreditorFinancialInstNode) {
                                 $this->destination->startElement('cac:FinancialInstitutionBranch');
-                                $this->destination->element('cbc:ID', $paymentMeansCreditorFinancialInstNode->nodeValue);
+                                $this->destination->element('cbc:ID', $this->source->queryValue('./ram:BICID', $paymentMeansCreditorFinancialInstNode));
                                 $this->destination->endElement();
                             }
                         );
@@ -1119,7 +1119,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                     function ($DirectDebitMandateNode) use ($paymentMeansNode) {
                         $this->destination->startElement('cac:PaymentMandate');
                         $this->destination->element('cbc:ID', $DirectDebitMandateNode->nodeValue);
-                        
+
                         $this->source->whenExists(
                             './ram:PayerPartyDebtorFinancialAccount',
                             $paymentMeansNode,

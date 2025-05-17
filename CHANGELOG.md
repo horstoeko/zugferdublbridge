@@ -1,3 +1,18 @@
+## v1.0.15
+
+``Previous version v1.0.13``
+
+| Type | Hash    | Date    | Author  | Subject  | Issue(s)
+| :--- | :------ | :------ | :------ | :------- | :-----------: 
+| :new_moon:  | [aa0c043](https://github.com/horstoeko/zugferdublbridge/commit/aa0c043) | 2025-05-17 22:01:02 CEST | HorstOeko | BIC formatted over multiple lines | [#14](https://github.com/horstoeko/zugferdublbridge/issues/14)
+| :new:  | [077161e](https://github.com/horstoeko/zugferdublbridge/commit/077161e) | 2025-03-15 09:01:19 CET | HorstOeko | [ENH] Update build and cs config | 
+| :new:  | [ebc0631](https://github.com/horstoeko/zugferdublbridge/commit/ebc0631) | 2025-03-14 20:50:39 CET | HorstOeko | [ENH] Update build and cs config | 
+| :new:  | [169e720](https://github.com/horstoeko/zugferdublbridge/commit/169e720) | 2025-03-14 20:43:30 CET | HorstOeko | [ENH] Update build and cs config | 
+| :new_moon:  | [5980f14](https://github.com/horstoeko/zugferdublbridge/commit/5980f14) | 2025-03-04 13:56:03 CET | Axel Guckelsberger | fix for issue | [#11](https://github.com/horstoeko/zugferdublbridge/issues/11)
+| :new_moon:  | [baf038e](https://github.com/horstoeko/zugferdublbridge/commit/baf038e) | 2025-02-27 16:11:53 CET | HorstOeko | Financial institution number (BIC) not precisely selected | [#11](https://github.com/horstoeko/zugferdublbridge/issues/11)
+
+:exclamation: _There are 7 internal commit(s)_
+
 ## v1.0.14
 
 :exclamation: _There is one internal commit_

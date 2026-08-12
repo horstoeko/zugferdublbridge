@@ -1,3 +1,13 @@
+## v1.0.17
+
+``Previous version v1.0.16``
+
+| Type | Hash    | Date    | Author  | Subject  | Issue(s)
+| :--- | :------ | :------ | :------ | :------- | :-----------: 
+| :new_moon:  | [31752f6](https://github.com/horstoeko/zugferdublbridge/commit/31752f6) | 2026-08-12 16:23:12 CEST | HorstOeko | Allow multiple PaymentMeans in CII to UBL conversion | [#27](https://github.com/horstoeko/zugferdublbridge/issues/27)
+
+:exclamation: _There are 5 internal commit(s)_
+
 ## v1.0.16
 
 ``Previous version v1.0.15``

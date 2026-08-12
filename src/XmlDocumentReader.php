@@ -201,7 +201,7 @@ class XmlDocumentReader extends XmlDocumentBase
      *
      * @param  string       $expression
      * @param  DOMNode|null $contextNode
-     * @return XmlNodeList;
+     * @return XmlNodeList
      */
     public function queryAll(string $expression, ?DOMNode $contextNode = null): XmlNodeList
     {

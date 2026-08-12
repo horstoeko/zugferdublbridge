@@ -1062,9 +1062,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         $invoiceSuppyChainTradeTransaction = $this->source->query('./rsm:SupplyChainTradeTransaction', $invoiceElement)->item(0);
         $invoiceHeaderSettlement = $this->source->query('./ram:ApplicableHeaderTradeSettlement', $invoiceSuppyChainTradeTransaction)->item(0);
 
-        $this->source->whenExists(
-            './ram:SpecifiedTradeSettlementPaymentMeans',
-            $invoiceHeaderSettlement,
+        $this->source->queryAll('./ram:SpecifiedTradeSettlementPaymentMeans', $invoiceHeaderSettlement)->foreach(
             function ($paymentMeansNode) use ($invoiceHeaderSettlement) {
                 $this->destination->startElement('cac:PaymentMeans');
 

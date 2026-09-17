@@ -221,13 +221,23 @@ class XmlConverterUblToCii extends XmlConverterBase
 
         $this->source->queryAll('./cbc:Note', $docRootElement)->foreach(
             function ($noteNode) {
-                $splittedNode = explode('#', $noteNode->nodeValue);
-                if (count($splittedNode) > 2) {
-                    $this->destination->startElement('ram:IncludedNote');
-                    $this->destination->element('ram:Content', $splittedNode[2]);
-                    $this->destination->element('ram:SubjectCode', $splittedNode[1]);
-                    $this->destination->endElement();
+                // A note may carry its subject code in front of the text ("#ADU#the text").
+                // The text is everything behind the second "#" - splitting without a limit
+                // would cut it at its next "#" (e.g. "#SKONTO#TAGE=10#PROZENT=2.00").
+                $splittedNode = explode('#', $noteNode->nodeValue, 3);
+                $content = count($splittedNode) > 2 ? $splittedNode[2] : '';
+
+                // ram:Content is mandatory in CII, so a note without any text cannot be
+                // expressed - writing only the subject code produces an invalid document
+                // (seen in the wild: "#ADU#" without a text).
+                if (trim($content) === '') {
+                    return;
                 }
+
+                $this->destination->startElement('ram:IncludedNote');
+                $this->destination->element('ram:Content', $content);
+                $this->destination->element('ram:SubjectCode', $splittedNode[1]);
+                $this->destination->endElement();
             }
         );
 

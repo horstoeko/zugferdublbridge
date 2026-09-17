@@ -1,3 +1,14 @@
+## v1.0.19
+
+``Previous version v1.0.17``
+
+| Type | Hash    | Date    | Author  | Subject  | Issue(s)
+| :--- | :------ | :------ | :------ | :------- | :-----------: 
+| :new_moon:  | [77c4f68](https://github.com/horstoeko/zugferdublbridge/commit/77c4f68) | 2026-09-17 15:12:48 CEST | dealerweb | Skip UBL notes without text - a CII note without ram:Content is invalid | 
+| :new_moon:  | [6ebb591](https://github.com/horstoeko/zugferdublbridge/commit/6ebb591) | 2026-09-17 14:38:17 CEST | dealerweb | Add the XRechnung extension profiles (2.3 and 3.0) to the supported profiles | 
+
+:exclamation: _There are 2 internal commit(s)_
+
 ## v1.0.18
 
 ``Previous version v1.0.16``

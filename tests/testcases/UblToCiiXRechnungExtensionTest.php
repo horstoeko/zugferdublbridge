@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace horstoeko\zugferdublbridge\tests\testcases;
 
 use horstoeko\zugferdublbridge\tests\TestCase;
 use horstoeko\zugferdublbridge\tests\traits\HandlesXmlTests;
 use horstoeko\zugferdublbridge\XmlConverterUblToCii;
 
-class UblToCiiXRechnungExtensionTest extends TestCase
+final class UblToCiiXRechnungExtensionTest extends TestCase
 {
     use HandlesXmlTests;
 
@@ -55,7 +57,7 @@ class UblToCiiXRechnungExtensionTest extends TestCase
      */
     private function getUblWithCustomizationId(string $customizationId): string
     {
-        $ublContent = file_get_contents(__DIR__ . "/../assets/ubl/1_ubl_simple.xml");
+        $ublContent = file_get_contents(__DIR__ . '/../assets/ubl/1_ubl_simple.xml');
 
         return preg_replace(
             '/<cbc:CustomizationID>.*?<\/cbc:CustomizationID>/',

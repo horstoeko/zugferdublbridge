@@ -10,7 +10,6 @@
                 <path>src</path>
             </source>
             <ignore hidden="true" symlinks="true">
-                <path>src/entities/**/*</path>
                 <path>tests/**/*</path>
             </ignore>
             <extensions>

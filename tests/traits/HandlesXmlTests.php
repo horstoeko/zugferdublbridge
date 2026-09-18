@@ -1,30 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace horstoeko\zugferdublbridge\tests\traits;
+
+use horstoeko\zugferdublbridge\XmlConverterBase;
+use SimpleXMLElement;
 
 trait HandlesXmlTests
 {
     /**
-     * @var \horstoeko\zugferdublbridge\XmlConverterBase
+     * @var XmlConverterBase
      */
     protected static $document;
 
     /**
      * Cache for latest rendered XML
      *
-     * @var \SimpleXMLElement
+     * @var SimpleXMLElement
      */
     protected $latestXml;
 
     /**
      * Dont render xml content
      *
-     * @var boolean
+     * @var bool
      */
     protected $renderingOfXmlDisabled = false;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp(): void
     {
@@ -42,16 +47,44 @@ trait HandlesXmlTests
     }
 
     /**
+     * Write debug file
+     *
+     * @return void
+     */
+    public function debugWriteFile(): void
+    {
+        self::$document->saveXmlFile(getcwd() . '/myfile_dbg.xml');
+    }
+
+    /**
+     * Save generated XML to buildlogs
+     *
+     * @param  string    $filename
+     * @return false|int
+     */
+    public function saveFinalXmlToBuildResults(string $filename)
+    {
+        $buildDir = __DIR__ . '/../../build';
+        $buildXmlResultDir = $buildDir . '/generated';
+
+        if (!is_dir($buildXmlResultDir)) {
+            @mkdir($buildXmlResultDir);
+        }
+
+        return self::$document->saveXmlFile($buildXmlResultDir . '/' . $filename);
+    }
+
+    /**
      * Get XML-Object from documents content
      *
-     * @return \SimpleXMLElement
+     * @return SimpleXMLElement
      */
-    protected function getXml(): \SimpleXMLElement
+    protected function getXml(): SimpleXMLElement
     {
-        if ($this->renderingOfXmlDisabled === false) {
-            $this->latestXml = new \SimpleXMLElement(self::$document->saveXmlString());
+        if (false === $this->renderingOfXmlDisabled) {
+            $this->latestXml = new SimpleXMLElement(self::$document->saveXmlString());
         }
-        
+
         return $this->latestXml;
     }
 
@@ -62,7 +95,7 @@ trait HandlesXmlTests
      */
     protected function disableRenderXmlContent()
     {
-        $this->latestXml = new \SimpleXMLElement(self::$document->saveXmlString());
+        $this->latestXml = new SimpleXMLElement(self::$document->saveXmlString());
         $this->renderingOfXmlDisabled = true;
     }
 
@@ -94,9 +127,9 @@ trait HandlesXmlTests
     /**
      * Assert a xpath with $expected value in a multiple element resultset
      *
-     * @param  string  $xpath
-     * @param  integer $index
-     * @param  string  $expected
+     * @param  string $xpath
+     * @param  int    $index
+     * @param  string $expected
      * @return void
      */
     protected function assertXPathValueWithIndex(string $xpath, int $index, string $expected): void
@@ -110,9 +143,9 @@ trait HandlesXmlTests
     /**
      * Assert a xpath with $expected value in a multiple element resultset
      *
-     * @param  string  $xpath
-     * @param  integer $index
-     * @param  string  $expected
+     * @param  string $xpath
+     * @param  int    $index
+     * @param  string $expected
      * @return void
      */
     protected function assertXPathValueStartsWithIndex(string $xpath, int $index, string $expected): void
@@ -120,15 +153,15 @@ trait HandlesXmlTests
         $xml = $this->getXml();
         $xmlvalue = $xml->xpath($xpath);
         $this->assertArrayHasKey($index, $xmlvalue);
-        $this->assertEquals($expected, substr($xmlvalue[$index], 0, strlen($expected)));
+        $this->assertEquals($expected, substr((string) $xmlvalue[$index], 0, strlen($expected)));
     }
 
     /**
      * Assert a xpath with $expected value in a multiple element resultset
      *
-     * @param  string  $xpath
-     * @param  integer $index
-     * @param  string  $expected
+     * @param  string $xpath
+     * @param  int    $index
+     * @param  string $expected
      * @return void
      */
     protected function assertXPathValueContainsWithIndex(string $xpath, int $index, string $expected): void
@@ -136,7 +169,7 @@ trait HandlesXmlTests
         $xml = $this->getXml();
         $xmlvalue = $xml->xpath($xpath);
         $this->assertArrayHasKey($index, $xmlvalue);
-        $this->assertStringContainsString($expected, $xmlvalue[$index]);
+        $this->assertStringContainsString($expected, (string) $xmlvalue[$index]);
     }
 
     /**
@@ -193,7 +226,7 @@ trait HandlesXmlTests
         $xml = $this->getXml();
         $xmlvalue = $xml->xpath($xpath);
         $this->assertArrayHasKey($index, $xmlvalue);
-        $this->assertEquals($expected, substr($xmlvalue[$index], 0, strlen($expected)));
+        $this->assertEquals($expected, substr((string) $xmlvalue[$index], 0, strlen($expected)));
         $this->assertNotNull($xmlvalue[$index]->attributes()[$expectedAttribute]);
         $this->assertNotNull($xmlvalue[$index]->attributes()[$expectedAttribute][0]);
         $this->assertEquals($expectedAttributeValue, $xmlvalue[$index]->attributes()[$expectedAttribute][0]);
@@ -228,8 +261,8 @@ trait HandlesXmlTests
     /**
      * Test that an xml element does not exist at index
      *
-     * @param  string  $xpath
-     * @param  integer $index
+     * @param  string $xpath
+     * @param  int    $index
      * @return void
      */
     protected function assertXPathNotExistsWithIndex(string $xpath, int $index)
@@ -237,33 +270,5 @@ trait HandlesXmlTests
         $xml = $this->getXml();
         $xmlvalue = $xml->xpath($xpath);
         $this->assertArrayNotHasKey($index, $xmlvalue);
-    }
-
-    /**
-     * Write debug file
-     *
-     * @return void
-     */
-    public function debugWriteFile(): void
-    {
-        self::$document->saveXmlFile(getcwd() . "/myfile_dbg.xml");
-    }
-
-    /**
-     * Save generated XML to buildlogs
-     *
-     * @param  string $filename
-     * @return int|false
-     */
-    public function saveFinalXmlToBuildResults(string $filename)
-    {
-        $buildDir = __DIR__ . '/../../build';
-        $buildXmlResultDir = $buildDir . '/generated';
-
-        if (!is_dir($buildXmlResultDir)) {
-            @mkdir($buildXmlResultDir);
-        }
-
-        return self::$document->saveXmlFile($buildXmlResultDir . '/' . $filename);
     }
 }

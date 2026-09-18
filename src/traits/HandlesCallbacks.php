@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is a part of horstoeko/zugferdublbridge.
  *
@@ -13,10 +15,9 @@ namespace horstoeko\zugferdublbridge\traits;
  * Trait for handling and firing callbacks
  *
  * @category Zugferd-UBL-Bridge
- * @package  Zugferd-UBL-Bridge
  * @author   D. Erling <horstoeko@erling.com.de>
  * @license  https://opensource.org/licenses/MIT MIT
- * @link     https://github.com/horstoeko/zugferdublbridge
+ * @see      https://github.com/horstoeko/zugferdublbridge
  */
 trait HandlesCallbacks
 {
@@ -24,7 +25,7 @@ trait HandlesCallbacks
      * Internal helper function to fire a callback function
      *
      * @param  callable $callback
-     * @param  array    ...$args
+     * @param  mixed[]  ...$args
      * @return mixed
      */
     private function fireCallback($callback, ...$args)

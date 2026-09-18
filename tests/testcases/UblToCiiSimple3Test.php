@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace horstoeko\zugferdublbridge\tests\testcases;
 
 use horstoeko\zugferdublbridge\tests\TestCase;
 use horstoeko\zugferdublbridge\tests\traits\HandlesXmlTests;
 use horstoeko\zugferdublbridge\XmlConverterUblToCii;
 
-class UblToCiiSimple3Test extends TestCase
+final class UblToCiiSimple3Test extends TestCase
 {
     use HandlesXmlTests;
 
     public function testLoadAndConvert(): void
     {
-        self::$document = XmlConverterUblToCii::fromFile(__DIR__ . "/../assets/ubl/3_ubl_simple_creditnote.xml")->convert();
+        self::$document = XmlConverterUblToCii::fromFile(__DIR__ . '/../assets/ubl/3_ubl_simple_creditnote.xml')->convert();
         $this->assertNotNull(self::$document);
         $this->assertNotFalse($this->saveFinalXmlToBuildResults('3_ubl_simple_creditnote_as_cii.xml'));
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is a part of horstoeko/zugferdublbridge.
  *
@@ -13,17 +15,16 @@ namespace horstoeko\zugferdublbridge\traits;
  * Trait for handling supported profiles
  *
  * @category Zugferd-UBL-Bridge
- * @package  Zugferd-UBL-Bridge
  * @author   D. Erling <horstoeko@erling.com.de>
  * @license  https://opensource.org/licenses/MIT MIT
- * @link     https://github.com/horstoeko/zugferdublbridge
+ * @see      https://github.com/horstoeko/zugferdublbridge
  */
 trait HandlesAmountFormatting
 {
     /**
      * Internal flag to disable amount formattting
      *
-     * @var boolean
+     * @var bool
      */
     private $amountFormatDisabled = true;
 
@@ -54,7 +55,7 @@ trait HandlesAmountFormatting
     /**
      * Returns true if the amount formatting is disabled
      *
-     * @return boolean
+     * @return bool
      */
     public function getAmountFormatDisabled(): bool
     {
@@ -64,22 +65,22 @@ trait HandlesAmountFormatting
     /**
      * Returns true if the amount formatting is enabled
      *
-     * @return boolean
+     * @return bool
      */
     public function getAmountFormatEnabled(): bool
     {
-        return $this->getAmountFormatDisabled() === false;
+        return false === $this->getAmountFormatDisabled();
     }
 
     /**
      * Format amount value
      *
-     * @param  string|null $amount
-     * @return string|null
+     * @param  null|string $amount
+     * @return null|string
      */
     private function formatAmount(?string $amount): ?string
     {
-        if ($this->getAmountFormatDisabled() === true) {
+        if (true === $this->getAmountFormatDisabled()) {
             return $amount;
         }
 
@@ -91,6 +92,6 @@ trait HandlesAmountFormatting
             return $amount;
         }
 
-        return (string)((float)$amount);
+        return (string) ((float) $amount);
     }
 }

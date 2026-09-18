@@ -7,6 +7,16 @@ assignees: horstoeko
 
 ---
 
+### Before Submitting an Issue
+
+Thank you for contributing to our project! :tada: Before opening a new issue, please review our [Contributing Guidelines](https://github.com/horstoeko/zugferdublbridge/blob/master/CONTRIBUTING.md).
+
+To help us assist you efficiently, we require confirmation of the following:
+- [ ] I have read the [documentation](https://github.com/horstoeko/zugferdublbridge/wiki) and could not find a solution to my issue.
+- [ ] I have searched open and closed [issues](https://github.com/horstoeko/zugferdublbridge/issues) to ensure my issue has not already been reported.
+
+Issues that do not meet these requirements may be closed without further action. Thank you for your understanding and support! :pray:
+
 **Your question**
 A clear and concise question
 

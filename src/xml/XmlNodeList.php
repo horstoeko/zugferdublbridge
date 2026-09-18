@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is a part of horstoeko/zugferdublbridge.
  *
@@ -9,6 +11,7 @@
 
 namespace horstoeko\zugferdublbridge\xml;
 
+use DOMNode;
 use DOMNodeList;
 use horstoeko\zugferdublbridge\traits\HandlesCallbacks;
 
@@ -16,10 +19,9 @@ use horstoeko\zugferdublbridge\traits\HandlesCallbacks;
  * Class representing a XML node list
  *
  * @category Zugferd-UBL-Bridge
- * @package  Zugferd-UBL-Bridge
  * @author   D. Erling <horstoeko@erling.com.de>
  * @license  https://opensource.org/licenses/MIT MIT
- * @link     https://github.com/horstoeko/zugferdublbridge
+ * @see      https://github.com/horstoeko/zugferdublbridge
  */
 class XmlNodeList
 {
@@ -28,25 +30,14 @@ class XmlNodeList
     /**
      * Nodelist
      *
-     * @var DOMNodeList|null
+     * @var null|DOMNodeList<DOMNode>
      */
     private $domNodeList;
 
     /**
-     * Factory
-     *
-     * @param  DOMNodeList|null $domNodeList
-     * @return XmlNodeList
-     */
-    public static function createFromDomNodelist(?DOMNodeList $domNodeList = null): XmlNodeList
-    {
-        return new XmlNodeList($domNodeList);
-    }
-
-    /**
      * Constructor
      *
-     * @param DOMNodeList|null $domNodeList
+     * @param null|DOMNodeList<DOMNode> $domNodeList
      */
     public function __construct(?DOMNodeList $domNodeList = null)
     {
@@ -54,13 +45,24 @@ class XmlNodeList
     }
 
     /**
+     * Factory
+     *
+     * @param  null|DOMNodeList<DOMNode> $domNodeList
+     * @return XmlNodeList
+     */
+    public static function createFromDomNodelist(?DOMNodeList $domNodeList = null): self
+    {
+        return new self($domNodeList);
+    }
+
+    /**
      * Foreach node in internal nodelist
      *
      * @param  callable      $callback
-     * @param  callable|null $callBackBefore
-     * @param  callable|null $callbackAfter
-     * @param  callable|null $callbackBeforeEach
-     * @param  callable|null $callbackAfterEach
+     * @param  null|callable $callBackBefore
+     * @param  null|callable $callbackAfter
+     * @param  null|callable $callbackBeforeEach
+     * @param  null|callable $callbackAfterEach
      * @return void
      */
     public function forEach($callback, $callBackBefore = null, $callbackAfter = null, $callbackBeforeEach = null, $callbackAfterEach = null)
@@ -71,12 +73,12 @@ class XmlNodeList
     /**
      * Foreach for only $max nodes in internal nodelist.
      *
-     * @param  integer       $max
+     * @param  int           $max
      * @param  callable      $callback
-     * @param  callable|null $callBackBefore
-     * @param  callable|null $callbackAfter
-     * @param  callable|null $callbackBeforeEach
-     * @param  callable|null $callbackAfterEach
+     * @param  null|callable $callBackBefore
+     * @param  null|callable $callbackAfter
+     * @param  null|callable $callbackBeforeEach
+     * @param  null|callable $callbackAfterEach
      * @return void
      */
     public function forEachMax(int $max, $callback, $callBackBefore = null, $callbackAfter = null, $callbackBeforeEach = null, $callbackAfterEach = null)
@@ -90,7 +92,7 @@ class XmlNodeList
         $count = 0;
 
         foreach ($this->domNodeList as $node) {
-            $count++;
+            ++$count;
 
             if ($count > $max && $max > 0) {
                 break;

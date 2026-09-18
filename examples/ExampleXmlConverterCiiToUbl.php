@@ -3,21 +3,21 @@
 use horstoeko\stringmanagement\PathUtils;
 use horstoeko\zugferdublbridge\XmlConverterCiiToUbl;
 
-require __DIR__ . "/../vendor/autoload.php";
+require __DIR__ . '/../vendor/autoload.php';
 
-$xmlFilenames = glob(__DIR__ . "/*uncefact*.xml");
+$xmlFilenames = glob(__DIR__ . '/*uncefact*.xml');
 
-if ($xmlFilenames === false) {
-    die();
+if (false === $xmlFilenames) {
+    exit;
 }
 
 foreach ($xmlFilenames as $xmlFilename) {
     $xmlFilePathInfo = pathinfo($xmlFilename);
 
-    $newXmlPath = PathUtils::combineAllPaths($xmlFilePathInfo['dirname'], "ubl");
+    $newXmlPath = PathUtils::combineAllPaths($xmlFilePathInfo['dirname'], 'ubl');
     $newXmlFilename = PathUtils::combinePathWithFile($newXmlPath, str_replace('uncefact', 'ubl', $xmlFilePathInfo['basename']));
 
-    echo "Converting..." . PHP_EOL;
+    echo 'Converting...' . PHP_EOL;
     echo ' - Source ... ' . $xmlFilename . PHP_EOL;
     echo ' - Dest ..... ' . $newXmlFilename . PHP_EOL;
 

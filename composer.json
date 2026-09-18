@@ -1,6 +1,15 @@
 {
     "name": "horstoeko/zugferdublbridge",
-    "keywords": ["zugferd","xrechnung","factur-x","CII","UBL","electronic","invoice","convert"],
+    "keywords": [
+        "zugferd",
+        "xrechnung",
+        "factur-x",
+        "CII",
+        "UBL",
+        "electronic",
+        "invoice",
+        "convert"
+    ],
     "description": "Convert Factur-X/ZUGFeRD (CII-Syntax) to PEPPOL (UBL-Syntax) and visa versa",
     "homepage": "https://github.com/horstoeko/zugferdublbridge",
     "type": "package",
@@ -28,43 +37,103 @@
         }
     },
     "require": {
-        "php": ">=7.3"
+        "php": ">=7.3",
+        "ext-dom": "*",
+        "ext-libxml": "*"
     },
     "require-dev": {
-        "nette/php-generator": "*",
-        "pdepend/pdepend": "^2",
-        "phpdocumentor/reflection-docblock": "^5",
-        "phploc/phploc": "^7",
-        "phpmd/phpmd": "^2",
-        "phpstan/phpstan": "^1|^2",
-        "phpunit/phpunit": "^9",
-        "rector/rector": "*",
-        "sebastian/phpcpd": "^6",
+        "ext-json": "*",
+        "ext-simplexml": "*",
+        "friendsofphp/php-cs-fixer": "^3",
         "horstoeko/stringmanagement": "^1",
-        "squizlabs/php_codesniffer": "^3"
+        "nette/php-generator": "*",
+        "php-parallel-lint/php-parallel-lint": "^1.4",
+        "phpdocumentor/reflection-docblock": "^6",
+        "phpstan/phpstan": "^1|^2.1",
+        "phpstan/phpstan-deprecation-rules": "^1|^2",
+        "phpstan/phpstan-strict-rules": "^1|^2",
+        "phpunit/phpunit": "^9.6",
+        "rector/rector": "^2"
     },
     "scripts": {
-        "tests": "./vendor/bin/phpunit ./tests/",
-        "testsreal": "./vendor/bin/phpunit --configuration ./build/phpunit.xml",
-        "phpcs": "./vendor/bin/phpcs --standard=./build/phpcsrules.xml --extensions=php --ignore=autoload.php ./src ./tests",
-        "phpcs12": "./vendor/bin/phpcs --standard=./build/phpcsrules_psr12.xml --extensions=php --ignore=autoload.php ./src ./tests",
-        "phpcbf": "./vendor/bin/phpcbf -q ./src ./tests",
-        "phpcbf1": "./vendor/bin/phpcbf --standard=./build/phpcsrules_psr1.xml -q ./src ./tests",
-        "phpcbf2": "./vendor/bin/phpcbf --standard=./build/phpcsrules_psr2.xml -q ./src ./tests",
-        "phpcbf12": "./vendor/bin/phpcbf --standard=./build/phpcsrules_psr12.xml -q ./src ./tests",
-        "phpcbfsq": "./vendor/bin/phpcbf --standard=./build/phpcsrules_squiz.xml -q ./src ./tests",
-        "phpstan": "./vendor/bin/phpstan analyze -c ./build/phpstan.neon --autoload-file=vendor/autoload.php --no-interaction --no-progress --xdebug",
-        "phpstan_cs": "./vendor/bin/phpstan analyze -c ./build/phpstan.neon --autoload-file=vendor/autoload.php --no-interaction --no-progress --error-format=checkstyle --xdebug",
-        "makedoc": "phing -f ./build.xml projectdoc",
-        "checkstyle": [
+        "tests": [
             "Composer\\Config::disableProcessTimeout",
-            "vendor/bin/phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml src tests",
-            "vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependencies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg src",
-            "vendor/bin/phpmd src xml build/phpmd.xml --reportfile build/logs/pmd.xml --exclude src/entities/",
-            "vendor/bin/phpcs --report=checkstyle --report-file=build/logs/checkstyle.xml --standard=build/phpcsrules.xml --extensions=php --ignore=autoload.php src tests",
-            "vendor/bin/phpstan analyze -c build/phpstan.neon --autoload-file=vendor/autoload.php --no-interaction --no-progress --error-format=checkstyle > build/logs/checkstyle_phpstan.xml",
-            "vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml --exclude src/entities/ src"
+            "./vendor/bin/phpunit ./tests/"
         ],
-        "rector": "vendor/bin/rector --config=./build/phprectorconfig.php"
+        "testsreal": [
+            "Composer\\Config::disableProcessTimeout",
+            "./vendor/bin/phpunit --configuration ./build/phpunit.xml"
+        ],
+        "testsreal:quick": [
+            "Composer\\Config::disableProcessTimeout",
+            "./vendor/bin/phpunit --configuration ./build/phpunit.xml --no-coverage"
+        ],
+        "testsreal:basic": [
+            "Composer\\Config::disableProcessTimeout",
+            "./vendor/bin/phpunit --configuration ./build/phpunit.xml --testsuite Basic"
+        ],
+        "testsreal:basic:quick": [
+            "Composer\\Config::disableProcessTimeout",
+            "./vendor/bin/phpunit --configuration ./build/phpunit.xml --testsuite Basic --no-coverage"
+        ],
+        "testsreal:cii2ubl": [
+            "Composer\\Config::disableProcessTimeout",
+            "./vendor/bin/phpunit --configuration ./build/phpunit.xml --testsuite Cii2Ubl"
+        ],
+        "testsreal:cii2ubl:quick": [
+            "Composer\\Config::disableProcessTimeout",
+            "./vendor/bin/phpunit --configuration ./build/phpunit.xml --testsuite Cii2Ubl --no-coverage"
+        ],
+        "phpstan:run": [
+            "Composer\\Config::disableProcessTimeout",
+            "./vendor/bin/phpstan analyze -c ./build/phpstan.neon --autoload-file=vendor/autoload.php --no-interaction --memory-limit 4G"
+        ],
+        "phpstan:clearcache": [
+            "Composer\\Config::disableProcessTimeout",
+            "./vendor/bin/phpstan clear-result-cache"
+        ],
+        "rector:dryrun": [
+            "Composer\\Config::disableProcessTimeout",
+            "vendor/bin/rector --config=./build/phprectorconfig.php --dry-run"
+        ],
+        "rector:run": [
+            "Composer\\Config::disableProcessTimeout",
+            "vendor/bin/rector --config=./build/phprectorconfig.php"
+        ],
+        "rector:dryrun:xd": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php -d xdebug.mode=off -d realpath_cache_size=64M -d realpath_cache_ttl=600 -d opcache.enable_cli=1 -d opcache.file_cache_only=0 -d opcache.file_cache= vendor/bin/rector process --config build/phprectorconfig.php --dry-run"
+        ],
+        "rector:run:xd": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php -d xdebug.mode=off -d realpath_cache_size=64M -d realpath_cache_ttl=600 -d opcache.enable_cli=1 -d opcache.file_cache_only=0 -d opcache.file_cache= vendor/bin/rector process --config build/phprectorconfig.php"
+        ],
+        "phpcsfixer:dryrun": [
+            "Composer\\Config::disableProcessTimeout",
+            "./vendor/bin/php-cs-fixer fix --config=./build/phpcsfixer.php --dry-run --diff"
+        ],
+        "phpcsfixer:run": [
+            "Composer\\Config::disableProcessTimeout",
+            "./vendor/bin/php-cs-fixer fix --config=./build/phpcsfixer.php"
+        ],
+        "lint:run": [
+            "Composer\\Config::disableProcessTimeout",
+            "./vendor/bin/parallel-lint src tests"
+        ],
+        "audit:run": [
+            "Composer\\Config::disableProcessTimeout",
+            "composer audit --locked"
+        ],
+        "checkstyle:run": [
+            "Composer\\Config::disableProcessTimeout",
+            "@lint:run",
+            "@phpcsfixer:dryrun",
+            "@phpstan:run",
+            "@audit:run"
+        ],
+        "refactor:run": [
+            "@rector:run",
+            "@phpcsfixer:run"
+        ]
     }
 }

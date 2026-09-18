@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is a part of horstoeko/zugferdublbridge.
  *
@@ -15,10 +17,9 @@ use DOMDocument;
  * Class representing the base XML document
  *
  * @category Zugferd-UBL-Bridge
- * @package  Zugferd-UBL-Bridge
  * @author   D. Erling <horstoeko@erling.com.de>
  * @license  https://opensource.org/licenses/MIT MIT
- * @link     https://github.com/horstoeko/zugferdublbridge
+ * @see      https://github.com/horstoeko/zugferdublbridge
  */
 class XmlDocumentBase
 {
@@ -32,7 +33,7 @@ class XmlDocumentBase
     /**
      * List of registered namespaces
      *
-     * @var array
+     * @var array<string,string>
      */
     protected $registeredNamespaces = [];
 
@@ -54,7 +55,7 @@ class XmlDocumentBase
      * Check is namespae is registered
      *
      * @param  string $namespace
-     * @return boolean
+     * @return bool
      */
     public function isNamespaceRegistered(string $namespace): bool
     {
@@ -71,13 +72,13 @@ class XmlDocumentBase
      */
     protected function splitNamespaceAndTag(string $tag, ?string &$namespace, ?string &$newTag): void
     {
-        $splittedTag = explode(":", $tag);
+        $splittedTag = explode(':', $tag);
 
-        if (count($splittedTag) == 2) {
+        if (2 === count($splittedTag)) {
             $namespace = $splittedTag[0];
             $newTag = $splittedTag[1];
         } else {
-            $namespace = "";
+            $namespace = '';
             $newTag = $splittedTag[0];
         }
     }

@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 use horstoeko\zugferdublbridge\XmlDocumentWriter;
 
-require __DIR__ . "/../vendor/autoload.php";
+require __DIR__ . '/../vendor/autoload.php';
 
-$doc = new XmlDocumentWriter("rsm:CrossIndustryInvoice");
+$doc = new XmlDocumentWriter('rsm:CrossIndustryInvoice');
 
 $doc
     ->addNamespace('rsm', 'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100')
@@ -13,18 +15,18 @@ $doc
     ->addNamespace('udt', 'urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100')
     ->addNamespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
     ->startElement('rsm:ExchangedDocumentContext', '')
-        ->startElement('ram:GuidelineSpecifiedDocumentContextParameter', '')
-            ->startElement('ram:ID', 'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.0')
-            ->endElement()
-        ->endElement()
+    ->startElement('ram:GuidelineSpecifiedDocumentContextParameter', '')
+    ->startElement('ram:ID', 'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.0')
+    ->endElement()
+    ->endElement()
     ->endElement()
     ->startElement('rsm:ExchangedDocument', '')
-        ->startElement('ram:ID', '4711')
-        ->endElement()
-        ->startElement('ramx:TypeCode', '380')
-            ->attribute('listID', '1001')
-            ->attribute('listVersionID', 'D16A')
-        ->endElement()
+    ->startElement('ram:ID', '4711')
+    ->endElement()
+    ->startElement('ramx:TypeCode', '380')
+    ->attribute('listID', '1001')
+    ->attribute('listVersionID', 'D16A')
+    ->endElement()
     ->endElement();
 
 echo $doc->saveXmlString();

@@ -1,35 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace horstoeko\zugferdublbridge\tests\testcases;
 
 use horstoeko\zugferdublbridge\tests\TestCase;
 use horstoeko\zugferdublbridge\tests\traits\HandlesXmlTests;
 use horstoeko\zugferdublbridge\XmlConverterCiiToUbl;
 
-class CiiToUblExtendedFwTest extends TestCase
+final class CiiToUblExtendedFwTest extends TestCase
 {
     use HandlesXmlTests;
 
     public function testLoadAndConvert(): void
     {
-        self::$document = XmlConverterCiiToUbl::fromFile(__DIR__ . "/../assets/cii/2_cii_extended_fw.xml")->enableAutomaticMode()->setForceDestinationProfileEn16931()->convert();
+        self::$document = XmlConverterCiiToUbl::fromFile(__DIR__ . '/../assets/cii/2_cii_extended_fw.xml')->enableAutomaticMode()->setForceDestinationProfileEn16931()->convert();
         $this->assertNotNull(self::$document);
     }
 
     public function testDocumentGeneral(): void
     {
-        $this->assertXPathValue('/ubl:Invoice/cbc:CustomizationID', "urn:cen.eu:en16931:2017");
-        $this->assertXPathValue('/ubl:Invoice/cbc:ProfileID', "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0");
-        $this->assertXPathValue('/ubl:Invoice/cbc:ID', "47110815");
-        $this->assertXPathValue('/ubl:Invoice/cbc:IssueDate', "2018-10-31");
+        $this->assertXPathValue('/ubl:Invoice/cbc:CustomizationID', 'urn:cen.eu:en16931:2017');
+        $this->assertXPathValue('/ubl:Invoice/cbc:ProfileID', 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0');
+        $this->assertXPathValue('/ubl:Invoice/cbc:ID', '47110815');
+        $this->assertXPathValue('/ubl:Invoice/cbc:IssueDate', '2018-10-31');
         $this->assertXPathValue('/ubl:Invoice/cbc:DueDate', '2018-11-20');
-        $this->assertXPathValue('/ubl:Invoice/cbc:InvoiceTypeCode', "380");
+        $this->assertXPathValue('/ubl:Invoice/cbc:InvoiceTypeCode', '380');
         $this->assertXPathNotExists('/ubl:Invoice/cbc:CreditNoteTypeCode');
-        $this->assertXPathValueStartsWithIndex('/ubl:Invoice/cbc:Note', 0, "#REG#Mitglieder der Geschäftsleitung");
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cbc:Note', 1, "#AAI#Vom 17. Dezember 2018 bis 6. Januar 2019 haben wir Betriebsferien.");
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cbc:Note', 2, "#TXD#Aus konzern-internen Gründen wird der Steuerbetrag sowohl in der Rechungswährung (EUR) als auch in der Buchwährung (GBP) ausgegeben.");
+        $this->assertXPathValueStartsWithIndex('/ubl:Invoice/cbc:Note', 0, '#REG#Mitglieder der Geschäftsleitung');
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cbc:Note', 1, '#AAI#Vom 17. Dezember 2018 bis 6. Januar 2019 haben wir Betriebsferien.');
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cbc:Note', 2, '#TXD#Aus konzern-internen Gründen wird der Steuerbetrag sowohl in der Rechungswährung (EUR) als auch in der Buchwährung (GBP) ausgegeben.');
         $this->assertXPathNotExists('/ubl:Invoice/cbc:TaxPointDate');
-        $this->assertXPathValue('/ubl:Invoice/cbc:DocumentCurrencyCode', "GBP");
+        $this->assertXPathValue('/ubl:Invoice/cbc:DocumentCurrencyCode', 'GBP');
         $this->assertXPathValue('/ubl:Invoice/cbc:TaxCurrencyCode', 'EUR');
         $this->assertXPathNotExists('/ubl:Invoice/cbc:AccountingCost');
         $this->assertXPathNotExists('/ubl:Invoice/cbc:BuyerReference');
@@ -56,19 +58,19 @@ class CiiToUblExtendedFwTest extends TestCase
     public function testAccountingSupplierParty(): void
     {
         $this->assertXPathNotExists('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cbc:EndpointID');
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID', 0, "12345676");
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID', 0, '12345676');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID', 1);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID', 2);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name', 0);
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:StreetName', 0, "Marktstr. 153");
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:StreetName', 0, 'Marktstr. 153');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName', 0);
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName', 0, "Salzgitter");
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:PostalZone', 0, "38226");
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode', 0, "DE");
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:CityName', 0, 'Salzgitter');
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cbc:PostalZone', 0, '38226');
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode', 0, 'DE');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PostalAddress/cac:AddressLine/cbc:Line', 0);
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID', 0, "DE123456789");
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID', 0, "VAT");
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName', 0, "Rohstoff AG Salzgitter");
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID', 0, 'DE123456789');
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cac:TaxScheme/cbc:ID', 0, 'VAT');
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName', 0, 'Rohstoff AG Salzgitter');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyLegalForm', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingSupplierParty/cac:Party/cac:Contact/cbc:Telephone', 0);
@@ -79,19 +81,19 @@ class CiiToUblExtendedFwTest extends TestCase
     {
         $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cbc:EndpointID', 0, '04 0 11 000 - 12345 12345 - 35', 'schemeID', '9958');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cbc:EndpointID', 1);
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID', 0, "75969813");
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID', 0, '75969813');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID', 1);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID', 2);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name', 0);
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:StreetName', 0, "Pappelallee 15");
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:StreetName', 0, 'Pappelallee 15');
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName', 0, 'Hof 3');
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CityName', 0, "Leipzig");
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:PostalZone', 0, "12345");
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode', 0, "DE");
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:CityName', 0, 'Leipzig');
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cbc:PostalZone', 0, '12345');
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:Country/cbc:IdentificationCode', 0, 'DE');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PostalAddress/cac:AddressLine/cbc:Line', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID', 1);
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName', 0, "Metallbau Leipzig GmbH & Co. KG");
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:RegistrationName', 0, 'Metallbau Leipzig GmbH & Co. KG');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyLegalForm', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:PartyLegalEntity/cbc:CompanyID', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:AccountingCustomerParty/cac:Party/cac:Contact', 0);
@@ -100,9 +102,9 @@ class CiiToUblExtendedFwTest extends TestCase
     public function testPayeeParty(): void
     {
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:PayeeParty/cbc:EndpointID', 0);
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:PayeeParty/cac:PartyIdentification/cbc:ID', 0, "432156789", 'schemeID', '0060');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:PayeeParty/cac:PartyIdentification/cbc:ID', 0, '432156789', 'schemeID', '0060');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:PayeeParty/cac:PartyIdentification/cbc:ID', 1);
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:PayeeParty/cac:PartyName/cbc:Name', 0, "Global Supplies Financial Services");
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:PayeeParty/cac:PartyName/cbc:Name', 0, 'Global Supplies Financial Services');
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:PayeeParty/cac:PostalAddress/cbc:StreetName', 0, 'Friedrichstraße 165');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:PayeeParty/cac:PostalAddress/cbc:AdditionalStreetName', 0);
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:PayeeParty/cac:PostalAddress/cbc:CityName', 0, 'Berlin');
@@ -125,7 +127,7 @@ class CiiToUblExtendedFwTest extends TestCase
     {
         $this->assertXPathNotExists('/ubl:Invoice/cac:TaxRepresentativeParty/cbc:EndpointID');
         $this->assertXPathNotExists('/ubl:Invoice/cac:TaxRepresentativeParty/cac:PartyIdentification/cbc:ID');
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:TaxRepresentativeParty/cac:PartyName/cbc:Name', 0, "Global Supplies Financial Services");
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:TaxRepresentativeParty/cac:PartyName/cbc:Name', 0, 'Global Supplies Financial Services');
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:TaxRepresentativeParty/cac:PostalAddress/cbc:StreetName', 0, 'Friedrichstraße 165');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:TaxRepresentativeParty/cac:PostalAddress/cbc:AdditionalStreetName', 0);
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:TaxRepresentativeParty/cac:PostalAddress/cbc:CityName', 0, 'Berlin');
@@ -218,13 +220,13 @@ class CiiToUblExtendedFwTest extends TestCase
 
     public function testTaxTotal(): void
     {
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:TaxTotal/cbc:TaxAmount', 0, "163.16", 'currencyID', 'GBP');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:TaxTotal/cbc:TaxAmount', 0, '163.16', 'currencyID', 'GBP');
 
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cbc:TaxableAmount', 0, "858.75", 'currencyID', 'GBP');
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cbc:TaxAmount', 0, "163.16", 'currencyID', 'GBP');
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:ID', 0, "S");
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:Percent', 0, "19.00");
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID', 0, "VAT");
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cbc:TaxableAmount', 0, '858.75', 'currencyID', 'GBP');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cbc:TaxAmount', 0, '163.16', 'currencyID', 'GBP');
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:ID', 0, 'S');
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:Percent', 0, '19.00');
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID', 0, 'VAT');
 
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cbc:TaxableAmount', 1);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cbc:TaxAmount', 1);
@@ -232,19 +234,19 @@ class CiiToUblExtendedFwTest extends TestCase
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cbc:Percent', 1);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:TaxTotal/cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID', 1);
 
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:TaxTotal/cbc:TaxAmount', 1, "183.14", 'currencyID', 'EUR');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:TaxTotal/cbc:TaxAmount', 1, '183.14', 'currencyID', 'EUR');
     }
 
     public function testLegalMonetaryTotal(): void
     {
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:LineExtensionAmount', 0, "850", 'currencyID', 'GBP');
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount', 0, "858.75", 'currencyID', 'GBP');
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount', 0, "1021.91", 'currencyID', 'GBP');
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:AllowanceTotalAmount', 0, "21.25", 'currencyID', 'GBP');
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:ChargeTotalAmount', 0, "30", 'currencyID', 'GBP');
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:PrepaidAmount', 0, "500", 'currencyID', 'GBP');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:LineExtensionAmount', 0, '850', 'currencyID', 'GBP');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount', 0, '858.75', 'currencyID', 'GBP');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount', 0, '1021.91', 'currencyID', 'GBP');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:AllowanceTotalAmount', 0, '21.25', 'currencyID', 'GBP');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:ChargeTotalAmount', 0, '30', 'currencyID', 'GBP');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:PrepaidAmount', 0, '500', 'currencyID', 'GBP');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:PayableRoundingAmount', 0);
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:PayableAmount', 0, "521.91", 'currencyID', 'GBP');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:PayableAmount', 0, '521.91', 'currencyID', 'GBP');
 
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:LineExtensionAmount', 1);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:LegalMonetaryTotal/cbc:TaxExclusiveAmount', 1);
@@ -259,10 +261,10 @@ class CiiToUblExtendedFwTest extends TestCase
 
     public function testInvoiceLine(): void
     {
-        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:ID', 0, "1");
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:ID', 0, '1');
         $this->assertXPathValueStartsWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:Note', 0, 'Materialzertifikat X-234 gem ISO XYZ');
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:InvoiceLine/cbc:InvoicedQuantity', 0, "10", "unitCode", "H87");
-        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:InvoiceLine/cbc:LineExtensionAmount', 0, "850", "currencyID", "GBP");
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:InvoiceLine/cbc:InvoicedQuantity', 0, '10', 'unitCode', 'H87');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:InvoiceLine/cbc:LineExtensionAmount', 0, '850', 'currencyID', 'GBP');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:AccountingCost', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:InvoicePeriod', 0);
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:InvoicePeriod/cbc:StartDate', 0);

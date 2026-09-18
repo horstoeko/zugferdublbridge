@@ -3,188 +3,62 @@ name: Release
 on:
   push:
     tags:
-      - "v*"
-    paths-ignore:
-      - "**.md"
-      - ".github/**"
-      - "examples/**"
-      - "make/**"
+      - 'v*'
 
-env:
-  VALIDATORURL: https://github.com/itplr-kosit/validator/releases/download/v1.5.0/validator-1.5.0-distribution.zip
-  VALIDATORSCENARIOURL: https://github.com/itplr-kosit/validator-configuration-xrechnung/releases/download/release-2024-10-31/validator-configuration-xrechnung_3.0.2_2024-10-31.zip
-  VALIDATORPATH: build/validator
-  VALIDATORZIPFILENAME: validator.zip
-  VALIDATORSCENARIOZIPFILENAME: validator-configuration.zip
-  VALIDATORJARFILENAME: validationtool-1.5.0-standalone.jar
-  VALIDATORSCENARIOFILENAME: scenarios.xml
-  PHPDOCUMENTORURL: https://phpdoc.org/phpDocumentor.phar
-  PHPDOCUMENTORFILENAME: phpDocumentor.phar
-  VERAPDFURL: https://software.verapdf.org/rel/verapdf-installer.zip
-  VERAPDFPATH: build/verapdf
-  VERAPDFZIPFILENAME: verapdf.zip
-  GH_PAT: ${{ secrets.UPDATEWIKITOKEN }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
-  build:
-    permissions: write-all
-    runs-on: "ubuntu-24.04"
+  release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
 
     steps:
-      - name: Checkout Sources
+      - name: Checkout sources
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          fetch-tags: true
+          persist-credentials: false
 
-      - name: Setup PHP with PECL extension
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.3"
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, bcmath, intl, gd, exif, iconv, imagick, json, xdebug
-          coverage: xdebug
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v5
-        with:
-          java-version: "11"
-          distribution: "adopt"
-
-      - name: Get Composer Cache Directory
-        id: composer-cache
+      - name: Generate release notes
         run: |
-          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+          mkdir -p build
 
-      - uses: actions/cache@v6
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-8.3-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-8.3-composer-
+          currentTag="$GITHUB_REF_NAME"
+          currentCommit=$(git rev-list -n 1 "$currentTag")
+          previousTag=$(git describe --tags --match 'v*' --abbrev=0 "${currentCommit}^" 2>/dev/null || true)
 
-      - name: Install composer dependencies
-        run: |
-          composer config -g github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
-          composer install
+          echo "Previous tag .... ${previousTag:-<none>}"
+          echo "Current tag ..... $currentTag"
 
-      - name: Prepare Directories
-        run: |
-          mkdir build/builddoc
-          mkdir build/doc
-          mkdir build/coverage
-          mkdir build/coverage-html
-          mkdir build/logs
-          mkdir build/pdepend
-          mkdir build/dist
-          mkdir build/phpdoc
-
-      - name: Run Lint
-        run: |
-          for afile in $(find . -type f -name '*.php' -path './src*/*' -print); do
-             php -l $afile
-          done
-          for afile in $(find . -type f -name '*.php' -path './tests*/*' -print); do
-             php -l $afile
-          done
-
-      - name: Run PHPLOC
-        continue-on-error: true
-        run: |
-          vendor/bin/phploc --count-tests --log-csv build/logs/phploc.csv --log-xml build/logs/phploc.xml src tests
-
-      - name: Run PDEPEND
-        continue-on-error: true
-        run: |
-          vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependencies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg src
-
-      - name: Run PHPMD
-        continue-on-error: true
-        run: |
-          vendor/bin/phpmd src xml build/phpmd.xml --reportfile build/logs/pmd.xml --exclude src/entities/
-          vendor/bin/phpmd src github build/phpmd.xml --exclude src/entities/
-
-      - name: Run PHPCS
-        continue-on-error: true
-        run: |
-          vendor/bin/phpcs --report=checkstyle --report-file=build/logs/checkstyle.xml --standard=build/phpcsrules.xml --extensions=php --ignore=autoload.php src tests
-
-      - name: Run PHPSTAN
-        continue-on-error: true
-        run: |
-          vendor/bin/phpstan analyze -c build/phpstan.neon --autoload-file=vendor/autoload.php --no-interaction --no-progress --error-format=checkstyle > build/logs/checkstyle_phpstan.xml
-
-      - name: Run PHPCPD
-        continue-on-error: true
-        run: |
-          vendor/bin/phpcpd --log-pmd build/logs/pmd-cpd.xml --exclude src/entities/ src
-
-      - name: Run Tests (PHPUnit)
-        run: |
-          vendor/bin/phpunit --stop-on-failure --configuration build/phpunit.xml
-        env:
-          XDEBUG_MODE: coverage
-
-      - name: Run Tests (Schematron)
-        run: |
-          set -e
-          rm -rf $VALIDATORPATH
-          mkdir $VALIDATORPATH
-          wget $VALIDATORURL -O $VALIDATORPATH/$VALIDATORZIPFILENAME
-          wget $VALIDATORSCENARIOURL -O $VALIDATORPATH/$VALIDATORSCENARIOZIPFILENAME
-          unzip $VALIDATORPATH/$VALIDATORZIPFILENAME -d $VALIDATORPATH
-          unzip $VALIDATORPATH/$VALIDATORSCENARIOZIPFILENAME -d $VALIDATORPATH
-          for afile in $(find . -type f -name '*.xml' -path './build/generated/*.xml' -print); do
-            java -jar $VALIDATORPATH/$VALIDATORJARFILENAME -r $VALIDATORPATH -s $VALIDATORPATH/$VALIDATORSCENARIOFILENAME $afile
-          done
-          rm -rf $VALIDATORPATH
-
-      - name: Documentation
-        continue-on-error: true
-        run: |
-          wget $PHPDOCUMENTORURL -O $PHPDOCUMENTORFILENAME
-          chmod +x $PHPDOCUMENTORFILENAME
-          cd build
-          php ../$PHPDOCUMENTORFILENAME
-          cd ..
-          rm -f $PHPDOCUMENTORFILENAME
-
-      - name: Deploy
-        continue-on-error: true
-        run: |
-          zip -r build/dist/doc.zip build/doc
-          zip -r build/dist/builddoc.zip build/builddoc build/coverage build/coverage-html build/logs build/pdepend build/phpdoc
-
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        with:
-          files: "build/logs/junit.xml"
-
-      - name: Publish Build Logs
-        uses: actions/upload-artifact@v7
-        with:
-          name: Build log artifacts for ubuntu-24.04 PHP 8.3 (Release)
-          path: build/logs
-
-      - name: Generate Release Notes
-        id: changelog
-        run: |
-          prev_tag=$(git tag -l --sort=-v:refname | sed -n '2p')
-          curr_tag=$(git tag -l --sort=-v:refname | sed -n '1p')
-          if [ -z "$prev_tag" ]; then
-            prev_tag=$(git rev-list --max-parents=0 HEAD)
+          if [ -n "$previousTag" ]; then
+            releaseRange="$previousTag..$currentTag"
+          else
+            releaseRange="$currentTag"
           fi
-          if [ -z "$curr_tag" ]; then
-            curr_tag=$(git rev-parse HEAD)
-          fi
-          echo "Previous Tag .... $prev_tag"
-          echo "Current Tag ..... $curr_tag"
-          git log --no-merges --pretty=format:"- %s (%an)" $prev_tag..$curr_tag | grep -Ev '^\- \[INFR\]|\- \[CS\] |\- \[DOC\] ' | sed -E 's/^- (#.*)/- [ENH] \1/' > build/releasenotes.txt
-          ls -l build/
-          ls -l build/releasenotes.txt
+
+          git log --no-merges --pretty=format:'- %s (%an)' "$releaseRange" \
+            | awk '
+                /^- \[(INFR|CS|DOC)\] / { next }
+                /^- #/ { sub(/^- /, "- [ENH] ") }
+                { print }
+              ' \
+            > build/releasenotes.txt
+
+          touch build/releasenotes.txt
           cat build/releasenotes.txt
 
-      - name: Make Release
-        uses: ncipollo/release-action@v1
+      - name: Create GitHub release
+        uses: ncipollo/release-action@v1.21.0
         with:
-          artifacts: "build/dist/doc.zip,build/dist/builddoc.zip"
-          bodyFile: "build/releasenotes.txt"
+          tag: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          immutableCreate: true
+          skipIfReleaseExists: true
+          bodyFile: build/releasenotes.txt

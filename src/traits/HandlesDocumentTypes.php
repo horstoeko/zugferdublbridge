@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is a part of horstoeko/zugferdublbridge.
  *
@@ -13,17 +15,16 @@ namespace horstoeko\zugferdublbridge\traits;
  * Trait for handling supported profiles
  *
  * @category Zugferd-UBL-Bridge
- * @package  Zugferd-UBL-Bridge
  * @author   D. Erling <horstoeko@erling.com.de>
  * @license  https://opensource.org/licenses/MIT MIT
- * @link     https://github.com/horstoeko/zugferdublbridge
+ * @see      https://github.com/horstoeko/zugferdublbridge
  */
 trait HandlesDocumentTypes
 {
     /**
      * Internal flag to disable the automatic detection of Invoice or CreditNote
      *
-     * @var boolean
+     * @var bool
      */
     private $automaticDocumentTypeModeDisabled = true;
 
@@ -31,7 +32,7 @@ trait HandlesDocumentTypes
      * Returns a list of docuemnt type codes which mean that the document type
      * is an invoice
      *
-     * @return array
+     * @return string[]
      */
     public function getInvoiceTypeCodes(): array
     {
@@ -46,7 +47,7 @@ trait HandlesDocumentTypes
      * Returns a list of docuemnt type codes which mean that the document type
      * is a credit memo
      *
-     * @return array
+     * @return string[]
      */
     public function getCreditNoteTypeCodes(): array
     {
@@ -59,22 +60,22 @@ trait HandlesDocumentTypes
      * Returns true if $documentTypeCode means "Invoice"
      *
      * @param  string $documentTypeCode
-     * @return boolean
+     * @return bool
      */
     public function isInvoiceDocumentType(string $documentTypeCode): bool
     {
-        return in_array($documentTypeCode, $this->getInvoiceTypeCodes());
+        return in_array($documentTypeCode, $this->getInvoiceTypeCodes(), true);
     }
 
     /**
      * Returns true if $documentTypeCode means "Credit Memo"
      *
      * @param  string $documentTypeCode
-     * @return boolean
+     * @return bool
      */
     public function isCreditMemoDocumentType(string $documentTypeCode): bool
     {
-        return in_array($documentTypeCode, $this->getCreditNoteTypeCodes());
+        return in_array($documentTypeCode, $this->getCreditNoteTypeCodes(), true);
     }
 
     /**
@@ -104,7 +105,7 @@ trait HandlesDocumentTypes
     /**
      * Returns true if the automatic document type detection is disabled
      *
-     * @return boolean
+     * @return bool
      */
     public function getAutomaticDocumentTypeModeDisabled(): bool
     {
@@ -114,10 +115,10 @@ trait HandlesDocumentTypes
     /**
      * Returns true if the automatic document type detection is enabled
      *
-     * @return boolean
+     * @return bool
      */
     public function getAutomaticDocumentTypeModeEnabled(): bool
     {
-        return $this->getAutomaticDocumentTypeModeDisabled() === false;
+        return false === $this->getAutomaticDocumentTypeModeDisabled();
     }
 }

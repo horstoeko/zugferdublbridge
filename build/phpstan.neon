@@ -1,6 +1,22 @@
+includes:
+    - ../vendor/phpstan/phpstan/conf/bleedingEdge.neon
+    - ../vendor/phpstan/phpstan-strict-rules/rules.neon
+    - ../vendor/phpstan/phpstan-deprecation-rules/rules.neon
 parameters:
+    tmpDir: ./phpstan-cache
     paths:
         - ../src
-        - ../tests
-    level: 5
+    level: 6
     treatPhpDocTypesAsCertain: false
+    exceptions:
+        implicitThrows: false
+        check:
+            missingCheckedExceptionInThrows: true
+            tooWideThrowType: true
+        uncheckedExceptionClasses: []
+        uncheckedExceptionRegexes: []
+    checkTooWideThrowTypesInProtectedAndPublicMethods: true
+    parallel:
+        jobSize: 20
+        maximumNumberOfProcesses: 32
+        minimumNumberOfJobsPerProcess: 2

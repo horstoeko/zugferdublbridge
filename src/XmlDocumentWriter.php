@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is a part of horstoeko/zugferdublbridge.
  *
@@ -9,19 +11,19 @@
 
 namespace horstoeko\zugferdublbridge;
 
-use DOMElement;
 use DOMDocument;
+use DOMElement;
+use DOMException;
+use Exception;
 use horstoeko\zugferdublbridge\traits\HandlesCallbacks;
-use horstoeko\zugferdublbridge\XmlDocumentBase;
 
 /**
  * Class representing the XML writer helper
  *
  * @category Zugferd-UBL-Bridge
- * @package  Zugferd-UBL-Bridge
  * @author   D. Erling <horstoeko@erling.com.de>
  * @license  https://opensource.org/licenses/MIT MIT
- * @link     https://github.com/horstoeko/zugferdublbridge
+ * @see      https://github.com/horstoeko/zugferdublbridge
  */
 class XmlDocumentWriter extends XmlDocumentBase
 {
@@ -37,15 +39,17 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Constructor
      *
-     * @param  string $tag
-     * Specify the root tag of the document
+     * @param  string            $tag
+     *                                Specify the root tag of the document
      * @return XmlDocumentWriter
+     *
+     * @throws DOMException
      */
-    public function __construct(string $tag, string $version = "1.0", string $encoding = "UTF-8")
+    public function __construct(string $tag, string $version = '1.0', string $encoding = 'UTF-8')
     {
         $this->internalDomDocument = new DOMDocument($version, $encoding);
         $this->internalDomDocument->formatOutput = true;
-        
+
         $root = $this->internalDomDocument->createElement($tag);
         $this->internalDomDocument->appendChild($root);
 
@@ -57,9 +61,9 @@ class XmlDocumentWriter extends XmlDocumentBase
      *
      * @param  string $namespace
      * @param  string $value
-     * @return XmlDocumentWriter
+     * @return static
      */
-    public function addNamespace(string $namespace, string $value): XmlDocumentBase
+    public function addNamespace(string $namespace, string $value)
     {
         $this->internalDomDocument->documentElement->setAttributeNS('http://www.w3.org/2000/xmlns/', sprintf('xmlns:%s', $namespace), $value);
 
@@ -71,20 +75,22 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Start an element
      *
-     * @param  string $tag
-     * @param  string $value
+     * @param  string            $tag
+     * @param  string            $value
      * @return XmlDocumentWriter
+     *
+     * @throws DOMException
      */
-    public function startElement(string $tag, string $value = ''): XmlDocumentWriter
+    public function startElement(string $tag, string $value = ''): self
     {
         $this->splitNamespaceAndTag($tag, $newNameSpace, $newTag);
 
-        if ($value !== '' && $value !== '0') {
+        if ('' !== $value && '0' !== $value) {
             $value = trim($value, ' ');
             $value = htmlspecialchars($value);
         }
 
-        if ($newNameSpace !== null && $newNameSpace !== '' && $newNameSpace !== '0') {
+        if (null !== $newNameSpace && '' !== $newNameSpace && '0' !== $newNameSpace) {
             if ($this->isNamespaceRegistered($newNameSpace)) {
                 $node = $this->internalDomDocument->createElementNS($this->registeredNamespaces[$newNameSpace], sprintf('%s:%s', $newNameSpace, $newTag), $value);
             } else {
@@ -106,8 +112,10 @@ class XmlDocumentWriter extends XmlDocumentBase
      * End an element
      *
      * @return XmlDocumentWriter
+     *
+     * @throws Exception
      */
-    public function endElement(): XmlDocumentWriter
+    public function endElement(): self
     {
         $this->stackPop();
 
@@ -117,13 +125,16 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Write a single element
      *
-     * @param  string $tag
-     * @param  string $value
+     * @param  string            $tag
+     * @param  string            $value
      * @return XmlDocumentWriter
+     *
+     * @throws DOMException
+     * @throws Exception
      */
-    public function element(string $tag, ?string $value = ''): XmlDocumentWriter
+    public function element(string $tag, ?string $value = ''): self
     {
-        if (is_null($value) || $value === '') {
+        if (is_null($value) || '' === $value) {
             return $this;
         }
 
@@ -135,12 +146,15 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Write a single element if $condition is true
      *
-     * @param  boolean     $condition
-     * @param  string      $tag
-     * @param  string|null $value
+     * @param  bool              $condition
+     * @param  string            $tag
+     * @param  null|string       $value
      * @return XmlDocumentWriter
+     *
+     * @throws DOMException
+     * @throws Exception
      */
-    public function elementIf(bool $condition, string $tag, ?string $value = ''): XmlDocumentWriter
+    public function elementIf(bool $condition, string $tag, ?string $value = ''): self
     {
         if ($condition) {
             $this->element($tag, $value);
@@ -152,21 +166,24 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Write a single element with a single attribute
      *
-     * @param  string      $tag
-     * @param  string|null $value
-     * @param  string|null $attributeName
-     * @param  string|null $attributeValue
+     * @param  string            $tag
+     * @param  null|string       $value
+     * @param  null|string       $attributeName
+     * @param  null|string       $attributeValue
      * @return XmlDocumentWriter
+     *
+     * @throws DOMException
+     * @throws Exception
      */
-    public function elementWithAttribute(string $tag, ?string $value = '', ?string $attributeName = '', ?string $attributeValue = ''): XmlDocumentWriter
+    public function elementWithAttribute(string $tag, ?string $value = '', ?string $attributeName = '', ?string $attributeValue = ''): self
     {
-        if (is_null($value) || $value === '') {
+        if (is_null($value) || '' === $value) {
             return $this;
         }
 
         $this->startElement($tag, $value);
 
-        if (!is_null($attributeName) && $attributeName !== '' && !is_null($attributeValue) && $attributeValue !== '') {
+        if (!is_null($attributeName) && '' !== $attributeName && !is_null($attributeValue) && '' !== $attributeValue) {
             $this->attribute($attributeName, $attributeValue);
         }
 
@@ -178,21 +195,24 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Write a single element with multiple attributes
      *
-     * @param  string      $tag
-     * @param  string|null $value
-     * @param  array       $attributes
+     * @param  string               $tag
+     * @param  null|string          $value
+     * @param  array<string,string> $attributes
      * @return XmlDocumentWriter
+     *
+     * @throws DOMException
+     * @throws Exception
      */
-    public function elementWithMultipleAttributes(string $tag, ?string $value = '', array $attributes = []): XmlDocumentWriter
+    public function elementWithMultipleAttributes(string $tag, ?string $value = '', array $attributes = []): self
     {
-        if (is_null($value) || $value === '') {
+        if (is_null($value) || '' === $value) {
             return $this;
         }
 
         $this->startElement($tag, $value);
 
         foreach ($attributes as $attributeName => $attributeValue) {
-            if ($attributeName != null && $attributeName != '' && $attributeValue != null && $attributeValue != '') {
+            if ('' !== $attributeName && '' !== $attributeValue) {
                 $this->attribute($attributeName, $attributeValue);
             }
         }
@@ -205,13 +225,15 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Add an attribute to latest element when value is given
      *
-     * @param  string $name
-     * @param  string $value
+     * @param  string            $name
+     * @param  string            $value
      * @return XmlDocumentWriter
+     *
+     * @throws DOMException
      */
-    public function attribute(string $name, ?string $value = null): XmlDocumentWriter
+    public function attribute(string $name, ?string $value = null): self
     {
-        if (is_null($value) || $value === '') {
+        if (is_null($value) || '' === $value) {
             return $this;
         }
 
@@ -227,19 +249,21 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Change the root of the document
      *
-     * @param  string $newRoot
+     * @param  string            $newRoot
      * @return XmlDocumentWriter
+     *
+     * @throws DOMException
      */
-    public function changeRoot(string $newRoot): XmlDocumentWriter
+    public function changeRoot(string $newRoot): self
     {
         $oldRoot = $this->internalDomDocument->documentElement;
-        $newRoot = $this->internalDomDocument->createElementNs("http://www.w3.org/2005/Atom", $newRoot);
+        $newRoot = $this->internalDomDocument->createElementNS('http://www.w3.org/2005/Atom', $newRoot);
 
         foreach ($oldRoot->attributes as $attr) {
             $newRoot->setAttribute($attr->nodeName, $attr->nodeValue);
         }
 
-        while ($oldRoot->firstChild) {
+        while (null !== $oldRoot->firstChild) {
             $newRoot->appendChild($oldRoot->firstChild);
         }
 
@@ -260,6 +284,9 @@ class XmlDocumentWriter extends XmlDocumentBase
      * @param  string   $tagName
      * @param  callable $callback
      * @return void
+     *
+     * @throws DOMException
+     * @throws Exception
      */
     public function group(string $tagName, $callback): void
     {
@@ -285,8 +312,8 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Save XML to file
      *
-     * @param  string $filename
-     * @return int|false
+     * @param  string    $filename
+     * @return false|int
      */
     public function saveXmlFile(string $filename)
     {
@@ -296,10 +323,10 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Pushed a node to the stack
      *
-     * @param  \DOMElement $node
+     * @param  DOMElement $node
      * @return void
      */
-    private function stackPush(\DOMElement $node): void
+    private function stackPush(DOMElement $node): void
     {
         $this->stack[] = $node;
     }
@@ -307,9 +334,9 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Peek stack
      *
-     * @return \DOMElement
+     * @return DOMElement
      */
-    private function stackPeek(): \DOMElement
+    private function stackPeek(): DOMElement
     {
         return end($this->stack);
     }
@@ -317,12 +344,14 @@ class XmlDocumentWriter extends XmlDocumentBase
     /**
      * Pop stack
      *
-     * @return \DOMElement
+     * @return DOMElement
+     *
+     * @throws Exception
      */
-    private function stackPop(): \DOMElement
+    private function stackPop(): DOMElement
     {
-        if (count($this->stack) === 1) {
-            throw new \Exception("First level already reached");
+        if (1 === count($this->stack)) {
+            throw new Exception('First level already reached');
         }
 
         return array_pop($this->stack);

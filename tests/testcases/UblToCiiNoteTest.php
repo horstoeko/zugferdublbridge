@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace horstoeko\zugferdublbridge\tests\testcases;
 
 use horstoeko\zugferdublbridge\tests\TestCase;
 use horstoeko\zugferdublbridge\tests\traits\HandlesXmlTests;
 use horstoeko\zugferdublbridge\XmlConverterUblToCii;
 
-class UblToCiiNoteTest extends TestCase
+final class UblToCiiNoteTest extends TestCase
 {
     use HandlesXmlTests;
 
@@ -64,7 +66,7 @@ class UblToCiiNoteTest extends TestCase
      */
     private function convertWithNote(string $note): void
     {
-        $ublContent = file_get_contents(__DIR__ . "/../assets/ubl/1_ubl_simple.xml");
+        $ublContent = file_get_contents(__DIR__ . '/../assets/ubl/1_ubl_simple.xml');
 
         $ublContent = preg_replace(
             '/<cbc:Note>.*?<\/cbc:Note>/s',

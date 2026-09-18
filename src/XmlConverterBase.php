@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is a part of horstoeko/zugferdublbridge.
  *
@@ -9,18 +11,16 @@
 
 namespace horstoeko\zugferdublbridge;
 
+use DOMException;
 use RuntimeException;
-use horstoeko\zugferdublbridge\XmlDocumentReader;
-use horstoeko\zugferdublbridge\XmlDocumentWriter;
 
 /**
  * Class representing the base class of a converter
  *
  * @category Zugferd-UBL-Bridge
- * @package  Zugferd-UBL-Bridge
  * @author   D. Erling <horstoeko@erling.com.de>
  * @license  https://opensource.org/licenses/MIT MIT
- * @link     https://github.com/horstoeko/zugferdublbridge
+ * @see      https://github.com/horstoeko/zugferdublbridge
  */
 abstract class XmlConverterBase
 {
@@ -40,6 +40,8 @@ abstract class XmlConverterBase
 
     /**
      * Constructor
+     *
+     * @throws DOMException
      */
     final protected function __construct()
     {
@@ -58,23 +60,17 @@ abstract class XmlConverterBase
     }
 
     /**
-     * Custom initialization in derrived classes
-     *
-     * @return static
-     */
-    protected function initialize()
-    {
-        return $this;
-    }
-
-    /**
      * Factory: Load from XML file
      *
      * @param  string $filename
      * @return static
+     *
+     * @throws DOMException
+     * @throws RuntimeException
      */
     public static function fromFile(string $filename)
     {
+        // @phpstan-ignore new.staticInAbstractClassStaticMethod (intentional late-static-binding factory)
         return (new static())->loadFromXmlFile($filename);
     }
 
@@ -83,9 +79,13 @@ abstract class XmlConverterBase
      *
      * @param  string $xmlData
      * @return static
+     *
+     * @throws DOMException
+     * @throws RuntimeException
      */
     public static function fromString(string $xmlData)
     {
+        // @phpstan-ignore new.staticInAbstractClassStaticMethod (intentional late-static-binding factory)
         return (new static())->loadFromXmlString($xmlData);
     }
 
@@ -94,6 +94,8 @@ abstract class XmlConverterBase
      *
      * @param  string $source
      * @return static
+     *
+     * @throws RuntimeException
      */
     public function loadFromXmlString(string $source)
     {
@@ -107,6 +109,7 @@ abstract class XmlConverterBase
      *
      * @param  string $filename
      * @return static
+     *
      * @throws RuntimeException
      */
     public function loadFromXmlFile(string $filename)
@@ -133,8 +136,8 @@ abstract class XmlConverterBase
     /**
      * Save converted XML to a file
      *
-     * @param  string $filename
-     * @return int|false
+     * @param  string    $filename
+     * @return false|int
      */
     public function saveXmlFile(string $filename)
     {
@@ -151,6 +154,16 @@ abstract class XmlConverterBase
         $this->checkValidSource();
         $this->doConvert();
 
+        return $this;
+    }
+
+    /**
+     * Custom initialization in derrived classes
+     *
+     * @return static
+     */
+    protected function initialize()
+    {
         return $this;
     }
 

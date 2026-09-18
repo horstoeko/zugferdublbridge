@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is a part of horstoeko/zugferdublbridge.
  *
@@ -13,10 +15,9 @@ namespace horstoeko\zugferdublbridge\traits;
  * Trait for handling supported profiles
  *
  * @category Zugferd-UBL-Bridge
- * @package  Zugferd-UBL-Bridge
  * @author   D. Erling <horstoeko@erling.com.de>
  * @license  https://opensource.org/licenses/MIT MIT
- * @link     https://github.com/horstoeko/zugferdublbridge
+ * @see      https://github.com/horstoeko/zugferdublbridge
  */
 trait HandlesProfiles
 {
@@ -25,42 +26,17 @@ trait HandlesProfiles
      *
      * @var string
      */
-    private $forceDestinationProfile = "";
-
-    /**
-     * Returns a list of supported profiles
-     *
-     * @return string[]
-     */
-    protected function getSupportedProfiles(): array
-    {
-        return [
-            'urn:factur-x.eu:1p0:minimum',
-            'urn:factur-x.eu:1p0:basicwl',
-            'urn:cen.eu:en16931:2017#compliant#urn:factur-x.eu:1p0:basic',
-            'urn:cen.eu:en16931:2017',
-            'urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended',
-            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_1.2',
-            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.0',
-            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.1',
-            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2',
-            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.3',
-            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.3#conformant#urn:xoev-de:kosit:extension:xrechnung_2.3',
-            'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0',
-            'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0',
-            'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0'
-        ];
-    }
+    private $forceDestinationProfile = '';
 
     /**
      * Returns true if the profiles $profileToCheck is a supported profile
      *
      * @param  string $profileToCheck
-     * @return boolean
+     * @return bool
      */
     public function isSupportedProfile(string $profileToCheck): bool
     {
-        return in_array($profileToCheck, $this->getSupportedProfiles());
+        return in_array($profileToCheck, $this->getSupportedProfiles(), true);
     }
 
     /**
@@ -82,7 +58,7 @@ trait HandlesProfiles
      */
     public function getForceDestinationProfileWithDefault(string $defaultProfile): string
     {
-        if ($this->getForceDestinationProfile()) {
+        if ('' !== $this->getForceDestinationProfile()) {
             return $this->getForceDestinationProfile();
         }
 
@@ -97,7 +73,7 @@ trait HandlesProfiles
      */
     public function setForceDestinationProfile(string $forceDestinationProfile)
     {
-        if ($this->isSupportedProfile($forceDestinationProfile) !== true) {
+        if (true !== $this->isSupportedProfile($forceDestinationProfile)) {
             return $this;
         }
 
@@ -113,7 +89,7 @@ trait HandlesProfiles
      */
     public function clearForceDestinationProfile()
     {
-        $this->forceDestinationProfile = "";
+        $this->forceDestinationProfile = '';
 
         return $this;
     }
@@ -188,5 +164,30 @@ trait HandlesProfiles
         $this->setForceDestinationProfile('urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0');
 
         return $this;
+    }
+
+    /**
+     * Returns a list of supported profiles
+     *
+     * @return string[]
+     */
+    protected function getSupportedProfiles(): array
+    {
+        return [
+            'urn:factur-x.eu:1p0:minimum',
+            'urn:factur-x.eu:1p0:basicwl',
+            'urn:cen.eu:en16931:2017#compliant#urn:factur-x.eu:1p0:basic',
+            'urn:cen.eu:en16931:2017',
+            'urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended',
+            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_1.2',
+            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.0',
+            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.1',
+            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2',
+            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.3',
+            'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.3#conformant#urn:xoev-de:kosit:extension:xrechnung_2.3',
+            'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0',
+            'urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0',
+            'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0',
+        ];
     }
 }

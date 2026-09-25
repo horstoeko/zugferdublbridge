@@ -127,6 +127,8 @@ abstract class XmlConverterBase
      * Save converted XML to a string containing XML data
      *
      * @return string
+     *
+     * @throws DOMException
      */
     public function saveXmlString(): string
     {
@@ -138,6 +140,8 @@ abstract class XmlConverterBase
      *
      * @param  string    $filename
      * @return false|int
+     *
+     * @throws DOMException
      */
     public function saveXmlFile(string $filename)
     {

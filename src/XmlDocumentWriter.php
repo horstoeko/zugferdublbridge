@@ -62,6 +62,8 @@ class XmlDocumentWriter extends XmlDocumentBase
      * @param  string $namespace
      * @param  string $value
      * @return static
+     *
+     * @throws DOMException
      */
     public function addNamespace(string $namespace, string $value)
     {
@@ -303,6 +305,8 @@ class XmlDocumentWriter extends XmlDocumentBase
      * Get XML as a string
      *
      * @return string
+     *
+     * @throws DOMException
      */
     public function saveXmlString(): string
     {
@@ -314,6 +318,8 @@ class XmlDocumentWriter extends XmlDocumentBase
      *
      * @param  string    $filename
      * @return false|int
+     *
+     * @throws DOMException
      */
     public function saveXmlFile(string $filename)
     {

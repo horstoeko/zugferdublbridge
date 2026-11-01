@@ -1,3 +1,13 @@
+## v1.0.20
+
+``Previous version v1.0.19``
+
+| Type | Hash    | Date    | Author  | Subject  | Issue(s)
+| :--- | :------ | :------ | :------ | :------- | :-----------: 
+| :bug:  | [d488533](https://github.com/horstoeko/zugferdublbridge/commit/d488533) | 2026-11-01 11:57:01 CET | HorstOeko | [FIX] Preserve gross price (BT-148) and price discount (BT-147) in bidirectional CII/UBL conversion () | [#36](https://github.com/horstoeko/zugferdublbridge/issues/36)
+
+:exclamation: _There are 3 internal commit(s)_
+
 ## v1.0.19
 
 ``Previous version v1.0.17``

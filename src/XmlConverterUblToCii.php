@@ -372,6 +372,21 @@ class XmlConverterUblToCii extends XmlConverterBase
                         $this->destination->endElement();
                     }
                 );
+                $this->source->whenExists(
+                    './cac:Price/cac:AllowanceCharge[cbc:ChargeIndicator="false" and normalize-space(cbc:Amount) != "" and normalize-space(cbc:BaseAmount) != ""]',
+                    $invoiceLineNode,
+                    function ($priceAllowanceChargeNode): void {
+                        $this->destination->startElement('ram:GrossPriceProductTradePrice');
+                        $this->destination->element('ram:ChargeAmount', $this->source->queryValue('./cbc:BaseAmount', $priceAllowanceChargeNode));
+                        $this->destination->startElement('ram:AppliedTradeAllowanceCharge');
+                        $this->destination->startElement('ram:ChargeIndicator');
+                        $this->destination->element('udt:Indicator', 'false');
+                        $this->destination->endElement();
+                        $this->destination->element('ram:ActualAmount', $this->source->queryValue('./cbc:Amount', $priceAllowanceChargeNode));
+                        $this->destination->endElement();
+                        $this->destination->endElement();
+                    }
+                );
                 $this->destination->startElement('ram:NetPriceProductTradePrice');
                 $this->destination->element('ram:ChargeAmount', $this->source->queryValue('./cac:Price/cbc:PriceAmount', $invoiceLineNode));
                 $this->destination->elementWithAttribute('ram:BasisQuantity', $this->source->queryValue('./cac:Price/cbc:BaseQuantity', $invoiceLineNode), 'unitCode', $this->source->queryValue('./cac:Price/cbc:BaseQuantity/@unitCode', $invoiceLineNode));

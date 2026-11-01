@@ -1620,6 +1620,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                                 $this->destination->startElement('cac:Price');
                                 $this->destination->elementWithAttribute('cbc:PriceAmount', $this->formatAmount($this->source->queryValue('./ram:NetPriceProductTradePrice/ram:ChargeAmount', $tradeLineItemAgreementNode)), 'currencyID', $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement));
                                 $this->destination->elementWithAttribute('cbc:BaseQuantity', $this->source->queryValue('./ram:NetPriceProductTradePrice/ram:BasisQuantity', $tradeLineItemAgreementNode), 'unitCode', $this->source->queryValue('./ram:NetPriceProductTradePrice/ram:BasisQuantity/@unitCode', $tradeLineItemAgreementNode));
+
                                 $this->source->whenExists(
                                     './ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:ActualAmount',
                                     $tradeLineItemAgreementNode,

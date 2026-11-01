@@ -50,7 +50,7 @@ class XmlConverterCiiToUbl extends XmlConverterBase
         return [
             'rsm' => 'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100',
             'ram' => 'urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100',
-            'qdt' => 'urn:un:unece:uncefact:data:Standard:QualifiedDataType:100',
+            'qdt' => 'urn:un:unece:uncefact:data:standard:QualifiedDataType:100',
             'udt' => 'urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100',
             'xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
         ];

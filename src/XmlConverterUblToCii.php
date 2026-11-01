@@ -373,7 +373,7 @@ class XmlConverterUblToCii extends XmlConverterBase
                     }
                 );
                 $this->source->whenExists(
-                    './cac:Price/cac:AllowanceCharge[cbc:ChargeIndicator="false" and normalize-space(cbc:Amount) != "" and normalize-space(cbc:BaseAmount) != ""]',
+                    './cac:Price/cac:AllowanceCharge[cbc:ChargeIndicator="false" and normalize-space(cbc:Amount)!="" and normalize-space(cbc:BaseAmount)!=""]',
                     $invoiceLineNode,
                     function ($priceAllowanceChargeNode): void {
                         $this->destination->startElement('ram:GrossPriceProductTradePrice');

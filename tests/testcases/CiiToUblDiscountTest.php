@@ -279,10 +279,9 @@ final class CiiToUblDiscountTest extends TestCase
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Item/cac:ClassifiedTaxCategory/cac:TaxScheme/cbc:ID', 0, 'VAT');
         $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:InvoiceLine/cac:Price/cbc:PriceAmount', 0, '3.3333', 'currencyID', 'EUR');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/cbc:BaseQuantity', 0);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge', 0);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge/cbc:ChargeIndicator', 0);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge/cbc:Amount', 0);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge/cbc:BaseAmount', 0);
+        $this->assertXPathValueWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/cac:AllowanceCharge/cbc:ChargeIndicator', 0, 'false');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:InvoiceLine/cac:Price/cac:AllowanceCharge/cbc:Amount', 0, '0.6667', 'currencyID', 'EUR');
+        $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:InvoiceLine/cac:Price/cac:AllowanceCharge/cbc:BaseAmount', 0, '4.0000', 'currencyID', 'EUR');
 
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:ID', 1, '2');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:Note', 1);
@@ -318,10 +317,10 @@ final class CiiToUblDiscountTest extends TestCase
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Item/cac:ClassifiedTaxCategory/cac:TaxScheme/cbc:ID', 1, 'VAT');
         $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:InvoiceLine/cac:Price/cbc:PriceAmount', 1, '5.5000', 'currencyID', 'EUR');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/cbc:BaseQuantity', 1);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge', 1);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge/cbc:ChargeIndicator', 1);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge/cbc:Amount', 1);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge/cbc:BaseAmount', 1);
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine[2]/cac:Price/cac:AllowanceCharge', 0);
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine[2]/cac:Price/cac:AllowanceCharge/cbc:ChargeIndicator', 0);
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine[2]/cac:Price/cac:AllowanceCharge/cbc:Amount', 0);
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine[2]/cac:Price/cac:AllowanceCharge/cbc:BaseAmount', 0);
 
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:ID', 2, '3');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:Note', 2);
@@ -357,10 +356,10 @@ final class CiiToUblDiscountTest extends TestCase
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Item/cac:ClassifiedTaxCategory/cac:TaxScheme/cbc:ID', 2, 'VAT');
         $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:InvoiceLine/cac:Price/cbc:PriceAmount', 2, '5.4900', 'currencyID', 'EUR');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/cbc:BaseQuantity', 2);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge', 2);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge/cbc:ChargeIndicator', 2);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge/cbc:Amount', 2);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge/cbc:BaseAmount', 2);
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine[3]/cac:Price/cac:AllowanceCharge', 0);
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine[3]/cac:Price/cac:AllowanceCharge/cbc:ChargeIndicator', 0);
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine[3]/cac:Price/cac:AllowanceCharge/cbc:Amount', 0);
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine[3]/cac:Price/cac:AllowanceCharge/cbc:BaseAmount', 0);
 
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:ID', 3, '4');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cbc:Note', 3);
@@ -396,10 +395,10 @@ final class CiiToUblDiscountTest extends TestCase
         $this->assertXPathValueWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Item/cac:ClassifiedTaxCategory/cac:TaxScheme/cbc:ID', 3, 'VAT');
         $this->assertXPathValueWithIndexAndAttribute('/ubl:Invoice/cac:InvoiceLine/cac:Price/cbc:PriceAmount', 3, '2.7700', 'currencyID', 'EUR');
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/cbc:BaseQuantity', 3);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge', 3);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge/cbc:ChargeIndicator', 3);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge/cbc:Amount', 3);
-        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine/cac:Price/AllowanceCharge/cbc:BaseAmount', 3);
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine[4]/cac:Price/cac:AllowanceCharge', 0);
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine[4]/cac:Price/cac:AllowanceCharge/cbc:ChargeIndicator', 0);
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine[4]/cac:Price/cac:AllowanceCharge/cbc:Amount', 0);
+        $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine[4]/cac:Price/cac:AllowanceCharge/cbc:BaseAmount', 0);
 
         $this->assertXPathNotExistsWithIndex('/ubl:Invoice/cac:InvoiceLine', 4);
     }

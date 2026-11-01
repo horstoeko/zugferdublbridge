@@ -1620,6 +1620,17 @@ class XmlConverterCiiToUbl extends XmlConverterBase
                                 $this->destination->startElement('cac:Price');
                                 $this->destination->elementWithAttribute('cbc:PriceAmount', $this->formatAmount($this->source->queryValue('./ram:NetPriceProductTradePrice/ram:ChargeAmount', $tradeLineItemAgreementNode)), 'currencyID', $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement));
                                 $this->destination->elementWithAttribute('cbc:BaseQuantity', $this->source->queryValue('./ram:NetPriceProductTradePrice/ram:BasisQuantity', $tradeLineItemAgreementNode), 'unitCode', $this->source->queryValue('./ram:NetPriceProductTradePrice/ram:BasisQuantity/@unitCode', $tradeLineItemAgreementNode));
+                                $this->source->whenExists(
+                                    './ram:GrossPriceProductTradePrice/ram:AppliedTradeAllowanceCharge/ram:ActualAmount',
+                                    $tradeLineItemAgreementNode,
+                                    function ($priceDiscountNode) use ($tradeLineItemAgreementNode, $invoiceHeaderSettlement): void {
+                                        $this->destination->startElement('cac:AllowanceCharge');
+                                        $this->destination->element('cbc:ChargeIndicator', 'false');
+                                        $this->destination->elementWithAttribute('cbc:Amount', $this->formatAmount($priceDiscountNode->nodeValue), 'currencyID', $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement));
+                                        $this->destination->elementWithAttribute('cbc:BaseAmount', $this->formatAmount($this->source->queryValue('./ram:GrossPriceProductTradePrice/ram:ChargeAmount', $tradeLineItemAgreementNode)), 'currencyID', $this->source->queryValue('./ram:InvoiceCurrencyCode', $invoiceHeaderSettlement));
+                                        $this->destination->endElement();
+                                    }
+                                );
                                 $this->destination->endElement();
                             }
                         );

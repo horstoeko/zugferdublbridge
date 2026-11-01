@@ -81,7 +81,7 @@ class XmlConverterUblToCii extends XmlConverterBase
             'a' => 'urn:un:unece:uncefact:data:standard:QualifiedDataType:100',
             'rsm' => 'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100',
             'ram' => 'urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100',
-            'qdt' => 'urn:un:unece:uncefact:data:Standard:QualifiedDataType:100',
+            'qdt' => 'urn:un:unece:uncefact:data:standard:QualifiedDataType:100',
             'udt' => 'urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100',
             'xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
         ];
@@ -369,6 +369,21 @@ class XmlConverterUblToCii extends XmlConverterBase
                     function ($invoiceLineOrderLineRefIdNode): void {
                         $this->destination->startElement('ram:BuyerOrderReferencedDocument');
                         $this->destination->element('ram:LineID', $invoiceLineOrderLineRefIdNode->nodeValue);
+                        $this->destination->endElement();
+                    }
+                );
+                $this->source->whenExists(
+                    './cac:Price/cac:AllowanceCharge[cbc:ChargeIndicator="false" and normalize-space(cbc:Amount)!="" and normalize-space(cbc:BaseAmount)!=""]',
+                    $invoiceLineNode,
+                    function ($priceAllowanceChargeNode): void {
+                        $this->destination->startElement('ram:GrossPriceProductTradePrice');
+                        $this->destination->element('ram:ChargeAmount', $this->source->queryValue('./cbc:BaseAmount', $priceAllowanceChargeNode));
+                        $this->destination->startElement('ram:AppliedTradeAllowanceCharge');
+                        $this->destination->startElement('ram:ChargeIndicator');
+                        $this->destination->element('udt:Indicator', 'false');
+                        $this->destination->endElement();
+                        $this->destination->element('ram:ActualAmount', $this->source->queryValue('./cbc:Amount', $priceAllowanceChargeNode));
+                        $this->destination->endElement();
                         $this->destination->endElement();
                     }
                 );

@@ -9,7 +9,6 @@ use Rector\CodeQuality\Rector\New_\NewStaticToNewSelfRector;
 use Rector\CodingStyle\Rector\FuncCall\CallUserFuncArrayToVariadicRector;
 use Rector\CodingStyle\Rector\String_\UseClassKeywordForClassNameResolutionRector;
 use Rector\Config\RectorConfig;
-use Rector\DeadCode\Rector\ClassMethod\RemoveDuplicatedReturnSelfDocblockRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveMixedDocblockOverruledByNativeTypeRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessParamTagRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
@@ -18,7 +17,6 @@ use Rector\DeadCode\Rector\Property\RemoveUselessVarTagRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
-use Rector\TypeDeclaration\Rector\StmtsAwareInterface\DeclareStrictTypesRector;
 use Rector\ValueObject\PhpVersion;
 
 return RectorConfig::configure()
@@ -42,7 +40,6 @@ return RectorConfig::configure()
         SimplifyIfReturnBoolRector::class,
         UseClassKeywordForClassNameResolutionRector::class,
         CallUserFuncArrayToVariadicRector::class,
-        RemoveDuplicatedReturnSelfDocblockRector::class,
         RemoveUselessUnionReturnDocblockRector::class,
         RemoveMixedDocblockOverruledByNativeTypeRector::class,
     ])
@@ -55,9 +52,6 @@ return RectorConfig::configure()
         SetList::INSTANCEOF,
         PHPUnitSetList::PHPUNIT_CODE_QUALITY,
         PHPUnitSetList::COMPOSER_BASED,
-    ])
-    ->withRules([
-        DeclareStrictTypesRector::class,
     ])
     ->withImportNames(false, false, true, true)
     ->withCache(__DIR__ . '/rector-cache', FileCacheStorage::class)

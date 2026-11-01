@@ -20,6 +20,7 @@
             <file>../tests/testcases/UblToCiiSimple2Test.php</file>
             <file>../tests/testcases/UblToCiiSimple3Test.php</file>
             <file>../tests/testcases/UblToCiiNoteTest.php</file>
+            <file>../tests/testcases/UblToCiiPriceDiscountTest.php</file>
             <file>../tests/testcases/UblToCiiXRechnungExtensionTest.php</file>
         </testsuite>
     </testsuites>

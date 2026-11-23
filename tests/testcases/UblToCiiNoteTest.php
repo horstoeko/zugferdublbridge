@@ -22,11 +22,20 @@ final class UblToCiiNoteTest extends TestCase
         $this->assertXPathValueWithIndex(self::NOTE_PATH . '/ram:SubjectCode', 0, 'ADU');
     }
 
-    public function testNoteWithoutSubjectCodeIsSkipped(): void
+    public function testNoteWithoutSubjectCode(): void
     {
-        $this->convertWithNote('A note without any subject code');
+        $this->convertWithNote('Das ist eine Notiz');
 
-        $this->assertXPathNotExistsWithIndex(self::NOTE_PATH, 0);
+        $this->assertXPathValueWithIndex(self::NOTE_PATH . '/ram:Content', 0, 'Das ist eine Notiz');
+        $this->assertXPathNotExistsWithIndex(self::NOTE_PATH . '/ram:SubjectCode', 0);
+    }
+
+    public function testNoteWithoutSubjectCodeContainingHashes(): void
+    {
+        $this->convertWithNote('Bestellung #12345 vom 18.11.2026');
+
+        $this->assertXPathValueWithIndex(self::NOTE_PATH . '/ram:Content', 0, 'Bestellung #12345 vom 18.11.2026');
+        $this->assertXPathNotExistsWithIndex(self::NOTE_PATH . '/ram:SubjectCode', 0);
     }
 
     /**

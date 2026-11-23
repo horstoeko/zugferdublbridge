@@ -1,3 +1,13 @@
+## v1.0.21
+
+``Previous version v1.0.20``
+
+| Type | Hash    | Date    | Author  | Subject  | Issue(s)
+| :--- | :------ | :------ | :------ | :------- | :-----------: 
+| :bug:  | [d7e6819](https://github.com/horstoeko/zugferdublbridge/commit/d7e6819) | 2026-11-23 12:56:20 CET | HorstOeko | [FIX] Fix UBL to CII conversion of document notes without subject codes () () | [#38](https://github.com/horstoeko/zugferdublbridge/issues/38), [#39](https://github.com/horstoeko/zugferdublbridge/issues/39)
+
+:exclamation: _There is one internal commit_
+
 ## v1.0.20
 
 ``Previous version v1.0.19``

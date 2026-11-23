@@ -14,6 +14,7 @@ namespace horstoeko\zugferdublbridge;
 use DateTime;
 use DOMException;
 use Exception;
+use horstoeko\stringmanagement\StringUtils;
 use horstoeko\zugferdublbridge\traits\HandlesProfiles;
 use RuntimeException;
 use ValueError;
@@ -235,22 +236,25 @@ class XmlConverterUblToCii extends XmlConverterBase
 
         $this->source->queryAll('./cbc:Note', $docRootElement)->forEach(
             function ($noteNode): void {
-                // A note may carry its subject code in front of the text ("#ADU#the text").
-                // The text is everything behind the second "#" - splitting without a limit
-                // would cut it at its next "#" (e.g. "#SKONTO#TAGE=10#PROZENT=2.00").
-                $splittedNode = explode('#', $noteNode->nodeValue, 3);
-                $content = count($splittedNode) > 2 ? $splittedNode[2] : '';
+                $content = $noteNode->nodeValue;
+                $subjectCode = null;
 
-                // ram:Content is mandatory in CII, so a note without any text cannot be
-                // expressed - writing only the subject code produces an invalid document
-                // (seen in the wild: "#ADU#" without a text).
-                if ('' === trim($content)) {
+                if (preg_match('/^#([^#]+)#(.*)$/s', $content, $matches)) {
+                    $subjectCode = $matches[1];
+                    $content = $matches[2];
+                }
+
+                if (StringUtils::stringIsNullOrEmpty($content)) {
                     return;
                 }
 
                 $this->destination->startElement('ram:IncludedNote');
                 $this->destination->element('ram:Content', $content);
-                $this->destination->element('ram:SubjectCode', $splittedNode[1]);
+
+                if (!StringUtils::stringIsNullOrEmpty($subjectCode)) {
+                    $this->destination->element('ram:SubjectCode', $subjectCode);
+                }
+
                 $this->destination->endElement();
             }
         );
